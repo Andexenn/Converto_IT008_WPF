@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Converto_IT008_WPF.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ using System.Windows.Shapes;
 
 namespace Converto_IT008_WPF.Views
 {
+
     /// <summary>
     /// Interaction logic for DisconnectView.xaml
     /// </summary>
@@ -24,5 +26,11 @@ namespace Converto_IT008_WPF.Views
         {
             InitializeComponent();
         }
+        public DisconnectView(DisconnectViewModel vm)
+        {
+            InitializeComponent();
+            DataContext = vm;
+        }
     }
 }
+

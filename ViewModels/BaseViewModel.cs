@@ -12,6 +12,18 @@ public class BaseViewModel : ObservableObject, IDisposable, INotifyPropertyChang
 {
     public event PropertyChangedEventHandler PropertyChanged;
 
+    private bool _isBusy;
+    public bool IsBusy
+    {
+        get => _isBusy;
+        set
+        {
+            _isBusy = value;
+            OnPropertyChanged(nameof(IsBusy));
+            
+        }
+    }
+
     protected void OnPropertyChanged(string propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

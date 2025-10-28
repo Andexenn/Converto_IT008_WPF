@@ -18,7 +18,8 @@ public static class AppModule
     {
         // Store điều hướng
         services.AddSingleton<NavigationStore>(); // :contentReference[oaicite:8]{index=8}
-        services.AddSingleton<INavigationService, NavigationServiceImpl>();
+        services.AddScoped<INavigationService, NavigationServiceImpl>();
+        services.AddScoped<INetworkMonitorService, NetworkMonitorServiceImpl>(); 
 
         // ViewModels
         services.AddTransient<ViewModels.DisconnectViewModel>(); // :contentReference[oaicite:9]{index=9}

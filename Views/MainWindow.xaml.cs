@@ -25,4 +25,10 @@ public partial class MainWindow : Window
         InitializeComponent();
         DataContext = vm;
     }
+
+    private void Skeleton_MouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if(e.ChangedButton == MouseButton.Left)
+            this.DragMove();
+    }
 }

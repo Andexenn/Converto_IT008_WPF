@@ -14,7 +14,7 @@ namespace Converto_IT008_WPF.ServicesFEImpl
         private readonly Uri _healthCheckpoint;
         private CancellationTokenSource? _cts;
         private Task? _loopTask;
-        private TimeSpan _interval = TimeSpan.FromSeconds(5);
+        private TimeSpan _interval = TimeSpan.FromSeconds(2);
 
         private volatile bool _isOnline = true;
         public bool IsOnline => _isOnline;
@@ -34,7 +34,7 @@ namespace Converto_IT008_WPF.ServicesFEImpl
 
             _interval = interval ?? _interval;
             _cts = new CancellationTokenSource();
-            _loopTask = Task.Run( () => MonitorLoopAsync(_cts.Token));
+            _loopTask = Task.Run(() => MonitorLoopAsync(_cts.Token));
         }
 
         public void Stop()

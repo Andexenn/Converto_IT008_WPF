@@ -260,6 +260,12 @@
     <!--CTA button-->
     <Style TargetType="{x:Type Button}"
            x:Key="CTA">
+        <Setter Property="Background" Value="#F24822"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontFamily" Value="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
@@ -274,12 +280,6 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-        <Setter Property="Background" Value="#F24822"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="FontSize" Value="18"/>
-        <Setter Property="FontFamily" Value="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"/>
-        <Setter Property="FontWeight" Value="SemiBold"/>
     </Style>
 
 </ResourceDictionary>

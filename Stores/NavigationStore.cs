@@ -10,7 +10,7 @@ namespace Converto_IT008_WPF.Stores;
 
 public class NavigationStore : INotifyPropertyChanged
 {
-    private BaseViewModel _currentViewModel;
+    private BaseViewModel _currentViewModel = null!;
     public BaseViewModel CurrentViewModel
     {
         get => _currentViewModel;

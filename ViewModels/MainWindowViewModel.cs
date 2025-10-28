@@ -15,7 +15,8 @@ namespace Converto_IT008_WPF.ViewModels
         private readonly NavigationStore _navigationStore;
         public BaseViewModel CurrentViewModel => _navigationStore.CurrentViewModel;
         public ICommand GoDisconnectCommand { get; }
-        public MainWindowViewModel(NavigationStore navigationStore, INavigationService goDisconnect)
+        public ICommand GoHomepageCommand { get; }
+        public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav)
         {
             _navigationStore = navigationStore;
             _navigationStore.PropertyChanged += (_, e) =>
@@ -26,9 +27,11 @@ namespace Converto_IT008_WPF.ViewModels
                 }
             };
 
-            goDisconnect.Navigate();
-            GoDisconnectCommand = new RelayCommand(() => goDisconnect.Navigate());
-
+            //goDisconnect.Navigate();
+            //GoDisconnectCommand = new RelayCommand(() => goDisconnect.Navigate());
+            GoDisconnectCommand = new RelayCommand(() => nav.Navigate<DisconnectViewModel>());
+            GoHomepageCommand = new RelayCommand(() => nav.Navigate<HomepageViewModel>());
+            nav.Navigate<HomepageViewModel>();
         }
     }
 

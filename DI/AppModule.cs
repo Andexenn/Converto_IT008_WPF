@@ -18,20 +18,25 @@ public static class AppModule
     {
         // Store điều hướng
         services.AddSingleton<NavigationStore>(); // :contentReference[oaicite:8]{index=8}
+        services.AddSingleton<INavigationService, NavigationServiceImpl>();
 
         // ViewModels
         services.AddTransient<ViewModels.DisconnectViewModel>(); // :contentReference[oaicite:9]{index=9}
         services.AddTransient<ViewModels.MainWindowViewModel>(); // :contentReference[oaicite:10]{index=10}
+        services.AddTransient<ViewModels.HomepageViewModel>();
 
         // Navigation services (đi thẳng tới DisconnectViewModel)
-        services.AddTransient<INavigationService>(sp =>
-            new NavigationServiceImpl<ViewModels.DisconnectViewModel>(
-                sp.GetRequiredService<NavigationStore>(),
-                () => sp.GetRequiredService<ViewModels.DisconnectViewModel>())); // 
+        //services.AddTransient<INavigationService>(sp =>
+        //    new NavigationServiceImpl<ViewModels.DisconnectViewModel>(
+        //        sp.GetRequiredService<NavigationStore>(),
+        //        () => sp.GetRequiredService<ViewModels.DisconnectViewModel>())); // 
+
+        //services.AddTransient(typeof(INavigationService<>), typeof(NavigationServiceImpl<>));
 
         // MainWindow + DataContext
-        services.AddSingleton<Views.MainWindow>(sp =>
-            new Views.MainWindow(sp.GetRequiredService<MainWindowViewModel>()));
+        //services.AddSingleton<Views.MainWindow>(sp =>
+        //    new Views.MainWindow(sp.GetRequiredService<MainWindowViewModel>()));
+        services.AddSingleton<Views.MainWindow>();
 
         return services;
     }

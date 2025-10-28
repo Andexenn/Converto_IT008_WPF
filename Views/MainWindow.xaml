@@ -4,9 +4,106 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Converto_IT008_WPF.Views"
+        xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
+        Height="650" Width="1000"
+        WindowStyle="None"
+        Background="Transparent"
+        AllowsTransparency="True"
+        ResizeMode="NoResize">
+    <Border Background="#FFFBFBFB"
+            CornerRadius="15"
+            Padding="10" >
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="92*" />
+                <ColumnDefinition Width="393*"/>
 
-    </Grid>
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="39*"/>
+                <RowDefinition Height="271*"/>
+            </Grid.RowDefinitions>
+
+            <Border BorderThickness="0.5" Grid.RowSpan="2" Background="White" CornerRadius="10,10,10,10" BorderBrush="#7F4F4E4E">
+                <Border.Effect>
+                    <DropShadowEffect Color="#FF4F4E4E" BlurRadius="10" Direction="209" Opacity="0.3" ShadowDepth="0" RenderingBias="Quality"/>
+                </Border.Effect>
+
+                <Grid>
+                    <StackPanel VerticalAlignment="Top" >
+                        <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Resources/Logo.png" Width="150" Margin="6,20,0,0"/>
+                        <Border BorderBrush="#CECECE"  BorderThickness="0.5" Margin="0, 12, 0, 0"/>
+
+                        <StackPanel  Margin="0,24,0,0" >
+                            <RadioButton x:Name="Convert" Content="Convert"
+                                         Tag="{x:Static fa:FontAwesomeIcon.Exchange}"
+                                         Style="{StaticResource MenuButtonTheme}"/>
+
+                            <RadioButton x:Name="Compress" Content="Compress"
+                                         Tag="{x:Static fa:FontAwesomeIcon.Compress}"
+                                         Style="{StaticResource MenuButtonTheme}" BorderBrush="{x:Null}"/>
+
+                            <RadioButton x:Name="Tex_to_Image" Content="Text to Image"
+                                         Tag="{x:Static fa:FontAwesomeIcon.Steam}"
+                                         Style="{StaticResource MenuButtonTheme}"/>
+
+                            <RadioButton x:Name="Remove_Background" Content="Remove Background"
+                                         Tag="{x:Static fa:FontAwesomeIcon.Image}"
+                                         Style="{StaticResource MenuButtonTheme}"/>
+
+                            <Border HorizontalAlignment="Left" Height="1" Background="#CECECE" Width="120" Margin="24,20,0,20"/>
+
+                            <RadioButton x:Name="My_Account" Content="My Account"
+                                         Tag="{x:Static fa:FontAwesomeIcon.User}"
+                                         Style="{StaticResource MenuButtonTheme}"/>
+
+                            <RadioButton x:Name="About_Us" Content="About Us"
+                                         Tag="{x:Static fa:FontAwesomeIcon.Group}" 
+                                         Style="{StaticResource MenuButtonTheme}"/>
+
+                            <RadioButton x:Name="History" Content="History"
+                                         Tag="{x:Static fa:FontAwesomeIcon.History}"
+                                         Style="{StaticResource MenuButtonTheme}"/>
+
+                            <RadioButton x:Name="Exit" Grid.Row="1"
+                                         Tag="{x:Static fa:FontAwesomeIcon.SignOut}"
+                                         Content="Exit"
+                                         Style="{StaticResource MenuButtonTheme}"
+                                         Height="35"
+                                         Command="{Binding CloseWindowCommand}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                </Grid>
+            </Border>
+
+            <Border BorderThickness="0.5" Grid.Column="1" Background="White" CornerRadius="10,10,10,10" Margin="13,0,0,0" BorderBrush="#7F4F4E4E">
+                <Border.Effect>
+                    <DropShadowEffect Color="#FF4F4E4E" Opacity="0.3" ShadowDepth="0" RenderingBias="Quality" Direction="209" BlurRadius="10" />
+                </Border.Effect>
+                <Grid VerticalAlignment="Center">
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="1"
+                            Style="{StaticResource Login}"/>
+
+                    <Button Grid.Column="2"
+                            Style="{StaticResource Signup}" />
+
+                </Grid>
+            </Border>
+
+            <ContentControl Grid.Column="1" Grid.Row="1"
+                            x:Name="MainContentControl"
+                            Margin="13,10,10,10"/>
+
+        </Grid>
+    </Border>
 </Window>

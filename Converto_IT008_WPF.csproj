@@ -9,7 +9,27 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Themes\" />
+    <None Remove="Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF" />
+    <None Remove="Resources\INTER-VARIABLEFONT_OPSZ,WGHT.TTF" />
+    <None Remove="Resources\Logo.png" />
+    <None Remove="Resources\MONTSERRAT-REGULAR.TTF" />
+    <None Remove="Resources\MONTSERRAT-SEMIBOLD.TTF" />
+    <None Remove="Resources\no-connection.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF" />
+    <Resource Include="Resources\INTER-VARIABLEFONT_OPSZ,WGHT.TTF" />
+    <Resource Include="Resources\Logo.png" />
+    <Resource Include="Resources\MONTSERRAT-REGULAR.TTF" />
+    <Resource Include="Resources\MONTSERRAT-SEMIBOLD.TTF" />
+    <Resource Include="Resources\no-connection.png" />
   </ItemGroup>
 
 </Project>

@@ -71,6 +71,7 @@
 
                             <RadioButton x:Name="History" Content="History"
                                          Tag="{x:Static fa:FontAwesomeIcon.History}"
+                                         Command="{Binding GoHistoryCommand}"
                                          Style="{StaticResource MenuButtonTheme}"/>
 
                             <RadioButton x:Name="Exit" Grid.Row="1"

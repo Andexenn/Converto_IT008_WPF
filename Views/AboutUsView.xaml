@@ -57,7 +57,7 @@
                 <StackPanel Grid.Column="2" Margin="0,0,30,0">
                     <Ellipse Width="100" Height="100" >
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="/Resources/HH.jpg"/>
+                            <ImageBrush ImageSource="/Resources/HT.jpg"/>
                         </Ellipse.Fill>
                     </Ellipse>
                     <TextBlock Margin="0,10,0,0" Text="Nguyễn Đức Hoàng Thuận" HorizontalAlignment="Center" FontWeight="SemiBold"/>

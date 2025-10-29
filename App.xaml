@@ -21,6 +21,10 @@
             <DataTemplate DataType="{x:Type vm:AboutUsViewModel}">
                 <v:AboutUsView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:HistoryViewModel}">
+                <v:HistoryView/>
+            </DataTemplate>
             
         </ResourceDictionary>
     </Application.Resources>

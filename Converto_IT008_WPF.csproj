@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <None Remove="Resources\HH.jpg" />
+    <None Remove="Resources\HT.jpg" />
     <None Remove="Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF" />
     <None Remove="Resources\INTER-VARIABLEFONT_OPSZ,WGHT.TTF" />
     <None Remove="Resources\Logo.png" />
@@ -26,6 +27,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\HH.jpg" />
+    <Resource Include="Resources\HT.jpg" />
     <Resource Include="Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF" />
     <Resource Include="Resources\INTER-VARIABLEFONT_OPSZ,WGHT.TTF" />
     <Resource Include="Resources\Logo.png" />

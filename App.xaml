@@ -17,6 +17,11 @@
             <DataTemplate DataType="{x:Type vm:HomepageViewModel}">
                 <v:HomepageView/>
             </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:AboutUsViewModel}">
+                <v:AboutUsView/>
+            </DataTemplate>
+            
         </ResourceDictionary>
     </Application.Resources>
 </Application>

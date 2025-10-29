@@ -66,7 +66,8 @@
 
                             <RadioButton x:Name="About_Us" Content="About Us"
                                          Tag="{x:Static fa:FontAwesomeIcon.Group}" 
-                                         Style="{StaticResource MenuButtonTheme}"/>
+                                         Style="{StaticResource MenuButtonTheme}"
+                                         Command="{Binding GoAboutUsCommand}"/>
 
                             <RadioButton x:Name="History" Content="History"
                                          Tag="{x:Static fa:FontAwesomeIcon.History}"

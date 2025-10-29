@@ -1,0 +1,68 @@
+﻿<UserControl x:Class="Converto_IT008_WPF.Views.AboutUsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Converto_IT008_WPF.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="About Us" 
+                       Foreground="#F24822"
+                       FontWeight="SemiBold"
+                       FontSize="40"/>
+            <Border Height="140" 
+                    Background="Transparent" 
+                    Margin="0,30,0,10"
+                    Width="760"
+                    Padding="10"
+                    BorderThickness="1"
+                    HorizontalAlignment="Left"
+                    BorderBrush="#4F4E4E"
+                    CornerRadius="10"
+                    >
+                <StackPanel>
+                    
+                    <TextBlock Text="Xin chào! Chúng mình là nhóm sinh viên năm 2 đến từ ngành Kỹ thuật Phần mềm, trường Đại học Công Nghệ Thông Tin - Đại học Quốc gia Thành phố Hồ Chí Minh. Đây là ứng dụng mà nhóm chúng mình thực hiện cho đồ án cuối kỳ môn Lập trình trực quan."
+                               TextWrapping="Wrap"
+                               FontSize="16"
+                               Foreground="#4F4E4E"/>
+
+                    <TextBlock Text="Chúng mình cam kết source code là hoàn toàn tự viết. Mọi hành vi đạo code đều chịu trách nhiệm của nhà trường." 
+                               TextWrapping="Wrap"
+                                FontSize="16"
+                                Foreground="#4F4E4E"/>
+                </StackPanel>
+
+
+            </Border>
+
+            <Grid Margin="0,70,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                
+                <StackPanel Grid.Column="0" Margin="30,0,0,0">
+                    <Ellipse Width="100" Height="100" >
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="/Resources/HH.jpg"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock Margin="0,10,0,0" Text="Phan Huỳnh Hưng" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2" Margin="0,0,30,0">
+                    <Ellipse Width="100" Height="100" >
+                        <Ellipse.Fill>
+                            <ImageBrush ImageSource="/Resources/HH.jpg"/>
+                        </Ellipse.Fill>
+                    </Ellipse>
+                    <TextBlock Margin="0,10,0,0" Text="Nguyễn Đức Hoàng Thuận" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

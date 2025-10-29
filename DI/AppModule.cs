@@ -25,7 +25,7 @@ public static class AppModule
         services.AddTransient<ViewModels.DisconnectViewModel>(); // :contentReference[oaicite:9]{index=9}
         services.AddTransient<ViewModels.MainWindowViewModel>(); // :contentReference[oaicite:10]{index=10}
         services.AddTransient<ViewModels.HomepageViewModel>();
-
+        services.AddTransient<ViewModels.AboutUsViewModel>();
         // Navigation services (đi thẳng tới DisconnectViewModel)
         //services.AddTransient<INavigationService>(sp =>
         //    new NavigationServiceImpl<ViewModels.DisconnectViewModel>(

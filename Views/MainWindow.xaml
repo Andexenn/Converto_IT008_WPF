@@ -43,6 +43,7 @@
 
                         <StackPanel  Margin="0,24,0,0" >
                             <RadioButton x:Name="Convert" Content="Convert"
+                                         Command="{Binding GoHomepageCommand}"
                                          Tag="{x:Static fa:FontAwesomeIcon.Exchange}"
                                          Style="{StaticResource MenuButtonTheme}"/>
 
@@ -89,7 +90,7 @@
             
             
 
-            <Border BorderThickness="0.5" Grid.Column="1" Background="White" CornerRadius="10,10,10,10" Margin="13,0,0,0" BorderBrush="#7F4F4E4E">
+            <Border BorderThickness="0.5" Grid.Column="1" Background="White" CornerRadius="10,10,10,10" Margin="13,0,0,20" BorderBrush="#7F4F4E4E">
                 <Border.Effect>
                     <DropShadowEffect Color="#FF4F4E4E" Opacity="0.3" ShadowDepth="0" RenderingBias="Quality" Direction="209" BlurRadius="10" />
                 </Border.Effect>
@@ -112,7 +113,7 @@
 
             <ContentControl Grid.Column="1" Grid.Row="1"
                             x:Name="MainContentControl"
-                            Margin="13,10,10,10"
+                            Margin="13,0,10,10"
                             Content="{Binding CurrentViewModel}"/>
 
         </Grid>

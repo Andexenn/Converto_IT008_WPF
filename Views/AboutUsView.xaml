@@ -12,16 +12,19 @@
                        Foreground="#F24822"
                        FontWeight="SemiBold"
                        FontSize="40"/>
-            <Border Height="140" 
-                    Background="Transparent" 
+            <Border Height="170" 
+                    Background="White" 
                     Margin="0,30,0,10"
                     Width="760"
                     Padding="10"
                     BorderThickness="1"
                     HorizontalAlignment="Left"
                     BorderBrush="#4F4E4E"
-                    CornerRadius="10"
+                    CornerRadius="5"
                     >
+                <Border.Effect>
+                    <DropShadowEffect/>
+                </Border.Effect>
                 <StackPanel>
                     
                     <TextBlock Text="Xin chào! Chúng mình là nhóm sinh viên năm 2 đến từ ngành Kỹ thuật Phần mềm, trường Đại học Công Nghệ Thông Tin - Đại học Quốc gia Thành phố Hồ Chí Minh. Đây là ứng dụng mà nhóm chúng mình thực hiện cho đồ án cuối kỳ môn Lập trình trực quan."
@@ -31,8 +34,9 @@
 
                     <TextBlock Text="Chúng mình cam kết source code là hoàn toàn tự viết. Mọi hành vi đạo code đều chịu trách nhiệm của nhà trường." 
                                TextWrapping="Wrap"
-                                FontSize="16"
-                                Foreground="#4F4E4E"/>
+                               FontSize="16"
+                               Margin="0, 20,0,0"
+                               Foreground="#4F4E4E"/>
                 </StackPanel>
 
 
@@ -46,21 +50,21 @@
                 </Grid.ColumnDefinitions>
                 
                 <StackPanel Grid.Column="0" Margin="30,0,0,0">
-                    <Ellipse Width="100" Height="100" >
+                    <Ellipse Width="120" Height="120" StrokeThickness="1" Stroke="#4F4E4E">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="/Resources/HH.jpg"/>
+                            <ImageBrush ImageSource="/Resources/HH.jpg" Stretch="UniformToFill"/>
                         </Ellipse.Fill>
                     </Ellipse>
-                    <TextBlock Margin="0,10,0,0" Text="Phan Huỳnh Hưng" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                    <TextBlock Margin="0,10,0,0" Text="Phan Huỳnh Hưng" HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="18" Foreground="#4F4E4E"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2" Margin="0,0,30,0">
-                    <Ellipse Width="100" Height="100" >
+                    <Ellipse Width="120" Height="120" StrokeThickness="1" Stroke="#4F4E4E">
                         <Ellipse.Fill>
-                            <ImageBrush ImageSource="/Resources/HT.jpg"/>
+                            <ImageBrush ImageSource="/Resources/HT.jpg" Stretch="UniformToFill" AlignmentX="Center" AlignmentY="Top"/>
                         </Ellipse.Fill>
                     </Ellipse>
-                    <TextBlock Margin="0,10,0,0" Text="Nguyễn Đức Hoàng Thuận" HorizontalAlignment="Center" FontWeight="SemiBold"/>
+                    <TextBlock Margin="0,10,0,0" Text="Nguyễn Đức Hoàng Thuận" HorizontalAlignment="Center" FontWeight="SemiBold" FontSize="18" Foreground="#4F4E4E"/>
                 </StackPanel>
             </Grid>
         </StackPanel>

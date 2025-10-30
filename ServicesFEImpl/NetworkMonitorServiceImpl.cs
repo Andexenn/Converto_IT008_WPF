@@ -1,4 +1,5 @@
-﻿using Converto_IT008_WPF.ServicesFE;
+﻿using CommunityToolkit.Mvvm.Input;
+using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -89,7 +90,6 @@ namespace Converto_IT008_WPF.ServicesFEImpl
                 using var resp = await _http.SendAsync(req, HttpCompletionOption.ResponseHeadersRead, ct)
                                             .ConfigureAwait(false);
 
-                // generate_204 trả 204 No Content khi online
                 return resp.IsSuccessStatusCode || (int)resp.StatusCode == 204;
             }
             catch

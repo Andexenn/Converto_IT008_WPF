@@ -3,14 +3,50 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Welcome to Converto!" 
-                       HorizontalAlignment="Center" 
-                       VerticalAlignment="Center"
-                       FontSize="36"
-                       FontWeight="Bold"/> 
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+ 
+        <TextBox Grid.Column="1" Text="Search" Style="{StaticResource Search}"/>
+
+        <Grid Grid.Row="1" Margin="0,40,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/> 
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Video &amp; Audio" Style="{StaticResource HeaderHomepage}"/>
+            <Border Grid.Column="1" BorderThickness="1 0 0 0" Height="30" BorderBrush="#4F4E4E"/>
+            <TextBlock Text="Image" Grid.Column="2" Style="{StaticResource HeaderHomepage}"/>
+            <Border Grid.Column="3" BorderThickness="1 0 0 0" Height="30" BorderBrush="#4F4E4E"/>
+            <TextBlock Text="PDF &amp; Document" Grid.Column="4" Style="{StaticResource HeaderHomepage}"/>
+            <Border Grid.Column="5" BorderThickness="1 0 0 0" Height="30" BorderBrush="#4F4E4E"/>
+            <TextBlock Text="GIF" Grid.Column="6" Style="{StaticResource HeaderHomepage}" />
+
+            <Border Grid.Row="1" Grid.ColumnSpan="7" BorderThickness="0.5" BorderBrush="#4F4E4E" Margin="0,15,0,15"/>
+
+            <StackPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center">
+                
+            </StackPanel>
+        </Grid>
+            
     </Grid>
 </UserControl>

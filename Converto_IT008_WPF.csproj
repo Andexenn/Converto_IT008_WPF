@@ -36,4 +36,8 @@
     <Resource Include="Resources\no-connection.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+
 </Project>

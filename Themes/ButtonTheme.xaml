@@ -71,18 +71,18 @@
                                         <ColorAnimation
                                                   Storyboard.TargetName="Text"
                                                   Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
-                                                  To="#FF000000" Duration="0:0:0.15"/>
+                                                  To="#4F4E4E" Duration="0:0:0.15"/>
                                         <ColorAnimation
                                                   Storyboard.TargetName="Icon"
                                                   Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)"
-                                                  To="#FF000000" Duration="0:0:0.15"/>
+                                                  To="#4F4E4E" Duration="0:0:0.15"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
                         </Trigger>
 
                         <!-- Checked -->
-                        <!--<Trigger Property="IsChecked" Value="True">
+                        <Trigger Property="IsChecked" Value="True">
                             <Setter Property="FontWeight" Value="SemiBold"/>
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
@@ -114,7 +114,7 @@
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
-                        </Trigger>-->
+                        </Trigger>
 
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -129,11 +129,11 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="#F24822"/>
         <Setter Property="Foreground" Value="#F24822"/>
-        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontSize" Value="18"/>
         <Setter Property="Content" Value="Sign Up"/>
         <Setter Property="VerticalAlignment" Value="Top"/>
         <Setter Property="Padding" Value="5"/>
-        <Setter Property="Margin" Value="20,0,20,0"/>
+        <Setter Property="Margin" Value="10,0,20,0"/>
         <Setter Property="Cursor" Value="Hand"/>
 
         <Setter Property="Template">
@@ -195,10 +195,10 @@
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Foreground" Value="#4F4E4E"/>
-        <Setter Property="FontSize" Value="20"/>
+        <Setter Property="FontSize" Value="18"/>
         <Setter Property="Content" Value="Login"/>
-        <Setter Property="VerticalAlignment" Value="Top"/>
-        <Setter Property="Padding" Value="5"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <!--<Setter Property="Padding" Value="5"/>-->
         <Setter Property="Margin" Value="20,0,20,0"/>
         <Setter Property="Cursor" Value="Hand"/>
 
@@ -266,10 +266,12 @@
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="FontFamily" Value="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border Background="{TemplateBinding Background}"
+                    <Border x:Name="root"
+                            Background="{TemplateBinding Background}"
                             CornerRadius="8"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             BorderBrush="{TemplateBinding BorderBrush}">
@@ -277,6 +279,31 @@
                                           VerticalAlignment="Center"
                                           Margin="{TemplateBinding Padding}"/>
                     </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                                      Storyboard.TargetName="root"
+                                                      Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                                      To="Red" Duration="0:0:0.35"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                                      Storyboard.TargetName="root"
+                                                      Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                                      To="#F24822" Duration="0:0:0.35"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

@@ -308,5 +308,70 @@
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <!--Textoption button-->
 
+    <Style TargetType="Button" x:Key="TextOption">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="Foreground" Value="#FF4F4E4E"/>
+        <Setter Property="FontFamily" Value="D:\Ryan\App_project\Converto_IT008_WPF\Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF"/>
+        <Setter Property="FontWeight" Value="Regular"/>
+        <Setter Property="Margin" Value="0,15,0,0"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="15,5,15,5"/>
+        <Setter Property="BorderThickness" Value="0"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border x:Name="root"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="5"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                        <ContentPresenter x:Name="contentPresenter"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Margin="{TemplateBinding Padding}"/> 
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation 
+                                                  Storyboard.TargetName="contentPresenter"
+                                                  Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                                  To="White" Duration="0:0:0.2"/>
+
+                                        <ColorAnimation 
+                                                    Storyboard.TargetName="root"
+                                                    Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                                    To="#23772E" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation 
+                                                  Storyboard.TargetName="contentPresenter"
+                                                  Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                                  To="#FF4F4E4E" Duration="0:0:0.4"/>
+                                        <ColorAnimation 
+                                                    Storyboard.TargetName="root"
+                                                    Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                                    To="Transparent" Duration="0:0:0.2"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>

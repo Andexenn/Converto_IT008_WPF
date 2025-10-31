@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:Converto_IT008_WPF"
              xmlns:vm="clr-namespace:Converto_IT008_WPF.ViewModels"
-             xmlns:v="clr-namespace:Converto_IT008_WPF.Views">
+             xmlns:v="clr-namespace:Converto_IT008_WPF.Views"
+             xmlns:vi="clr-namespace:Converto_IT008_WPF.Views.ServiceViews">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -26,6 +27,10 @@
 
             <DataTemplate DataType="{x:Type vm:HistoryViewModel}">
                 <v:HistoryView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type vm:CompressViewModel}">
+                <vi:CompressView/>
             </DataTemplate>
             
         </ResourceDictionary>

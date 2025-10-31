@@ -27,6 +27,7 @@ public static class AppModule
         services.AddTransient<ViewModels.HomepageViewModel>();
         services.AddTransient<ViewModels.AboutUsViewModel>();
         services.AddTransient<ViewModels.HistoryViewModel>();
+        services.AddTransient<ViewModels.CompressViewModel>();
         // Navigation services (đi thẳng tới DisconnectViewModel)
         //services.AddTransient<INavigationService>(sp =>
         //    new NavigationServiceImpl<ViewModels.DisconnectViewModel>(

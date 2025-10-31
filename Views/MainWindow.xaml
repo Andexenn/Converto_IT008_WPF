@@ -49,6 +49,7 @@
 
                             <RadioButton x:Name="Compress" Content="Compress"
                                          Tag="{x:Static fa:FontAwesomeIcon.Compress}"
+                                         Command="{Binding GoCompressCommand}"
                                          Style="{StaticResource MenuButtonTheme}" BorderBrush="{x:Null}"/>
 
                             <RadioButton x:Name="Tex_to_Image" Content="Text to Image"

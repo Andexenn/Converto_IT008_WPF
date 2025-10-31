@@ -20,6 +20,7 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand GoHomepageCommand { get; }
         public ICommand GoAboutUsCommand { get; }
         public ICommand GoHistoryCommand { get; }
+        public ICommand GoCompressCommand { get; }
         public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService)
         {
             _navigationStore = navigationStore;
@@ -38,6 +39,7 @@ namespace Converto_IT008_WPF.ViewModels
             GoHomepageCommand = new RelayCommand(() => nav.Navigate<HomepageViewModel>());
             GoAboutUsCommand = new RelayCommand(() => nav.Navigate<AboutUsViewModel>());
             GoHistoryCommand = new RelayCommand(() => nav.Navigate<HistoryViewModel>());
+            GoCompressCommand = new RelayCommand(() => nav.Navigate<CompressViewModel>());
             nav.Navigate<HomepageViewModel>();
 
             //ktra mang

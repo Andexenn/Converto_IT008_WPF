@@ -260,19 +260,19 @@
     <!--CTA button-->
     <Style TargetType="{x:Type Button}"
            x:Key="CTA">
-        <Setter Property="Background" Value="#F24822"/>
-        <Setter Property="Foreground" Value="White"/>
-        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="FontSize" Value="18"/>
         <Setter Property="FontFamily" Value="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border x:Name="root"
                             Background="{TemplateBinding Background}"
-                            CornerRadius="8"
+                            CornerRadius="5"
                             BorderThickness="{TemplateBinding BorderThickness}"
                             BorderBrush="{TemplateBinding BorderBrush}">
                         <ContentPresenter HorizontalAlignment="Center"
@@ -310,7 +310,6 @@
     </Style>
     
     <!--Textoption button-->
-
     <Style TargetType="Button" x:Key="TextOption">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Background" Value="Transparent"/>
@@ -370,6 +369,37 @@
                             </Trigger.ExitActions>
                         </Trigger>
                     </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--Login with google button-->
+
+    <Style TargetType="Button" x:Key="GoogleLogin">
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontFamily" Value="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderBrush" Value="Black"/>
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Content" Value="Login with Google"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="root"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="5">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                            <fa:FontAwesome x:Name="Icon" Icon="{x:Static fa:FontAwesomeIcon.Google}" VerticalAlignment="Center"/>
+                            <ContentPresenter Margin="10,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

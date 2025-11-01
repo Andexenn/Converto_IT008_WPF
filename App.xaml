@@ -4,7 +4,10 @@
              xmlns:local="clr-namespace:Converto_IT008_WPF"
              xmlns:vm="clr-namespace:Converto_IT008_WPF.ViewModels"
              xmlns:v="clr-namespace:Converto_IT008_WPF.Views"
-             xmlns:vi="clr-namespace:Converto_IT008_WPF.Views.ServiceViews">
+             xmlns:vi="clr-namespace:Converto_IT008_WPF.Views.ServiceViews"
+             xmlns:usrvi="clr-namespace:Converto_IT008_WPF.Views.UserViews"
+             xmlns:usrvm="clr-namespace:Converto_IT008_WPF.ViewModels.UserViewModel"
+             >
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,6 +16,7 @@
                 <ResourceDictionary Source="/Themes/TextBoxTheme.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
+            <!-- ############# General ############# -->
             <DataTemplate DataType="{x:Type vm:DisconnectViewModel}">
                 <v:DisconnectView/>
             </DataTemplate>
@@ -29,10 +33,16 @@
                 <v:HistoryView/>
             </DataTemplate>
 
+            <!-- ############# Compress ############# -->
             <DataTemplate DataType="{x:Type vm:CompressViewModel}">
                 <vi:CompressView/>
             </DataTemplate>
-            
+
+            <!-- ############# User ############# -->
+            <DataTemplate DataType="{x:Type usrvm:LoginViewModel}">
+                <usrvi:LoginView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

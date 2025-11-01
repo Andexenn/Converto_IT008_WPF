@@ -17,9 +17,11 @@
                                FontSize="16"/>
 
             <Button Content="Reload"
-                            Width="200" 
+                            Width="250" 
                             Margin="0,56,0,0" 
-                            Height="50"
+                            Height="40"
+                            Foreground="White"
+                            Background="#F24822"
                             Style="{StaticResource CTA}">
                 <Button.Effect>
                     <DropShadowEffect/>

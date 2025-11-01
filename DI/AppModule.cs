@@ -16,29 +16,25 @@ public static class AppModule
 {
     public static IServiceCollection RegisterDependency(this IServiceCollection services)
     {
-        // Store điều hướng
         services.AddSingleton<NavigationStore>(); // :contentReference[oaicite:8]{index=8}
         services.AddScoped<INavigationService, NavigationServiceImpl>();
-        services.AddScoped<INetworkMonitorService, NetworkMonitorServiceImpl>(); 
+        services.AddScoped<INetworkMonitorService, NetworkMonitorServiceImpl>();
 
-        // ViewModels
-        services.AddTransient<ViewModels.DisconnectViewModel>(); // :contentReference[oaicite:9]{index=9}
-        services.AddTransient<ViewModels.MainWindowViewModel>(); // :contentReference[oaicite:10]{index=10}
+        //------------------ ViewModels ------------------
+        //GeneralViewModel
+        services.AddTransient<ViewModels.DisconnectViewModel>(); 
+        services.AddTransient<ViewModels.MainWindowViewModel>(); 
         services.AddTransient<ViewModels.HomepageViewModel>();
         services.AddTransient<ViewModels.AboutUsViewModel>();
         services.AddTransient<ViewModels.HistoryViewModel>();
+
+        //CompressViewModel
         services.AddTransient<ViewModels.CompressViewModel>();
-        // Navigation services (đi thẳng tới DisconnectViewModel)
-        //services.AddTransient<INavigationService>(sp =>
-        //    new NavigationServiceImpl<ViewModels.DisconnectViewModel>(
-        //        sp.GetRequiredService<NavigationStore>(),
-        //        () => sp.GetRequiredService<ViewModels.DisconnectViewModel>())); // 
 
-        //services.AddTransient(typeof(INavigationService<>), typeof(NavigationServiceImpl<>));
+        //UserViewModel
+        services.AddTransient<ViewModels.UserViewModel.LoginViewModel>();
 
-        // MainWindow + DataContext
-        //services.AddSingleton<Views.MainWindow>(sp =>
-        //    new Views.MainWindow(sp.GetRequiredService<MainWindowViewModel>()));
+        //------------------ Views ------------------
         services.AddSingleton<Views.MainWindow>();
 
         return services;

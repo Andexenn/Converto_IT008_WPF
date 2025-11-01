@@ -1,0 +1,90 @@
+﻿<UserControl x:Class="Converto_IT008_WPF.Views.UserViews.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Converto_IT008_WPF.Views.UserViews"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Border Background="White" Height="450" Width="420" BorderThickness="0.5" BorderBrush="Black" CornerRadius="5" Padding="0,10,0,10">
+            <Border.Effect>
+                <DropShadowEffect/>
+            </Border.Effect>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Login" 
+                           Foreground="#F24822"
+                           FontWeight="SemiBold"
+                           HorizontalAlignment="Center"
+                           FontSize="40"/>
+
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <TextBlock Text="Email*" 
+                               HorizontalAlignment="Left"
+                               Foreground="Black"
+                               FontWeight="SemiBold"
+                               FontSize="18"/>
+
+                    <TextBox Margin="0,5,0,0" Style="{StaticResource Input}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,10,0,0">
+                    <TextBlock Text="Password*" 
+                               HorizontalAlignment="Left"
+                               Foreground="Black"
+                               FontWeight="SemiBold"
+                               FontSize="18"/>
+
+                    <TextBox Margin="0,5,0,0" Style="{StaticResource Input}"/>
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Margin="0,0,10,0"/>
+                        <TextBlock Grid.Column="1" Text="Remember me"/>
+
+                        <TextBlock Text="Forgot Password?" Grid.Column="3" />
+                    </Grid>
+
+                    <Button Background="#F24822" Foreground="White" Content="Login" Grid.Row="3" Height="40" Margin="0,22,0,0" Style="{StaticResource CTA}"/>
+
+                    <Grid Margin="0,15,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Height="1" BorderThickness="0.5" BorderBrush="#4F4E4E"/>
+
+                        <TextBlock Grid.Column="1" Text="Or login with" HorizontalAlignment="Center" Foreground="#4F4E4E"/>
+                        <Border Grid.Column="2" Height="1" BorderThickness="0.5" BorderBrush="#4F4E4E"/>
+                        
+                    </Grid>
+
+                    <Button Margin="0,15,0,0" Height="40" Style="{StaticResource GoogleLogin}"/>
+
+                    <TextBlock Margin="0,10,0,0" HorizontalAlignment="Center" Text="Don't have an account? Sign Up" />
+                </StackPanel>
+
+
+
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

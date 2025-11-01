@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Converto_IT008_WPF.Views.ServiceViews;
+namespace Converto_IT008_WPF.Views.UserViews;
 
 /// <summary>
-/// Interaction logic for CompressView.xaml
+/// Interaction logic for LoginView.xaml
 /// </summary>
-public partial class CompressView : UserControl
+public partial class LoginView : UserControl
 {
-    public CompressView()
+    public LoginView()
     {
         InitializeComponent();
     }

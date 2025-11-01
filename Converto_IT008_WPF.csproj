@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\Google.png" />
     <None Remove="Resources\HH.jpg" />
     <None Remove="Resources\HT.jpg" />
     <None Remove="Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF" />
@@ -28,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\Google.png" />
     <Resource Include="Resources\HH.jpg" />
     <Resource Include="Resources\HT.jpg" />
     <Resource Include="Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF" />

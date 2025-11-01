@@ -16,10 +16,6 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <TextBlock Text="Login" 
@@ -55,10 +51,13 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <CheckBox Margin="0,0,10,0"/>
-                        <TextBlock Grid.Column="1" Text="Remember me"/>
+                        <CheckBox Margin="0,0,7,0" Background="#23772E" VerticalAlignment="Center" BorderBrush="Transparent" IsChecked="False"/>
+                        <TextBlock Grid.Column="1" Text="Remember me" Foreground="#23772E" FontWeight="SemiBold" VerticalAlignment="Center"/>
 
-                        <TextBlock Text="Forgot Password?" Grid.Column="3" />
+                        <StackPanel Grid.Column="3" Cursor="Hand">
+                            <TextBlock Text="Forgot Password?" Grid.Column="3" FontWeight="SemiBold" Foreground="#23772E"/>
+                            <Border Height="1" BorderThickness="0.5" BorderBrush="#23772E"/> 
+                        </StackPanel>
                     </Grid>
 
                     <Button Background="#F24822" Foreground="White" Content="Login" Grid.Row="3" Height="40" Margin="0,22,0,0" Style="{StaticResource CTA}"/>
@@ -79,7 +78,13 @@
 
                     <Button Margin="0,15,0,0" Height="40" Style="{StaticResource GoogleLogin}"/>
 
-                    <TextBlock Margin="0,10,0,0" HorizontalAlignment="Center" Text="Don't have an account? Sign Up" />
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <TextBlock FontWeight="SemiBold" Margin="0,10,0,0" HorizontalAlignment="Center" Text="Don't have an account?" />
+                        <StackPanel VerticalAlignment="Center" Margin="0,10,0,0" Cursor="Hand">
+                            <TextBlock Text=" Sign Up" Grid.Column="3" FontWeight="SemiBold" Foreground="#23772E"/>
+                            <Border Height="1" BorderThickness="0.5" BorderBrush="#23772E"/>
+                        </StackPanel>
+                    </StackPanel>
                 </StackPanel>
 
 

@@ -57,7 +57,7 @@
                     <Border Background="White" 
                             BorderBrush="#4F4E4E" 
                             BorderThickness="1" 
-                            CornerRadius="5"
+                            CornerRadius="3"
                             SnapsToDevicePixels="True">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <ScrollViewer x:Name="PART_ContentHost" 

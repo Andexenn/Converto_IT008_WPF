@@ -3,7 +3,6 @@
                     xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
     <Style TargetType="TextBox" x:Key="Search">
-        <Setter Property="Text" Value="Search"/>
         <Setter Property="Height" Value="40"/>
         <Setter Property="FontFamily" Value="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"/>
         <Setter Property="FontSize" Value="18"/>
@@ -27,10 +26,12 @@
                             <fa:FontAwesome  Icon="{x:Static fa:FontAwesomeIcon.Search}" 
                                              Width="20" Height="20" 
                                              Margin="10,0,0,0" 
-                                             Opacity="0.3" 
+                                             Opacity="0.5" 
                                              FontWeight="Thin"
                                              VerticalAlignment="Center"
                                              Foreground="#4F4E4E"/>
+
+                            <TextBlock Text="Search" Margin="5,0,0,0"/>
                             <ScrollViewer x:Name="PART_ContentHost" 
                                           Margin="10,0,10,0" 
                                           VerticalAlignment="Center"/>
@@ -62,6 +63,32 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <ScrollViewer x:Name="PART_ContentHost" 
                                           Margin="10,0,10,0" 
+                                          VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="TextBox" x:Key="InputSignup">
+        <Setter Property="Cursor" Value="IBeam"/>
+        <Setter Property="FontFamily" Value="D:\Ryan\App_project\Converto_IT008_WPF\Resources\INTER-VARIABLEFONT_OPSZ,WGHT.TTF"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Height" Value="45"/>
+        <Setter Property="Foreground" Value="Black"/>
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border BorderThickness="1"
+                            BorderBrush="#4F4E4E"
+                            Background="Transparent"
+                            CornerRadius="3">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="{TemplateBinding Uid}" Margin="5,0,0,0" Foreground="#4F4E4E"/>
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          Margin="5,0,10,0" 
                                           VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>

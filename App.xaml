@@ -43,6 +43,10 @@
                 <usrvi:LoginView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type usrvm:SignUpViewModel}">
+                <usrvi:SignUpView/>
+            </DataTemplate>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

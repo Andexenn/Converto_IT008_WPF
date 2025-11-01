@@ -108,7 +108,8 @@
                             Command="{Binding GoLoginCommand}"/>
 
                     <Button Grid.Column="2"
-                            Style="{StaticResource Signup}" />
+                            Style="{StaticResource Signup}"
+                            Command="{Binding GoSignUpCommand}"/>
 
                 </Grid>
             </Border>

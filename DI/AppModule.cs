@@ -34,6 +34,7 @@ public static class AppModule
         //UserViewModel
         services.AddTransient<ViewModels.UserViewModel.LoginViewModel>();
         services.AddTransient<ViewModels.UserViewModel.SignUpViewModel>();
+        services.AddTransient<ViewModels.UserViewModel.MyAccountViewModel>();
 
         //------------------ Views ------------------
         services.AddSingleton<Views.MainWindow>();

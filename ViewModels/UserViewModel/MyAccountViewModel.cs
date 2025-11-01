@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converto_IT008_WPF.ViewModels;
+namespace Converto_IT008_WPF.ViewModels.UserViewModel;
 
-public partial class HistoryViewModel : BaseViewModel
+public partial class MyAccountViewModel : BaseViewModel
 {
 }

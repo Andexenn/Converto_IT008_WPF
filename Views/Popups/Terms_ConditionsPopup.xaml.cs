@@ -10,18 +10,18 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Converto_IT008_WPF.Views.UserViews;
-
-/// <summary>
-/// Interaction logic for SignUpView.xaml
-/// </summary>
-public partial class SignUpView : UserControl
+namespace Converto_IT008_WPF.Views.Popups
 {
-    public SignUpView()
+    /// <summary>
+    /// Interaction logic for Terms_ConditionsPopup.xaml
+    /// </summary>
+    public partial class Terms_ConditionsPopup : Window
     {
-        InitializeComponent();
+        public Terms_ConditionsPopup()
+        {
+            InitializeComponent();
+        }
     }
 }

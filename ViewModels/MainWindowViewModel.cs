@@ -23,6 +23,7 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand GoCompressCommand { get; }
         public ICommand GoLoginCommand { get; }
         public ICommand GoSignUpCommand { get; }
+        public ICommand GoMyAccountCommand { get; }
         public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService)
         {
             _navigationStore = navigationStore;
@@ -44,6 +45,8 @@ namespace Converto_IT008_WPF.ViewModels
             GoCompressCommand = new RelayCommand(() => nav.Navigate<CompressViewModel>());
             GoLoginCommand = new RelayCommand(() => nav.Navigate<UserViewModel.LoginViewModel>());
             GoSignUpCommand = new RelayCommand(() => nav.Navigate<UserViewModel.SignUpViewModel>());
+            GoMyAccountCommand = new RelayCommand(() => nav.Navigate<UserViewModel.MyAccountViewModel>());
+
             nav.Navigate<HomepageViewModel>();
 
             //ktra mang

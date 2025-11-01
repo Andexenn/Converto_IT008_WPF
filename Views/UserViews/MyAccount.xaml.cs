@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Converto_IT008_WPF.ViewModels.UserViewModel;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,12 +18,13 @@ using System.Windows.Shapes;
 namespace Converto_IT008_WPF.Views.UserViews;
 
 /// <summary>
-/// Interaction logic for SignUpView.xaml
+/// Interaction logic for MyAccount.xaml
 /// </summary>
-public partial class SignUpView : UserControl
+public partial class MyAccount : UserControl
 {
-    public SignUpView()
+    public MyAccount()
     {
         InitializeComponent();
+        DataContext = App.ServiceProvider?.GetRequiredService<MyAccountViewModel>();
     }
 }

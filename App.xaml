@@ -47,6 +47,11 @@
                 <usrvi:SignUpView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type usrvm:MyAccountViewModel}">
+                <usrvi:MyAccount/>
+            </DataTemplate>
+        
+          
         </ResourceDictionary>
     </Application.Resources>
 </Application>

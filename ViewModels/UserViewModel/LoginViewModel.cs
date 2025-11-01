@@ -20,4 +20,5 @@ public partial class LoginViewModel : BaseViewModel
         GoSignUpCommand = new RelayCommand(() => _nav.Navigate<SignUpViewModel>());
     }
 
+
 }

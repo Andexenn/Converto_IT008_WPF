@@ -64,7 +64,8 @@
 
                             <RadioButton x:Name="My_Account" Content="My Account"
                                          Tag="{x:Static fa:FontAwesomeIcon.User}"
-                                         Style="{StaticResource MenuButtonTheme}"/>
+                                         Style="{StaticResource MenuButtonTheme}"
+                                         Command="{Binding GoMyAccountCommand}"/>
 
                             <RadioButton x:Name="About_Us" Content="About Us"
                                          Tag="{x:Static fa:FontAwesomeIcon.Group}" 

@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views"
              mc:Ignorable="d" >
     <Grid>
-        <StackPanel>
+        <StackPanel Background="#FFFBFBFB"> 
             <Image Source="/Resources/no-connection.png" Margin="0,44,0,0" Width="150" />
             <TextBlock Text="Unable to connect to the Internet" HorizontalAlignment="Center" Margin="0,48,0,0" 
                                FontWeight="Bold"

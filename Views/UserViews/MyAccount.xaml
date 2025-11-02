@@ -7,6 +7,107 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <StackPanel Background="#FFFBFBFB" Margin="0,0,0,-73">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Ellipse Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Width="60" Height="60" Margin="10">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="/Resources/DefaultUser.png"/>
+                    </Ellipse.Fill>
+                </Ellipse>
+
+                <TextBlock Text="Ryan" Grid.Column="1" VerticalAlignment="Bottom" FontWeight="SemiBold" FontSize="18" Margin="0,12,0,0"/>
+                <Button Content="Edit display image" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource DisplayImageBtn}" Margin="0,0,0,8"/>
+
+                <StackPanel Orientation="Horizontal" Grid.Column="3" Margin="10" VerticalAlignment="Center" Grid.Row="1">
+                    <Image Source="/Resources/coin.png" Width="15" Height="15" Margin="0,0,10,0"/>
+                    <TextBlock Text="Balanace:"  FontSize="18"/>
+                    
+                </StackPanel>
+            </Grid>
+
+            <Border Height="0.5" Margin="15" Background="#FF4F4E4E"/>
+
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="First name" FontSize="18"/>
+                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Last name" FontSize="18"/>
+                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
+                    <TextBlock Text="Address" FontSize="18"/>
+                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,15,0,0">
+                    <TextBlock Text="City" FontSize="18"/>
+                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,15,0,0">
+                    <TextBlock Text="Date of Birth" FontSize="18"/>
+                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,15,0,0">
+                    <TextBlock Text="Phone number" FontSize="18"/>
+                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,15,0,0">
+                    <TextBlock Text="New Password" FontSize="18"/>
+                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" Grid.Column="2" Margin="0,15,0,0">
+                    <TextBlock Text="Confirm Password" FontSize="18"/>
+                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                </StackPanel>
+            </Grid>
+
+            <Grid Margin="0,20,0,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal" >
+                    <Button Content="Cancel" Margin="0,0,25,0" Style="{StaticResource CancelButton}" />
+                    <Button Style="{StaticResource CTA}" Height="40" Content="Save Changes" Foreground="White" Background="#F24822" Width="170" BorderThickness="0"/>
+                </StackPanel>
+
+                <Button Grid.Column="2" Style="{StaticResource LogOut}" Content="Log Out" Background="Transparent" Width="150" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

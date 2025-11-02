@@ -9,6 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\coin.png" />
+    <None Remove="Resources\DefaultUser.jpg" />
+    <None Remove="Resources\DefaultUser.png" />
     <None Remove="Resources\Google.png" />
     <None Remove="Resources\HH.jpg" />
     <None Remove="Resources\HT.jpg" />
@@ -18,6 +21,7 @@
     <None Remove="Resources\MONTSERRAT-REGULAR.TTF" />
     <None Remove="Resources\MONTSERRAT-SEMIBOLD.TTF" />
     <None Remove="Resources\no-connection.png" />
+    <None Remove="Resources\user %282%29.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,6 +33,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\coin.png" />
+    <Resource Include="Resources\DefaultUser.png" />
     <Resource Include="Resources\Google.png" />
     <Resource Include="Resources\HH.jpg" />
     <Resource Include="Resources\HT.jpg" />

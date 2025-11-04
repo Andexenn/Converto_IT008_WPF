@@ -28,6 +28,7 @@ public static class AppModule
         services.AddTransient<ViewModels.AboutUsViewModel>();
         services.AddTransient<ViewModels.HistoryViewModel>();
         services.AddTransient<ViewModels.SideServices.TextToImageViewModel>();
+        services.AddTransient<ViewModels.SideServices.RemoveBackgroundViewModel>();
 
 
         //CompressViewModel

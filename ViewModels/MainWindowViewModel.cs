@@ -50,7 +50,7 @@ namespace Converto_IT008_WPF.ViewModels
             GoSignUpCommand = new RelayCommand(() => nav.Navigate<UserViewModel.SignUpViewModel>());
             GoMyAccountCommand = new RelayCommand(() => nav.Navigate<UserViewModel.MyAccountViewModel>());
             GoTextToImage = new RelayCommand(() => nav.Navigate<SideServices.TextToImageViewModel>());
-
+            GoRemoveBackground = new RelayCommand(() => nav.Navigate<SideServices.RemoveBackgroundViewModel>());
             nav.Navigate<HomepageViewModel>();
 
             //ktra mang

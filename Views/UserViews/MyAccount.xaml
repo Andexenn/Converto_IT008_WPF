@@ -85,12 +85,12 @@
 
                 <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,15,0,0">
                     <TextBlock Text="New Password" FontSize="18"/>
-                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                    <PasswordBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource PasswordBoxv2}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Grid.Column="2" Margin="0,15,0,0">
                     <TextBlock Text="Confirm Password" FontSize="18"/>
-                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                    <PasswordBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource PasswordBoxv2}"/>
                 </StackPanel>
             </Grid>
 
@@ -106,7 +106,7 @@
                     <Button Style="{StaticResource CTA}" Height="40" Content="Save Changes" Foreground="White" Background="#F24822" Width="170" BorderThickness="0"/>
                 </StackPanel>
 
-                <Button Grid.Column="2" Style="{StaticResource LogOut}" Content="Log Out" Background="Transparent" Width="150" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                <Button Grid.Column="2" Style="{StaticResource LogOut}" Background="Transparent" Content="Log Out" Width="130" HorizontalAlignment="Right" Margin="0,0,10,0"/>
             </Grid>
         </StackPanel>
     </Grid>

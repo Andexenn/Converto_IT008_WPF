@@ -59,6 +59,7 @@
 
                             <RadioButton x:Name="Remove_Background" Content="Remove Background"
                                          Tag="{x:Static fa:FontAwesomeIcon.Image}"
+                                         Command="{Binding GoRemoveBackground}"
                                          Style="{StaticResource MenuButtonTheme}"/>
 
                             <Border HorizontalAlignment="Left" Height="1" Background="#CECECE" Width="120" Margin="24,20,0,20"/>

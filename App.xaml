@@ -40,6 +40,10 @@
                 <vi:TextToImageView/>
             </DataTemplate>
 
+            <DataTemplate DataType="{x:Type ssv:RemoveBackgroundViewModel}">
+                <vi:RemoveBackgroundView/>
+            </DataTemplate>
+
             <!-- ############# Compress ############# -->
             <DataTemplate DataType="{x:Type vm:CompressViewModel}">
                 <vi:CompressView/>
@@ -65,5 +69,7 @@
         
           
         </ResourceDictionary>
+
+        
     </Application.Resources>
 </Application>

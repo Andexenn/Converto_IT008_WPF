@@ -4,8 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d" d:DesignWidth="800" Height="514">
     <Grid>
         <StackPanel Background="#FFFBFBFB">
             <TextBlock Text="History" 
@@ -45,14 +44,14 @@
 
                         <Border Grid.Row="1" Grid.ColumnSpan="4" BorderThickness="0.5" BorderBrush="#4F4E4E" Margin="0,10,0,0"/>
                     </Grid>
-                    
-                    
+
+
                 </StackPanel>
 
 
             </Border>
 
-            
+
         </StackPanel>
     </Grid>
 </UserControl>

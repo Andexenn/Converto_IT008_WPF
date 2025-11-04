@@ -54,6 +54,7 @@
 
                             <RadioButton x:Name="Tex_to_Image" Content="Text to Image"
                                          Tag="{x:Static fa:FontAwesomeIcon.Steam}"
+                                         Command="{Binding GoTextToImage}"
                                          Style="{StaticResource MenuButtonTheme}"/>
 
                             <RadioButton x:Name="Remove_Background" Content="Remove Background"

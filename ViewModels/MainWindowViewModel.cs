@@ -24,6 +24,9 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand GoLoginCommand { get; }
         public ICommand GoSignUpCommand { get; }
         public ICommand GoMyAccountCommand { get; }
+        public ICommand GoTextToImage { get; }
+        public ICommand GoRemoveBackground { get; }
+
         public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService)
         {
             _navigationStore = navigationStore;
@@ -46,6 +49,7 @@ namespace Converto_IT008_WPF.ViewModels
             GoLoginCommand = new RelayCommand(() => nav.Navigate<UserViewModel.LoginViewModel>());
             GoSignUpCommand = new RelayCommand(() => nav.Navigate<UserViewModel.SignUpViewModel>());
             GoMyAccountCommand = new RelayCommand(() => nav.Navigate<UserViewModel.MyAccountViewModel>());
+            GoTextToImage = new RelayCommand(() => nav.Navigate<SideServices.TextToImageViewModel>());
 
             nav.Navigate<HomepageViewModel>();
 

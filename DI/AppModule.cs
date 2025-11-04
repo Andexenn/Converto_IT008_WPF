@@ -27,7 +27,8 @@ public static class AppModule
         services.AddTransient<ViewModels.HomepageViewModel>();
         services.AddTransient<ViewModels.AboutUsViewModel>();
         services.AddTransient<ViewModels.HistoryViewModel>();
-       
+        services.AddTransient<ViewModels.SideServices.TextToImageViewModel>();
+
 
         //CompressViewModel
         services.AddTransient<ViewModels.CompressViewModel>();
@@ -42,6 +43,8 @@ public static class AppModule
 
         //PopupViewModel
         services.AddTransient<ViewModels.PopupViewModels.Terms_ConditionsPopupViewModel>();
+
+        
 
         //------------------ Views ------------------
         services.AddSingleton<Views.MainWindow>();

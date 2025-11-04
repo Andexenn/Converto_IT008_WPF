@@ -12,13 +12,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type RadioButton}">
-                    <ControlTemplate.Resources>
-                        <SolidColorBrush x:Key="BgBrush" Color="#00FFFFFF"/>
-                        <SolidColorBrush x:Key="FgBrush" Color="#FF000000"/>
-                        <SolidColorBrush x:Key="AccentBrush" Color="#FFDD2D2D"/>
-                    </ControlTemplate.Resources>
 
-                    <Grid x:Name="Root" Background="{StaticResource BgBrush}">
+                    <Grid x:Name="Root">
+
+                        <Grid.Background>
+                            <SolidColorBrush x:Name="BgBrush" Color="#00FFFFFF"/>
+                        </Grid.Background>
+
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="40"/>
                             <ColumnDefinition Width="*"/>
@@ -28,54 +28,49 @@
                              Icon="{TemplateBinding Tag}"
                              VerticalAlignment="Center"
                              Padding="10,0,0,0"
-                             Margin="0,0,10,0"
-                             Foreground="{TemplateBinding Foreground}"/>
+                             Margin="0,0,10,0">
+                            <fa:FontAwesome.Foreground>
+                                <SolidColorBrush x:Name="IconBrush" Color="#4F4E4E"/>
+                            </fa:FontAwesome.Foreground>
+                        </fa:FontAwesome>
 
                         <TextBlock x:Name="Text"
                                      Grid.Column="1"
                                      Text="{TemplateBinding Content}"
                                      VerticalAlignment="Center"
-                                     Padding="10,0,0,0"
-                                     Foreground="{TemplateBinding Foreground}"/>
+                                     Padding="10,0,0,0">
+                            <TextBlock.Foreground>
+                                <SolidColorBrush x:Name="TextBrush" Color="#4F4E4E"/>
+                            </TextBlock.Foreground>
+                        </TextBlock>
+
+                        <Border x:Name="HoverOverlay"
+                                Background="#20DD2D2D"  
+                                Opacity="0"
+                                Grid.ColumnSpan="2"/>
                     </Grid>
 
                     <ControlTemplate.Triggers>
-
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="FontWeight" Value="SemiBold" />
+                            <Setter Property="FontWeight" Value="SemiBold"/>
+                            <Setter TargetName="Icon" Property="Foreground" Value="#FFDD2D2D"/>
+                            <Setter TargetName="Text" Property="Foreground" Value="#FFDD2D2D"/>
                             <Trigger.EnterActions>
-                                <BeginStoryboard>
+                                <BeginStoryboard x:Name="HoverOverlaySb">
                                     <Storyboard>
-                                        <ColorAnimation
-                                                  Storyboard.TargetName="Root"
-                                                  Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                                  To="#FFD7CF" Duration="0:0:0.15"/>
-                                        <ColorAnimation
-                                                  Storyboard.TargetName="Text"
-                                                  Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
-                                                  To="#FFDD2D2D" Duration="0:0:0.15"/>
-                                        <ColorAnimation
-                                                  Storyboard.TargetName="Icon"
-                                                  Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)"
-                                                  To="#FFDD2D2D" Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetName="HoverOverlay"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0.8" Duration="0:0:0.12"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.EnterActions>
                             <Trigger.ExitActions>
+                                <RemoveStoryboard BeginStoryboardName="HoverOverlaySb"/>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation
-                                                  Storyboard.TargetName="Root"
-                                                  Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
-                                                  To="#00FFFFFF" Duration="0:0:0.15"/>
-                                        <ColorAnimation
-                                                  Storyboard.TargetName="Text"
-                                                  Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
-                                                  To="#4F4E4E" Duration="0:0:0.15"/>
-                                        <ColorAnimation
-                                                  Storyboard.TargetName="Icon"
-                                                  Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)"
-                                                  To="#4F4E4E" Duration="0:0:0.15"/>
+                                        <DoubleAnimation Storyboard.TargetName="HoverOverlay"
+                                     Storyboard.TargetProperty="Opacity"
+                                     To="0" Duration="0:0:0.12"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>
@@ -87,14 +82,14 @@
                             <Trigger.EnterActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="Root"
-                                                          Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                        <ColorAnimation Storyboard.TargetName="BgBrush"
+                                                          Storyboard.TargetProperty="Color"
                                                           To="#FFD7CF" Duration="0:0:0.15"/>
-                                        <ColorAnimation Storyboard.TargetName="Text"
-                                                          Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
+                                        <ColorAnimation Storyboard.TargetName="TextBrush"
+                                                          Storyboard.TargetProperty="Color"
                                                           To="#FFDD2D2D" Duration="0:0:0.15"/>
-                                        <ColorAnimation Storyboard.TargetName="Icon"
-                                                          Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)"
+                                        <ColorAnimation Storyboard.TargetName="IconBrush"
+                                                          Storyboard.TargetProperty="Color"
                                                           To="#FFDD2D2D" Duration="0:0:0.15"/>
                                     </Storyboard>
                                 </BeginStoryboard>
@@ -102,15 +97,15 @@
                             <Trigger.ExitActions>
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <ColorAnimation Storyboard.TargetName="Root"
-                                                          Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                        <ColorAnimation Storyboard.TargetName="BgBrush"
+                                                          Storyboard.TargetProperty="Color"
                                                           To="#00FFFFFF" Duration="0:0:0.15"/>
-                                        <ColorAnimation Storyboard.TargetName="Text"
-                                                          Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
-                                                          To="#FF000000" Duration="0:0:0.15"/>
-                                        <ColorAnimation Storyboard.TargetName="Icon"
-                                                          Storyboard.TargetProperty="(Control.Foreground).(SolidColorBrush.Color)"
-                                                          To="#FF000000" Duration="0:0:0.15"/>
+                                        <ColorAnimation Storyboard.TargetName="TextBrush"
+                                                          Storyboard.TargetProperty="Color"
+                                                          To="#4F4E4E" Duration="0:0:0.15"/>
+                                        <ColorAnimation Storyboard.TargetName="IconBrush"
+                                                          Storyboard.TargetProperty="Color"
+                                                          To="#4F4E4E" Duration="0:0:0.15"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </Trigger.ExitActions>

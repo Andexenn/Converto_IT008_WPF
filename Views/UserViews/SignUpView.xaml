@@ -69,7 +69,7 @@
                                   FontSize="14"
                                   Background="#23772E"
                                   VerticalAlignment="Center" TabIndex="4"/>
-                        <Button Margin="5,0,0,0" Content="Terms and Conditions" Foreground="#23772E" VerticalAlignment="Center" Style="{StaticResource SignUpButtonv2}" Command="{Binding GoTermsAndConditionsCommand}"/>
+                        <Button Margin="5,0,0,0" Content="Terms and Conditions" Foreground="#23772E" VerticalAlignment="Center" Style="{StaticResource SignUpButtonv2}" FontSize="14" Command="{Binding GoTermsAndConditionsCommand}"/>
                     </StackPanel>
 
                     <Button Grid.Row="4" Grid.ColumnSpan="3" Margin="10,15,10,0" Height="45" Content="Create Account" Background="#F24822" Foreground="White" Style="{StaticResource CTA}" TabIndex="5"/>

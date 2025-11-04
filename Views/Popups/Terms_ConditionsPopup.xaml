@@ -41,8 +41,8 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Style="{StaticResource CTA}" Background="#F24822" Content="Accecpt" Foreground="White" Padding="10,5,10,5" BorderThickness="0" />
-                <Button Style="{StaticResource Signup}" Content="Decline" Grid.Column="2" Margin="0,0,20,0" VerticalAlignment="Center"/>
+                <Button Style="{StaticResource CTA}" Background="#F24822" Content="Accecpt" Foreground="White" Padding="15,5,15,5" BorderThickness="0" />
+                <Button Style="{StaticResource Signup}" Content="Decline" Grid.Column="2" Margin="0,0,20,0" Padding="10,5,10,5" VerticalAlignment="Center"/>
 
             </Grid>
         </Grid>

@@ -4,9 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converto_IT008_WPF.ViewModels
+namespace Converto_IT008_WPF.ViewModels;
+
+public partial class HomepageViewModel : BaseViewModel
 {
-    public partial class HomepageViewModel : BaseViewModel
-    {
-    }
 }

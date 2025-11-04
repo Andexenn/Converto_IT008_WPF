@@ -32,6 +32,9 @@ public static class AppModule
         //CompressViewModel
         services.AddTransient<ViewModels.CompressViewModel>();
 
+        //ConvertViewModel
+        services.AddTransient<ViewModels.ConvertServiceViewModel.WEBPtoPNGViewModel>();
+
         //UserViewModel
         services.AddTransient<ViewModels.UserViewModel.LoginViewModel>();
         services.AddTransient<ViewModels.UserViewModel.SignUpViewModel>();

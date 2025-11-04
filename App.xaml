@@ -7,6 +7,8 @@
              xmlns:vi="clr-namespace:Converto_IT008_WPF.Views.ServiceViews"
              xmlns:usrvi="clr-namespace:Converto_IT008_WPF.Views.UserViews"
              xmlns:usrvm="clr-namespace:Converto_IT008_WPF.ViewModels.UserViewModel"
+             xmlns:cvvm="clr-namespace:Converto_IT008_WPF.ViewModels.ConvertServiceViewModel"
+             xmlns:cvv="clr-namespace:Converto_IT008_WPF.Views.ServiceViews.Converters"
              >
     <Application.Resources>
         <ResourceDictionary>
@@ -36,6 +38,11 @@
             <!-- ############# Compress ############# -->
             <DataTemplate DataType="{x:Type vm:CompressViewModel}">
                 <vi:CompressView/>
+            </DataTemplate>
+
+            <!-- ############# Convert ############# -->
+            <DataTemplate DataType="{x:Type cvvm:WEBPtoPNGViewModel}">
+                <cvv:WEBPtoPNGView/>
             </DataTemplate>
 
             <!-- ############# User ############# -->

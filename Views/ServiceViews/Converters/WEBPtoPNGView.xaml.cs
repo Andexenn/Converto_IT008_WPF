@@ -1,4 +1,4 @@
-﻿using Converto_IT008_WPF.ViewModels;
+﻿using Converto_IT008_WPF.ViewModels.ConvertServiceViewModel;
 using Converto_IT008_WPF.ViewModels.UserViewModel;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -16,17 +16,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Converto_IT008_WPF.Views
+namespace Converto_IT008_WPF.Views.ServiceViews.Converters;
+
+/// <summary>
+/// Interaction logic for WEBPtoPNGView.xaml
+/// </summary>
+public partial class WEBPtoPNGView : UserControl
 {
-    /// <summary>
-    /// Interaction logic for HomepageView.xaml
-    /// </summary>
-    public partial class HomepageView : UserControl
+    public WEBPtoPNGView()
     {
-        public HomepageView()
-        {
-            InitializeComponent();
-            DataContext = App.ServiceProvider?.GetRequiredService<HomepageViewModel>();
-        }
+        InitializeComponent();
+        DataContext = App.ServiceProvider?.GetRequiredService<WEBPtoPNGViewModel>();
     }
 }

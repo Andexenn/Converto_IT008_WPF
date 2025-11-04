@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="Converto_IT008_WPF.Views.ServiceViews.Converters.WEBPtoPNGView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Converto_IT008_WPF.Views.ServiceViews.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid Background="#FFFBFBFB">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock  Text="WEBP to PNG" 
+                    Foreground="#F24822"
+                    FontWeight="SemiBold"
+                    HorizontalAlignment="Center"
+                    FontSize="40"/>
+
+        <Grid Grid.Row="1" Margin="0,30,0,0">
+            <Rectangle Width="550" Height="250" Stroke="Black" StrokeThickness="1" StrokeDashArray="10 4">
+            </Rectangle>
+            <Border Width="550" Height="250">
+                <StackPanel>
+                    <Button Style="{StaticResource ChooseFileBtn}" Width="230" Height="65" Margin="0,50,0,0">
+                        <Button.Effect>
+                            <DropShadowEffect Direction="71" BlurRadius="5" ShadowDepth="0"/>
+                        </Button.Effect>
+                    </Button>
+                    <TextBlock Margin="0,10,0,0" Text="Max file size is 512MB" HorizontalAlignment="Center" FontWeight="SemiBold" FontStyle="Italic" FontFamily="D:\Ryan\App_project\Converto_IT008_WPF\Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF"/>
+
+                    <TextBlock Text="Drag or drop your files here" HorizontalAlignment="Center" Margin="0,70,0,0" FontSize="18" Foreground="#66D575" FontWeight="SemiBold"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Margin="0,20,0,0">
+            <Border Width="550" Height="30" BorderThickness="1" BorderBrush="#4F4E4E" CornerRadius="3">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Choose your destination" Margin="10,0,0,0" VerticalAlignment="Center" FontSize="16"/>
+
+                    <Button Grid.Column="2" Width="25" Height="20" Margin="0,0,10,0" Content="..." Cursor="Hand"/>
+
+                </Grid>
+            </Border>
+            <TextBox Width="550" Height="30" Style="{StaticResource InputSignup}" FontSize="16" Uid="Filename: " Margin="0,10,0,0"  VerticalAlignment="Center" />
+
+        </StackPanel>
+
+        <Button Grid.Row="3" Style="{StaticResource ChooseFileBtn}" Content="Convert" Width="150" Padding="10,0,10,0" Margin="0,30,0,0" FontSize="20" />
+
+    </Grid>
+</UserControl>

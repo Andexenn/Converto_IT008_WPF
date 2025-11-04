@@ -56,7 +56,7 @@
                 <Border Grid.Row="2" Grid.Column="1" BorderThickness="1 0 0 0" Height="350" BorderBrush="#4F4E4E" Margin="0,5,0,0" VerticalAlignment="Top"/> 
 
                 <StackPanel Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center">
-                    <Button Content="WEBP to PNG" Style="{StaticResource TextOption}"/>
+                    <Button Content="WEBP to PNG" Style="{StaticResource TextOption}" Command="{Binding GoToWEBPtoPNGCommand}"/>
                     <Button Content="JFIF to PNG" Style="{StaticResource TextOption}"/>
                     <Button Content="PNG to SVG" Style="{StaticResource TextOption}"/>
                     <Button Content="HEIC to JPG" Style="{StaticResource TextOption}"/>

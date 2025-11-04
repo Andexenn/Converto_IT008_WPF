@@ -64,12 +64,12 @@
                     <TextBox Uid="Enter your password:" Style="{StaticResource InputSignup }" HorizontalAlignment="Left"  Margin="10,15,10,0" Grid.Row="2" Grid.ColumnSpan="3" Width="489" TabIndex="3"/>
 
                     <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="3" Margin="10,15,0,0">
-                        <CheckBox Content="I agree to the Terms and Conditions" 
+                        <CheckBox Content="I agree to the" 
                                   FontFamily="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"
                                   FontSize="14"
                                   Background="#23772E"
                                   VerticalAlignment="Center" TabIndex="4"/>
-                        <Button />
+                        <Button Margin="5,0,0,0" Content="Terms and Conditions" Foreground="#23772E" VerticalAlignment="Center" Style="{StaticResource SignUpButtonv2}" Command="{Binding GoTermsAndConditionsCommand}"/>
                     </StackPanel>
 
                     <Button Grid.Row="4" Grid.ColumnSpan="3" Margin="10,15,10,0" Height="45" Content="Create Account" Background="#F24822" Foreground="White" Style="{StaticResource CTA}" TabIndex="5"/>

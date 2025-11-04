@@ -27,6 +27,7 @@ public static class AppModule
         services.AddTransient<ViewModels.HomepageViewModel>();
         services.AddTransient<ViewModels.AboutUsViewModel>();
         services.AddTransient<ViewModels.HistoryViewModel>();
+       
 
         //CompressViewModel
         services.AddTransient<ViewModels.CompressViewModel>();
@@ -36,9 +37,12 @@ public static class AppModule
         services.AddTransient<ViewModels.UserViewModel.SignUpViewModel>();
         services.AddTransient<ViewModels.UserViewModel.MyAccountViewModel>();
 
+        //PopupViewModel
+        services.AddTransient<ViewModels.PopupViewModels.Terms_ConditionsPopupViewModel>();
+
         //------------------ Views ------------------
         services.AddSingleton<Views.MainWindow>();
-
+        services.AddSingleton<Views.Popups.Terms_ConditionsPopup>();
 
         return services;
     }

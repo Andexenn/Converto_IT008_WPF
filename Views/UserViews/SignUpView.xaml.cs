@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Converto_IT008_WPF.ViewModels.UserViewModel;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,5 +25,6 @@ public partial class SignUpView : UserControl
     public SignUpView()
     {
         InitializeComponent();
+        DataContext = App.ServiceProvider?.GetRequiredService<SignUpViewModel>();
     }
 }

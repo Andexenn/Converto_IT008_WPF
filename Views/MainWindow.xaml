@@ -45,22 +45,98 @@
                             <RadioButton x:Name="Convert" Content="Convert"
                                          Command="{Binding GoHomepageCommand}"
                                          Tag="{x:Static fa:FontAwesomeIcon.Exchange}"
-                                         Style="{StaticResource MenuButtonTheme}"/>
+                                         Style="{StaticResource MenuButtonTheme}">
+                                <RadioButton.ToolTip>
+                                    <ToolTip Background="White" >
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <fa:FontAwesome Grid.RowSpan="2" Icon="{x:Static fa:FontAwesomeIcon.Exchange}" Foreground="#F24822" FontSize="28" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="1" Text="Convert files format" FontWeight="SemiBold" Foreground="#F24822"/>
+                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="Easily convert files between various formats." FontSize="12" Foreground="Gray"/>
+                                        </Grid>
+                                    </ToolTip>
+                                </RadioButton.ToolTip>
+                            </RadioButton>
 
                             <RadioButton x:Name="Compress" Content="Compress"
                                          Tag="{x:Static fa:FontAwesomeIcon.Compress}"
                                          Command="{Binding GoCompressCommand}"
-                                         Style="{StaticResource MenuButtonTheme}" BorderBrush="{x:Null}"/>
+                                         Style="{StaticResource MenuButtonTheme}" BorderBrush="{x:Null}">
+                                <RadioButton.ToolTip>
+                                    <ToolTip Background="White" >
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <fa:FontAwesome Grid.RowSpan="2" Icon="{x:Static fa:FontAwesomeIcon.Compress}" Foreground="#F24822" FontSize="28" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="1" Text="Compress files" FontWeight="SemiBold" Foreground="#F24822"/>
+                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="Compress your files quickly." FontSize="12" Foreground="Gray"/>
+                                        </Grid>
+                                    </ToolTip>
+                                </RadioButton.ToolTip>
+                            </RadioButton>
 
                             <RadioButton x:Name="Tex_to_Image" Content="Text to Image"
                                          Tag="{x:Static fa:FontAwesomeIcon.Steam}"
                                          Command="{Binding GoTextToImage}"
-                                         Style="{StaticResource MenuButtonTheme}"/>
+                                         Style="{StaticResource MenuButtonTheme}">
+                                <RadioButton.ToolTip>
+                                    <ToolTip Background="White" >
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <fa:FontAwesome Grid.RowSpan="2" Icon="{x:Static fa:FontAwesomeIcon.Steam}" Foreground="#F24822" FontSize="28" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="1" Text="Text to Image" FontWeight="SemiBold" Foreground="#F24822"/>
+                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="Prompt and see the magic happens." FontSize="12" Foreground="Gray"/>
+                                        </Grid>
+                                    </ToolTip>
+                                </RadioButton.ToolTip>
+                            </RadioButton>
 
                             <RadioButton x:Name="Remove_Background" Content="Remove Background"
                                          Tag="{x:Static fa:FontAwesomeIcon.Image}"
                                          Command="{Binding GoRemoveBackground}"
-                                         Style="{StaticResource MenuButtonTheme}"/>
+                                         Style="{StaticResource MenuButtonTheme}">
+                                <RadioButton.ToolTip>
+                                    <ToolTip Background="White" >
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <fa:FontAwesome Grid.RowSpan="2" Icon="{x:Static fa:FontAwesomeIcon.Image}" Foreground="#F24822" FontSize="28" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                                            <TextBlock Grid.Column="1" Text="Remove background" FontWeight="SemiBold" Foreground="#F24822"/>
+                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="Remove background in one click." FontSize="12" Foreground="Gray"/>
+                                        </Grid>
+                                    </ToolTip>
+                                </RadioButton.ToolTip>
+                            </RadioButton>
 
                             <Border HorizontalAlignment="Left" Height="1" Background="#CECECE" Width="120" Margin="24,20,0,20"/>
 

@@ -4,7 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              mc:Ignorable="d" >
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid>
         <StackPanel Background="#FFFBFBFB"> 
             <Image Source="/Resources/no-connection.png" Margin="0,44,0,0" Width="150" />
@@ -16,13 +20,19 @@
                                Margin="0,12,0,0"
                                FontSize="16"/>
 
+
+            <fa:ImageAwesome Icon="Refresh" Spin="True" Width="48" Height="48" Margin="0,56,0,0" Foreground="#23772E"
+                             Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
             <Button Content="Reload"
-                            Width="250" 
-                            Margin="0,56,0,0" 
-                            Height="40"
-                            Foreground="White"
-                            Background="#F24822"
-                            Style="{StaticResource CTA}">
+                    Command="{Binding ReloadCommand}"
+                    Width="250" 
+                    Margin="0,56,0,0" 
+                    Height="40"
+                    Foreground="White"
+                    Background="#F24822"
+                    Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Style="{StaticResource CTA}">
                 <Button.Effect>
                     <DropShadowEffect/>
                 </Button.Effect>

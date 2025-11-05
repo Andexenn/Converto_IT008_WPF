@@ -8,26 +8,20 @@ using System.Threading.Tasks;
 
 namespace Converto_IT008_WPF.ViewModels;
 
-public class BaseViewModel : ObservableObject, IDisposable, INotifyPropertyChanged
+public partial class BaseViewModel : ObservableObject, IDisposable
 {
-    public event PropertyChangedEventHandler PropertyChanged;
+    [ObservableProperty]
+    private bool isBusy;
 
-    private bool _isBusy;
-    public bool IsBusy
+    public bool IsNotBusy => !IsBusy;
+    partial void OnIsBusyChanged(bool value)
     {
-        get => _isBusy;
-        set
-        {
-            _isBusy = value;
-            OnPropertyChanged(nameof(IsBusy));
-            
-        }
+        OnPropertyChanged(nameof(IsNotBusy));
     }
 
-    protected void OnPropertyChanged(string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+
+    [ObservableProperty]
+    private bool isOnline;
 
     public virtual void Dispose()
     {

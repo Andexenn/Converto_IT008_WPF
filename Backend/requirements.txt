@@ -4,3 +4,4 @@ sqlalchemy
 pydantic
 dotenv
 pydantic-settings
+pymysql

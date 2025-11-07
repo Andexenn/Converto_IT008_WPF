@@ -1,15 +1,15 @@
 from sqlalchemy import Column, BigInteger, String, DECIMAL
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped, mapped_column
 from App.Database.connection import Base
 
 class Service(Base):
-    __tablename__ = "SERVICE"
+    __tablename__ = "service"
 
-    SerivceID = Column(BigInteger, primary_key=True, autoincrement=True)
-    InputFormat = Column(String(50), nullable=False)
-    OutputFormat = Column(String(50), nullable=False)
-    ServiceName = Column(String(150), nullable=False)
-    Price = Column(DECIMAL(10, 2), nullable=False)
+    SerivceID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    InputFormat: Mapped[str] = mapped_column(String(50))
+    OutputFormat: Mapped[str] = mapped_column(String(50))
+    ServiceName: Mapped[str] = mapped_column(String(150))
+    Price: Mapped[float] = mapped_column(DECIMAL(10, 2))
 
     #relationship
     conversion_histories = relationship("ConversionHistory", back_populates="service")

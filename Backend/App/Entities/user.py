@@ -2,9 +2,13 @@ from sqlalchemy import column, BigInteger, String, DateTime, LargeBinary
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 from App.Database.connection import Base 
 from datetime import datetime
+from typing import List
+
+from App.Entities.conversion_history import ConversionHistory
+from App.Entities.wallet import Wallet
 
 class User(Base):
-    __tablename__ = "user"
+    __tablename__ = "USER"
 
     UserID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     FirstName: Mapped[str] = mapped_column(String(255))
@@ -18,8 +22,9 @@ class User(Base):
     HashedPassword: Mapped[str] = mapped_column(String(255))
 
     #Relationship
-    wallets = relationship("Wallet", back_populates="user", cascade="all, delete-orphan")
-    conversion_histories = relationship("ConversionHistory", back_populates="user", cascade="all, delete-orphan")
+    wallet: Mapped["Wallet"] = relationship(back_populates="user", cascade="all, delete-orphan")
+    conversion_histories: Mapped[List["ConversionHistory"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+
 
 
 

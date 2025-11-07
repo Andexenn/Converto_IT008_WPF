@@ -2,7 +2,7 @@ fastapi
 uvicorn[standard]
 sqlalchemy
 pydantic
-dotenv
 pydantic-settings
 pymysql
 datetime
+python-dotenv

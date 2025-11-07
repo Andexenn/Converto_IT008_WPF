@@ -1,6 +1,12 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pathlib import Path 
 
+BASE_DIR = Path(__file__).resolve().parents[1]
+ENV_FILE = BASE_DIR / ".env"
 class Settings(BaseSettings):
+
+    model_config = SettingsConfigDict(env_file=str(ENV_FILE), env_file_encoding="utf-8")
+
     DB_HOST: str
     DB_PORT: int 
     DB_USER: str
@@ -14,8 +20,8 @@ class Settings(BaseSettings):
     APP_NAME: str = "Converto"
     DEBUG: bool = True 
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    # class Config:
+    #     env_file = ".env"
+    #     env_file_encoding = "utf-8"
 
 settings = Settings()

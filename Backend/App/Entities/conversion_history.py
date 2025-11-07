@@ -1,21 +1,22 @@
-from sqlalchemy import DateTime, BigInteger, String, ForeignKey
+from sqlalchemy import DateTime, BigInteger, ForeignKey, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from App.Database.connection import Base 
+from Database.connection import Base 
 from datetime import datetime
+from typing import TYPE_CHECKING
 
-from App.Entities.user import User
-from App.Entities.service import Service
+if TYPE_CHECKING:
+    from user import User
+    from service import Service
 
 class ConversionHistory(Base):
     __tablename__ = "CONVERSION_HISTORY"
 
     UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID", ondelete="CASCADE"), primary_key=True)
     ServiceID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICE.ServiceID", ondelete="CASCADE"), primary_key=True)
-    CreatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=datetime.now)
+    CreatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
     
-
     #relationship
     user: Mapped["User"] = relationship(back_populates="conversion_histories")
     service: Mapped["Service"] = relationship(back_populates="conversion_histories")
-
+    
 

@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
-from App.config import settings 
+from config import settings 
 
 SQL_ALCHEMY_DATABASE_URL = f"mysql+pymysql://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
 
@@ -20,6 +20,7 @@ def get_db():
         db.close()
 
 def init_db():
+    from Entities import User, Wallet, WalletTransaction, Service, ConversionHistory
     Base.metadata.create_all(bind=engine)
 
 

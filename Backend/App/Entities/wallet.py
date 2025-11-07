@@ -1,10 +1,11 @@
 from sqlalchemy import BigInteger, DECIMAL, DATETIME, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from App.Database.connection import Base 
-from typing import List 
+from Database.connection import Base 
+from typing import List, TYPE_CHECKING
 
-from App.Entities.user import User
-from App.Entities.wallet_transaction import WalletTransaction
+if TYPE_CHECKING:
+    from user import User
+    from wallet_transaction import WalletTransaction
 
 class Wallet(Base):
     __tablename__ = "WALLET"
@@ -16,4 +17,4 @@ class Wallet(Base):
 
     #relationship
     user: Mapped["User"] = relationship(back_populates="wallet")
-    transactions: Mapped[WalletTransaction["WalletTransaction"]] = relationship(back_populates="wallet", cascade="all, delete-orphan")
+    transactions: Mapped[List["WalletTransaction"]] = relationship(back_populates="wallet", cascade="all, delete-orphan")

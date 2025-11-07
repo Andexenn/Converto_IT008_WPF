@@ -1,13 +1,15 @@
 from typing import List
 from sqlalchemy import Column, BigInteger, String, DECIMAL
 from sqlalchemy.orm import relationship, Mapped, mapped_column
-from App.Database.connection import Base
+from Database.connection import Base
+from typing import TYPE_CHECKING
 
-from App.Entities.conversion_history import ConversionHistory
+if TYPE_CHECKING:
+    from conversion_history import ConversionHistory
 class Service(Base):
     __tablename__ = "SERVICE"
 
-    SerivceID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
+    ServiceID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     InputFormat: Mapped[str] = mapped_column(String(50))
     OutputFormat: Mapped[str] = mapped_column(String(50))
     ServiceName: Mapped[str] = mapped_column(String(150))

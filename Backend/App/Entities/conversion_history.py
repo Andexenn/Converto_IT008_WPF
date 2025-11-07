@@ -14,9 +14,8 @@ class ConversionHistory(Base):
     UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID", ondelete="CASCADE"), primary_key=True)
     ServiceID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICE.ServiceID", ondelete="CASCADE"), primary_key=True)
     CreatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
-    
+
     #relationship
     user: Mapped["User"] = relationship(back_populates="conversion_histories")
     service: Mapped["Service"] = relationship(back_populates="conversion_histories")
     
-

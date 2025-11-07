@@ -20,8 +20,4 @@ class Settings(BaseSettings):
     APP_NAME: str = "Converto"
     DEBUG: bool = True 
 
-    # class Config:
-    #     env_file = ".env"
-    #     env_file_encoding = "utf-8"
-
 settings = Settings()

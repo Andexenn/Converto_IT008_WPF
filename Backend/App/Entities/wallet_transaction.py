@@ -18,6 +18,3 @@ class WalletTransaction(Base):
     # relationship
     wallet:Mapped["Wallet"] = relationship(back_populates="transactions")
 
-
-
-

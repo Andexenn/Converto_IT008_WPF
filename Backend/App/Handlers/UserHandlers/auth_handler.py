@@ -15,21 +15,12 @@ async def sign_up(user_data: UserCreate, db: Session = Depends(get_db)):
 
 @router.get("/check-email/{email}")
 async def check_email_exists(email: str, db: Session = Depends(get_db)):
-    """
-    Check if an email is already registered
-    
-    Useful for frontend validation before signup
-    """
     auth_repo = AuthRepository(db)
     exists = await auth_repo.user_exists(email)
     return {"exists": exists, "email": email}
 
-
 @router.get("/user/{email}", response_model=UserResponse)
 async def get_user_by_email(email: str, db: Session = Depends(get_db)):
-    """
-    Get user information by email
-    """
     auth_repo = AuthRepository(db)
     user = await auth_repo.get_user_by_email(email)
     if not user:

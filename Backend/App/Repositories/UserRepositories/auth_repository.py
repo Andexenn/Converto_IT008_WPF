@@ -3,7 +3,7 @@ from sqlalchemy.exc import IntegrityError
 from typing import Optional 
 from fastapi import HTTPException, status 
 
-from Services.UserService.auth_service import IAuthService
+from Services.UserServices.auth_service import IAuthService
 from Schemas.user import UserCreate, UserResponse
 from Entities.user import User 
 from Entities.wallet import Wallet
@@ -22,13 +22,13 @@ class AuthRepository(IAuthService):
                     detail="Email already registered"
                 )
             
-            hash_password = hash_password(user_data.Password)
+            hashed_password = hash_password(user_data.Password)
 
             new_user = User(
                 Email = user_data.Email,
                 FirstName = user_data.FirstName,
                 LastName = user_data,
-                HashedPassword = hash_password)
+                HashedPassword = hashed_password)
             
             self.db.add(new_user)
             self.db.flush()
@@ -57,13 +57,16 @@ class AuthRepository(IAuthService):
             self.db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"An error occurred during registration: {str{e}}"
+                detail=f"An error occurred during registration: {str(e)}"
             )
         
     async def get_user_by_email(self, email: str) -> Optional[UserResponse]:
         user = self.db.query(User).filter(User.Email == email).first()
+        if(user):
+            return user 
+        return None
 
     async def user_exists(self, email: str) -> bool:
-        user =  self.db.query(User).filter(User.Email == email).first()
+        user = self.db.query(User).filter(User.Email == email).first()
         return user is not None
         

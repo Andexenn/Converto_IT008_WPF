@@ -14,6 +14,9 @@ public partial class BaseViewModel : ObservableObject, IDisposable
     private bool isBusy;
 
     public bool IsNotBusy => !IsBusy;
+
+    [ObservableProperty]
+    private bool acceptTermsAndConditionsStatus;
     partial void OnIsBusyChanged(bool value)
     {
         OnPropertyChanged(nameof(IsNotBusy));

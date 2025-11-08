@@ -68,7 +68,8 @@
                                   FontFamily="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"
                                   FontSize="14"
                                   Background="#23772E"
-                                  VerticalAlignment="Center" TabIndex="4" Cursor="Hand"/>
+                                  VerticalAlignment="Center" TabIndex="4" Cursor="Hand"
+                                  IsChecked="{Binding AcceptTermsAndConditionsStatus, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
                         <Button Margin="5,0,0,0" Content="Terms and Conditions" Foreground="#23772E" VerticalAlignment="Center" Style="{StaticResource SignUpButtonv2}" FontSize="14" Command="{Binding GoTermsAndConditionsCommand}"/>
                     </StackPanel>
 

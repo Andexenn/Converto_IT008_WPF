@@ -17,4 +17,18 @@ public partial class Terms_ConditionsPopupViewModel : BaseViewModel
     {
         RequestClose?.Invoke();
     }
+
+    [RelayCommand]
+    void AcceptTermsAndConditions()
+    {
+        AcceptTermsAndConditionsStatus = true;
+        RequestClose?.Invoke();
+    }
+
+    [RelayCommand]
+    void DeclineTermsAndConditions()
+    {
+        AcceptTermsAndConditionsStatus = false;
+        RequestClose?.Invoke();
+    }
 }

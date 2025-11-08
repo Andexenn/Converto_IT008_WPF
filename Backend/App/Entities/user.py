@@ -1,4 +1,4 @@
-from sqlalchemy import column, BigInteger, String, DateTime, LargeBinary 
+from sqlalchemy import BigInteger, String, DateTime, LargeBinary 
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 from Database.connection import Base 
 from datetime import datetime

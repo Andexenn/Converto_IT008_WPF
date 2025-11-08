@@ -3,8 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views.UserViews"
              mc:Ignorable="d" d:DesignWidth="800" Height="499">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Border Background="White" Height="490" Width="550" BorderThickness="0.5" BorderBrush="Black" CornerRadius="5" Padding="20,10,20,10">
             <Border.Effect>
@@ -79,7 +83,12 @@
                         <Button Margin="5,0,0,0" Content="Terms and Conditions" Foreground="#23772E" VerticalAlignment="Center" Style="{StaticResource SignUpButtonv2}" FontSize="14" Command="{Binding GoTermsAndConditionsCommand}"/>
                     </StackPanel>
 
-                    <Button Grid.Row="5" Grid.ColumnSpan="3" Margin="10,15,10,0" Height="45" Content="Create Account" Background="#F24822" Foreground="White" Style="{StaticResource CTA}" TabIndex="5"/>
+                    <Button Grid.Row="5" Grid.ColumnSpan="3" Margin="10,15,10,0" Height="45" Content="Create Account" Background="#F24822" Foreground="White" Style="{StaticResource CTA}" TabIndex="5" 
+                            Command="{Binding SignUpCommand}" 
+                            Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                    <fa:ImageAwesome Grid.Row="5" Grid.ColumnSpan="3" Icon="Refresh" Spin="True" Width="42" Height="42" Margin="10,15,10,0" Foreground="#23772E" HorizontalAlignment="Center"
+                                     Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
                     <Border Grid.Row="6" Width="170" HorizontalAlignment="Left" Grid.Column="0" Height="1" Margin="10,15,0,0" Background="#4F4E4E"/>
 

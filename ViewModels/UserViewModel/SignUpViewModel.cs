@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Converto_IT008_WPF.Dto.SignUpDto;
 using Converto_IT008_WPF.ViewModels.PopupViewModels;
 using Converto_IT008_WPF.Views.Popups;
 using System;
@@ -9,21 +10,30 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using Converto_IT008_WPF.ServicesFE.UserServices;
+using Converto_IT008_WPF.ServicesFE;
 
 namespace Converto_IT008_WPF.ViewModels.UserViewModel;
 
 public partial class SignUpViewModel : BaseViewModel
 {
+    private readonly IAuthService _userService;
     [ObservableProperty]
-    string firstName;
+    string firstName = string.Empty;
     [ObservableProperty]
-    string lastName;
+    string lastName = string.Empty;
     [ObservableProperty]
-    string email;
+    string email = string.Empty;
     [ObservableProperty]
-    string password;
+    string password = string.Empty;
 
+    private readonly INavigationService _nav;
 
+    public SignUpViewModel(IAuthService userService, INavigationService navigationService)
+    {
+        _userService = userService;
+        _nav = navigationService;
+    }
 
     [RelayCommand]
     void GoTermsAndConditions()
@@ -43,5 +53,45 @@ public partial class SignUpViewModel : BaseViewModel
         };
 
         popup.ShowDialog();
+    }
+
+    bool checkCondition()
+    {
+        return AcceptTermsAndConditionsStatus & !string.IsNullOrEmpty(FirstName) & !string.IsNullOrEmpty(LastName)
+            & !string.IsNullOrEmpty(Email) & !string.IsNullOrEmpty(Password);
+    }
+
+    [RelayCommand]
+    async Task SignUp()
+    {
+        if (!checkCondition())
+        {
+            MessageBox.Show("Please fill in all fields and accept the terms and conditions.", "Incomplete Information", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
+        SignUpRequest signUpRequest = new SignUpRequest()
+        {
+            FirstName = FirstName,
+            LastName = LastName,
+            Email = Email,
+            Password = Password
+        };
+
+        try
+        {
+            IsBusy = true;
+            SignUpResponse signUpReponse = await _userService.SignUp(signUpRequest);
+            _nav.Navigate<HomepageViewModel>();
+        }
+        catch (Exception ex)
+        {
+            // Xử lý lỗi (hiển thị thông báo lỗi, ghi log, v.v.)
+            MessageBox.Show($"Error during sign up: {ex.Message}", "Sign Up Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

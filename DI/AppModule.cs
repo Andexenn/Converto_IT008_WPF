@@ -1,9 +1,14 @@
-﻿using Converto_IT008_WPF.ServicesFE;
+﻿using Converto_IT008_WPF.Api.UserApi;
+using Converto_IT008_WPF.Interfaces.IUserApi;
+using Converto_IT008_WPF.ServicesFE;
+using Converto_IT008_WPF.ServicesFE.UserServices;
 using Converto_IT008_WPF.ServicesFEImpl;
+using Converto_IT008_WPF.ServicesFEImpl.UserServiceImpls;
 using Converto_IT008_WPF.Stores;
 using Converto_IT008_WPF.ViewModels;
 using Converto_IT008_WPF.Views;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +22,16 @@ public static class AppModule
     public static IServiceCollection RegisterDependency(this IServiceCollection services)
     {
         services.AddSingleton<NavigationStore>(); // :contentReference[oaicite:8]{index=8}
+
+        //------------------ Services ------------------
+
         services.AddScoped<INavigationService, NavigationServiceImpl>();
         services.AddScoped<INetworkMonitorService, NetworkMonitorServiceImpl>();
+        services.AddScoped<IAuthService, AuthServiceImpl>();
+
+        //------------------ Services ------------------
+
+        services.AddHttpClient<IAuthApi, AuthApi>();
 
         //------------------ ViewModels ------------------
         //GeneralViewModel
@@ -44,8 +57,6 @@ public static class AppModule
 
         //PopupViewModel
         services.AddTransient<ViewModels.PopupViewModels.Terms_ConditionsPopupViewModel>();
-
-        
 
         //------------------ Views ------------------
         services.AddSingleton<Views.MainWindow>();

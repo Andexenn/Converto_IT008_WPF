@@ -21,7 +21,7 @@ public partial class DisconnectViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    async void Reload()
+    async Task Reload()
     {
         IsBusy = true;
         await Task.Delay(3000);

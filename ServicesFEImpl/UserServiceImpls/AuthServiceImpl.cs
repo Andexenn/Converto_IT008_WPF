@@ -1,4 +1,5 @@
-﻿using Converto_IT008_WPF.Interfaces.IUserApi;
+﻿using Converto_IT008_WPF.Dto.SignUpDto;
+using Converto_IT008_WPF.Interfaces.IUserApi;
 using Converto_IT008_WPF.ServicesFE.UserServices;
 using System;
 using System.Collections.Generic;
@@ -15,5 +16,5 @@ public class AuthServiceImpl : IAuthService
     {
         _authApi = authApi;
     }
-    public async Task<bool> SignUp(string FirstName, string LastName, string Email, string Password) => await _authApi.SignUp(FirstName, LastName, Email, Password);
+    public async Task<SignUpResponse> SignUp(SignUpRequest signUpRequest) => await _authApi.SignUp(signUpRequest);
 }

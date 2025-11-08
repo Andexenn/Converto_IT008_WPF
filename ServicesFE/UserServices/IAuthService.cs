@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Converto_IT008_WPF.Dto.SignUpDto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,5 @@ namespace Converto_IT008_WPF.ServicesFE.UserServices;
 
 public interface IAuthService
 {
-    public Task<bool> SignUp();
+    public Task<SignUpResponse> SignUp(SignUpRequest signUpRequest);
 }

@@ -30,7 +30,7 @@ public partial class SignUpView : UserControl
 
     private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
     {
-        if(DataContext != null)
-            ((dynamic)DataContext).Password = ((PasswordBox)sender).Password;
+        if(DataContext != null) 
+            ((SignUpViewModel)DataContext).Password = ((PasswordBox)sender).Password;
     }
 }

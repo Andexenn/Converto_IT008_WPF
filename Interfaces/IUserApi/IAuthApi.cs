@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Converto_IT008_WPF.Dto.SignUpDto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converto_IT008_WPF.Interfaces.UserApi
+namespace Converto_IT008_WPF.Interfaces.IUserApi;
+
+public interface IAuthApi
 {
-    internal class IAuthApi
-    {
-    }
+    Task<SignUpResponse> SignUp(SignUpRequest signUpRequest);
 }

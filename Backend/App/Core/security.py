@@ -3,7 +3,10 @@ from datetime import datetime, timedelta, timezone
 from jose import JWTError, jwt
 from config import settings
 
-pwd_context = CryptContext(schemes=["bcrypt"])
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+print(f"SECRET_KEY exists: {hasattr(settings, 'SECRET_KEY')}")
+print(f"ALGORITHM: {settings.ALGORITHM}")
 
 def hash_password(password: str) -> str:
     return pwd_context.hash(password)

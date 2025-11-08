@@ -27,7 +27,7 @@ class AuthRepository(IAuthService):
             new_user = User(
                 Email = user_data.Email,
                 FirstName = user_data.FirstName,
-                LastName = user_data,
+                LastName = user_data.LastName,
                 HashedPassword = hashed_password)
             
             self.db.add(new_user)
@@ -63,7 +63,7 @@ class AuthRepository(IAuthService):
     async def get_user_by_email(self, email: str) -> Optional[UserResponse]:
         user = self.db.query(User).filter(User.Email == email).first()
         if(user):
-            return user 
+            return UserResponse.model_validate(user)
         return None
 
     async def user_exists(self, email: str) -> bool:

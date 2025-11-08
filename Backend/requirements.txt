@@ -6,3 +6,4 @@ pydantic-settings
 pymysql
 datetime
 python-dotenv
+passlib

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views.ServiceViews.Converters"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="#FFFBFBFB">
@@ -12,15 +13,21 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <TextBlock  Text="WEBP to PNG" 
+        <Button Background="Transparent" BorderBrush="Transparent" HorizontalAlignment="Left" Cursor="Hand" Style="{StaticResource CancelButton}" Command="{Binding GoBackCommand}">
+            <fa:FontAwesome Icon="LongArrowLeft" Foreground="Gray" FontWeight="SemiBold" HorizontalAlignment="Left" Margin="10,0,0,0" FontSize="22"/>
+        </Button>
+
+        <TextBlock  Grid.Row="1"
+                    Text="WEBP to PNG" 
                     Foreground="#F24822"
                     FontWeight="SemiBold"
                     HorizontalAlignment="Center"
                     FontSize="40"/>
 
-        <Grid Grid.Row="1" Margin="0,30,0,0">
+        <Grid Grid.Row="2" Margin="0,30,0,0">
             <Rectangle Width="550" Height="250" Stroke="Black" StrokeThickness="1" StrokeDashArray="10 4">
             </Rectangle>
             <Border Width="550" Height="250">
@@ -37,7 +44,7 @@
             </Border>
         </Grid>
 
-        <StackPanel Grid.Row="2" Margin="0,20,0,0">
+        <StackPanel Grid.Row="3" Margin="0,20,0,0">
             <Border Width="550" Height="30" BorderThickness="1" BorderBrush="#4F4E4E" CornerRadius="3">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -56,7 +63,7 @@
 
         </StackPanel>
 
-        <Button Grid.Row="3" Style="{StaticResource ChooseFileBtn}" Content="Convert" Width="150" Padding="10,0,10,0" Margin="0,30,0,0" FontSize="20" />
+        <Button Grid.Row="4" Style="{StaticResource ChooseFileBtn}" Content="Convert" Width="150" Padding="10,0,10,0" Margin="0,30,0,0" FontSize="20" />
 
     </Grid>
 </UserControl>

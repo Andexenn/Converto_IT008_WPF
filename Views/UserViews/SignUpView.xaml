@@ -4,9 +4,9 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views.UserViews"
-             mc:Ignorable="d" d:DesignWidth="800" Height="486">
+             mc:Ignorable="d" d:DesignWidth="800" Height="499">
     <Grid>
-        <Border Background="White" Height="480" Width="550" BorderThickness="0.5" BorderBrush="Black" CornerRadius="5" Padding="20,10,20,10">
+        <Border Background="White" Height="490" Width="550" BorderThickness="0.5" BorderBrush="Black" CornerRadius="5" Padding="20,10,20,10">
             <Border.Effect>
                 <DropShadowEffect/>
             </Border.Effect>
@@ -56,14 +56,20 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <TextBox TabIndex="0" Uid="First Name:" Width="220" Style="{StaticResource InputSignup }" Margin="10,0,0,0"/>
-                    <TextBox TabIndex="1" Uid="Last Name:" Width="220" Style="{StaticResource InputSignup }"  Margin="0,0,10,0" Grid.Column="2"/>
-                    <TextBox TabIndex="2" Uid="Email:" Style="{StaticResource InputSignup }" HorizontalAlignment="Left"  Margin="10,15,10,0" Grid.Row="1" Grid.ColumnSpan="3" Width="489"/>
-                    <PasswordBox Uid="Enter your password:" Style="{StaticResource PasswordBoxSignUp }" HorizontalAlignment="Left"  Margin="10,15,10,0" Grid.Row="2" Grid.ColumnSpan="3" Width="489" TabIndex="3"/>
+                    <TextBox TabIndex="0" Uid="First Name:" Width="220" Style="{StaticResource InputSignup }" Margin="10,0,0,0" Text="{Binding FirstName, Mode=TwoWay}"/>
+                    <TextBox TabIndex="1" Uid="Last Name:" Width="220" Style="{StaticResource InputSignup }"  Margin="0,0,10,0" Grid.Column="2" Text="{Binding LastName, Mode=TwoWay}"/>
+                    <TextBox TabIndex="2" Uid="Email:" Style="{StaticResource InputSignup }" HorizontalAlignment="Left"  Margin="10,15,10,0" Grid.Row="1" Grid.ColumnSpan="3" Width="489" Text="{Binding Email}"/>
 
-                    <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="3" Margin="10,15,0,0">
+                    <PasswordBox Uid="Enter your password:" 
+                                 Style="{StaticResource PasswordBoxSignUp }" 
+                                 HorizontalAlignment="Left"  
+                                 Margin="10,15,10,0" 
+                                 Grid.Row="2" Grid.ColumnSpan="3" Width="489" TabIndex="3" PasswordChanged="PasswordBox_PasswordChanged"/>
+                    <TextBlock Grid.Row="3" Grid.ColumnSpan="3" Text="Password at least 8 characters, including a special character, a number and an upper character" Margin="10,5,0,0" TextWrapping="Wrap" Foreground="#F24822" FontSize="10" FontStyle="Italic"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.ColumnSpan="3" Margin="10,10,0,0">
                         <CheckBox Content="I agree to the" 
                                   FontFamily="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"
                                   FontSize="14"
@@ -73,15 +79,15 @@
                         <Button Margin="5,0,0,0" Content="Terms and Conditions" Foreground="#23772E" VerticalAlignment="Center" Style="{StaticResource SignUpButtonv2}" FontSize="14" Command="{Binding GoTermsAndConditionsCommand}"/>
                     </StackPanel>
 
-                    <Button Grid.Row="4" Grid.ColumnSpan="3" Margin="10,15,10,0" Height="45" Content="Create Account" Background="#F24822" Foreground="White" Style="{StaticResource CTA}" TabIndex="5"/>
+                    <Button Grid.Row="5" Grid.ColumnSpan="3" Margin="10,15,10,0" Height="45" Content="Create Account" Background="#F24822" Foreground="White" Style="{StaticResource CTA}" TabIndex="5"/>
 
-                    <Border Grid.Row="5" Width="170" HorizontalAlignment="Left" Grid.Column="0" Height="1" Margin="10,15,0,0" Background="#4F4E4E"/>
+                    <Border Grid.Row="6" Width="170" HorizontalAlignment="Left" Grid.Column="0" Height="1" Margin="10,15,0,0" Background="#4F4E4E"/>
 
-                    <TextBlock Width="200" Text="or sign up with" TextAlignment="Center" Grid.Row="5" Margin="0,15,0,0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#4F4E4E" FontFamily="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF" FontSize="14"/>
+                    <TextBlock Width="200" Text="or sign up with" TextAlignment="Center" Grid.Row="6" Margin="0,15,0,0" Grid.ColumnSpan="3" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#4F4E4E" FontFamily="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF" FontSize="14"/>
 
-                    <Border Grid.Row="5" Width="170" HorizontalAlignment="Right" Grid.Column="2" Height="1" Margin="0,15,10,0" Background="#4F4E4E"/>
+                    <Border Grid.Row="6" Width="170" HorizontalAlignment="Right" Grid.Column="2" Height="1" Margin="0,15,10,0" Background="#4F4E4E"/>
 
-                    <Button Grid.Row="6" Grid.ColumnSpan="3" Height="45" Margin="10,15,10,0" Style="{StaticResource GoogleLogin}" TabIndex="6"/>
+                    <Button Grid.Row="7" Grid.ColumnSpan="3" Height="45" Margin="10,15,10,0" Style="{StaticResource GoogleLogin}" TabIndex="6"/>
                 </Grid>
             </Grid>
         </Border>

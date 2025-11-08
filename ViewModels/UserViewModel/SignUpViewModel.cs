@@ -14,13 +14,14 @@ namespace Converto_IT008_WPF.ViewModels.UserViewModel;
 
 public partial class SignUpViewModel : BaseViewModel
 {
-
-    public SignUpViewModel()
-    {
-
-    }
-
-
+    [ObservableProperty]
+    string firstName;
+    [ObservableProperty]
+    string lastName;
+    [ObservableProperty]
+    string email;
+    [ObservableProperty]
+    string password;
 
 
 

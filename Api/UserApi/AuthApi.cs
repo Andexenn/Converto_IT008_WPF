@@ -44,4 +44,27 @@ public class AuthApi : IAuthApi
             throw new Exception($"Exception in SignUp API: {ex.Message}");
         }
     }
+
+    public async Task<bool> CheckMailExisting(string Email)
+    {
+        try
+        {
+            using HttpResponseMessage response = await _httpClient.GetAsync($"{BaseUrl}check-email/{Uri.EscapeDataString(Email)}");
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                var responseContent = JsonSerializer.Deserialize<CheckMailResponse>(json);
+                return responseContent.exists;
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error during email check: {error}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Exception in CheckMailExisting API: {ex.Message}");
+        }
+    }
 }

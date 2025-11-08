@@ -17,7 +17,7 @@ namespace Converto_IT008_WPF.ViewModels.UserViewModel;
 
 public partial class SignUpViewModel : BaseViewModel
 {
-    private readonly IAuthService _userService;
+    private readonly IAuthService _authService;
     [ObservableProperty]
     string firstName = string.Empty;
     [ObservableProperty]
@@ -29,9 +29,9 @@ public partial class SignUpViewModel : BaseViewModel
 
     private readonly INavigationService _nav;
 
-    public SignUpViewModel(IAuthService userService, INavigationService navigationService)
+    public SignUpViewModel(IAuthService authService, INavigationService navigationService)
     {
-        _userService = userService;
+        _authService = authService;
         _nav = navigationService;
     }
 
@@ -70,6 +70,19 @@ public partial class SignUpViewModel : BaseViewModel
             return;
         }
 
+        if(Password.Length <= 8 || !Password.Any(c => char.IsUpper(c)) || !Password.Any(c => char.IsLower(c)) || !Password.Any(c => char.IsDigit(c)) || !Password.Any(c => char.IsLetterOrDigit(c)))
+        {
+            MessageBox.Show("Password must be at least 8 characters long and include uppercase letters, lowercase letters, and digits.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+        IsBusy = true;
+        if (await _authService.CheckMailExisting(Email))
+        {
+            MessageBox.Show("The email is already registered. Please use a different email.", "Email Exists", MessageBoxButton.OK, MessageBoxImage.Warning);
+            IsBusy = false;
+            return;
+        }
+
         SignUpRequest signUpRequest = new SignUpRequest()
         {
             FirstName = FirstName,
@@ -80,8 +93,8 @@ public partial class SignUpViewModel : BaseViewModel
 
         try
         {
-            IsBusy = true;
-            SignUpResponse signUpReponse = await _userService.SignUp(signUpRequest);
+            
+            SignUpResponse signUpReponse = await _authService.SignUp(signUpRequest);
             _nav.Navigate<HomepageViewModel>();
         }
         catch (Exception ex)

@@ -10,4 +10,5 @@ namespace Converto_IT008_WPF.ServicesFE.UserServices;
 public interface IAuthService
 {
     public Task<SignUpResponse> SignUp(SignUpRequest signUpRequest);
+    public Task<bool> CheckMailExisting(string Email);
 }

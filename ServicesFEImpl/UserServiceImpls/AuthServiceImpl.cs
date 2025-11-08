@@ -17,4 +17,5 @@ public class AuthServiceImpl : IAuthService
         _authApi = authApi;
     }
     public async Task<SignUpResponse> SignUp(SignUpRequest signUpRequest) => await _authApi.SignUp(signUpRequest);
+    public async Task<bool> CheckMailExisting(string Email) => await _authApi.CheckMailExisting(Email);
 }

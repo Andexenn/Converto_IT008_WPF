@@ -9,5 +9,6 @@ namespace Converto_IT008_WPF.Interfaces.IUserApi;
 
 public interface IAuthApi
 {
-    Task<SignUpResponse> SignUp(SignUpRequest signUpRequest);
+    public Task<SignUpResponse> SignUp(SignUpRequest signUpRequest);
+    public Task<bool> CheckMailExisting(string Email);
 }

@@ -4,8 +4,8 @@ from datetime import datetime
 
 class UserBase(BaseModel):
     Email: EmailStr 
-    FirstName: Optional[str] = None 
-    LastName: Optional[str] = None 
+    FirstName: str
+    LastName: str
     Address: Optional[str] = None 
     PhoneNumber: Optional[str] = None 
     City: Optional[str] = None 
@@ -21,6 +21,7 @@ class UserUpdate(BaseModel):
     PhoneNumber: Optional[str] = None 
     City: Optional[str] = None 
     DateOfBirth: Optional[datetime] = None
+    Password: Optional[str] = None
 
 class UserResponse(UserBase):
     UserID: int 

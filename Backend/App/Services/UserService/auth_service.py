@@ -12,6 +12,6 @@ class IAuthService(ABC):
         pass 
 
     @abstractmethod 
-    async def user_exist(self, email: str) -> bool:
+    async def user_exists(self, email: str) -> bool:
         pass 
 

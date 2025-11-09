@@ -1,9 +1,10 @@
 from PIL import Image 
+from typing import Tuple
 import io 
 from Services.ConvertServices.image_converter_service import IImageConverterServices
 
 class ImageConverterRepositories(IImageConverterServices):
-    async def convert_webp_to_png(self, file_content: bytes, filename: str):
+    async def convert_webp_to_png(self, file_content: bytes, filename: str) -> Tuple[bytes, str]:
         try:
             image = Image.open(io.BytesIO(file_content))
 

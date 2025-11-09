@@ -20,5 +20,5 @@ public partial class SessionState : ObservableObject
     }
 
     [ObservableProperty]
-    LoginResponse loginResponse = null!;
+    LoginResponse? loginResponse = null;
 }

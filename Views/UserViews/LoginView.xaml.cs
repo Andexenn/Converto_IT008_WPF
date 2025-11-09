@@ -20,4 +20,10 @@ public partial class LoginView : UserControl
         InitializeComponent();
         DataContext = App.ServiceProvider?.GetRequiredService<LoginViewModel>();
     }
+
+    private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext != null)
+            ((LoginViewModel)DataContext).Password = ((PasswordBox)sender).Password;
+    }
 }

@@ -26,6 +26,7 @@ public partial class SignUpViewModel : BaseViewModel
     string email = string.Empty;
     [ObservableProperty]
     string password = string.Empty;
+    public ICommand GoLoginCommand { get; }
 
     private readonly INavigationService _nav;
 
@@ -33,6 +34,8 @@ public partial class SignUpViewModel : BaseViewModel
     {
         _authService = authService;
         _nav = navigationService;
+
+        GoLoginCommand = new RelayCommand(() => _nav.Navigate<LoginViewModel>());
     }
 
     [RelayCommand]

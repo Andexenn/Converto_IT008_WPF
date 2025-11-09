@@ -67,4 +67,30 @@ public class AuthApi : IAuthApi
             throw new Exception($"Exception in CheckMailExisting API: {ex.Message}");
         }
     }
+
+    public async Task<bool> Login(LoginRequest loginRequest)
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(loginRequest);
+            var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+            using HttpResponseMessage response = await _httpClient.PostAsync($"{BaseUrl}login", content);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<bool>(responseContent);
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                throw new Exception($"Error during login: {error}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Exception in Login API: {ex.Message}");
+        }
+    }
 }

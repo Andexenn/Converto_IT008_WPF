@@ -40,7 +40,7 @@
                                Margin="10,0,0,0"
                                VerticalAlignment="Bottom"
                                FontFamily="D:\Ryan\App_project\Converto_IT008_WPF\Resources\MONTSERRAT-SEMIBOLD.TTF"/>
-                    <Button Margin="3,0,0,0" VerticalAlignment="Center" Content="Login" Style="{StaticResource LoginButtonv2}"/>
+                    <Button Margin="3,0,0,0" VerticalAlignment="Center" Content="Login" Style="{StaticResource LoginButtonv2}" Command="{Binding GoLoginCommand}"/>
 
                 </StackPanel>
 
@@ -65,13 +65,14 @@
 
                     <TextBox TabIndex="0" Uid="First Name:" Width="220" Style="{StaticResource InputSignup }" Margin="10,0,0,0" Text="{Binding FirstName, Mode=TwoWay}"/>
                     <TextBox TabIndex="1" Uid="Last Name:" Width="220" Style="{StaticResource InputSignup }"  Margin="0,0,10,0" Grid.Column="2" Text="{Binding LastName, Mode=TwoWay}"/>
-                    <TextBox TabIndex="2" Uid="Email:" Style="{StaticResource InputSignup }" HorizontalAlignment="Left"  Margin="10,15,10,0" Grid.Row="1" Grid.ColumnSpan="3" Width="489" Text="{Binding Email}"/>
+                    <TextBox TabIndex="2" Uid="Email:" Style="{StaticResource InputSignup }" HorizontalAlignment="Left"  Margin="10,15,10,0" Grid.Row="1" Grid.ColumnSpan="3" Width="489" Text="{Binding Email, Mode=TwoWay}"/>
 
                     <PasswordBox Uid="Enter your password:" 
                                  Style="{StaticResource PasswordBoxSignUp }" 
                                  HorizontalAlignment="Left"  
                                  Margin="10,15,10,0" 
-                                 Grid.Row="2" Grid.ColumnSpan="3" Width="489" TabIndex="3" PasswordChanged="PasswordBox_PasswordChanged"/>
+                                 Grid.Row="2" Grid.ColumnSpan="3" Width="489" TabIndex="3" 
+                                 PasswordChanged="PasswordBox_PasswordChanged"/>
                     <TextBlock Grid.Row="3" Grid.ColumnSpan="3" Text="Password at least 8 characters, including a special character, a number and an upper character" Margin="10,5,0,0" TextWrapping="Wrap" Foreground="#F24822" FontSize="10" FontStyle="Italic"/>
                     <StackPanel Orientation="Horizontal" Grid.Row="4" Grid.ColumnSpan="3" Margin="10,10,0,0">
                         <CheckBox Content="I agree to the" 

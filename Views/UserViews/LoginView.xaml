@@ -31,7 +31,7 @@
                                FontWeight="SemiBold"
                                FontSize="18"/>
 
-                    <TextBox Margin="0,5,0,0" Style="{StaticResource Input}" TabIndex="0"/>
+                    <TextBox Margin="0,5,0,0" Style="{StaticResource Input}" TabIndex="0" Text="{Binding Email, Mode=TwoWay}"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,10,0,0">
@@ -41,7 +41,8 @@
                                FontWeight="SemiBold"
                                FontSize="18"/>
 
-                    <PasswordBox Margin="0,5,0,0" Style="{StaticResource PasswordBoxv2}" TabIndex="1"/>
+                    <PasswordBox Margin="0,5,0,0" Style="{StaticResource PasswordBoxv2}" TabIndex="1"
+                                 PasswordChanged="PasswordBox_PasswordChanged"/>
 
                     <Grid Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>

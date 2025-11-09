@@ -21,7 +21,9 @@ public static class AppModule
 {
     public static IServiceCollection RegisterDependency(this IServiceCollection services)
     {
-        services.AddSingleton<NavigationStore>(); // :contentReference[oaicite:8]{index=8}
+        //------------------ Services ------------------
+        services.AddSingleton<NavigationStore>();
+        services.AddSingleton<SessionState>();
 
         //------------------ Services ------------------
 

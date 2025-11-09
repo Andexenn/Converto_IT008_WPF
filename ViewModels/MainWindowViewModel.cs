@@ -15,6 +15,7 @@ namespace Converto_IT008_WPF.ViewModels
     {
         private readonly NavigationStore _navigationStore;
         private readonly INetworkMonitorService _networkMonitorService;
+        public SessionState _sessionState { get; }
         public BaseViewModel CurrentViewModel => _navigationStore.CurrentViewModel;
         public ICommand GoHomepageCommand { get; }
         public ICommand GoAboutUsCommand { get; }
@@ -26,10 +27,11 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand GoTextToImage { get; }
         public ICommand GoRemoveBackground { get; }
 
-        public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService)
+        public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService, SessionState sessionState)
         {
             _navigationStore = navigationStore;
             _networkMonitorService = networkMonitorService;
+            _sessionState = sessionState;
             _navigationStore.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))

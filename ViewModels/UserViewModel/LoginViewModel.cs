@@ -4,6 +4,7 @@ using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.Dto.SignUpDto;
 using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.ServicesFE.UserServices;
+using Converto_IT008_WPF.Stores;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,17 +20,19 @@ public partial class LoginViewModel : BaseViewModel
     public ICommand GoSignUpCommand { get; }
     private readonly IAuthService _authService;
     private readonly INavigationService _nav;
+    private readonly SessionState _sessionState;
 
     [ObservableProperty]
     string email = string.Empty;
     [ObservableProperty]
     string password = string.Empty;
 
-    public LoginViewModel(INavigationService nav, IAuthService authService)
+    public LoginViewModel(INavigationService nav, IAuthService authService, SessionState sessionState)
     {
         _nav = nav;
         GoSignUpCommand = new RelayCommand(() => _nav.Navigate<SignUpViewModel>());
         _authService = authService;
+        _sessionState = sessionState;
     }
 
     [RelayCommand]
@@ -44,12 +47,12 @@ public partial class LoginViewModel : BaseViewModel
                 Password = Password
             };
 
-            LoginResponse = await _authService.Login(loginRequest);
-            if(LoginResponse != null)
+            _sessionState.LoginResponse = await _authService.Login(loginRequest);
+            if(_sessionState.LoginResponse != null)
             {
                 // Navigate to the main application view upon successful login
                 
-                IsLoginedIn = true;
+                _sessionState.IsUserLoggedIn = true;
                 _nav.Navigate<HomepageViewModel>();
             }
             else

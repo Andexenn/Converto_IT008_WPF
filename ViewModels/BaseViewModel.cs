@@ -25,17 +25,7 @@ public partial class BaseViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(IsNotBusy));
     }
 
-
-    [ObservableProperty]
-    private bool isLoginedIn;
-    public bool IsNotLoginedIn => !IsLoginedIn;
-
-    partial void OnIsLoginedInChanged(bool value)
-    {
-        OnPropertyChanged(nameof(IsNotLoginedIn));
-    }
-
-    public LoginResponse LoginResponse = null!;
+ 
 
     public virtual void Dispose()
     {

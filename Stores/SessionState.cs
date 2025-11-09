@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Converto_IT008_WPF.Dto.LoginDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Converto_IT008_WPF.Stores;
 
-public class SessionState : ObservableObject
+public partial class SessionState : ObservableObject
 {
     [ObservableProperty]
     private bool isUserLoggedIn;
@@ -17,4 +18,7 @@ public class SessionState : ObservableObject
     {
         OnPropertyChanged(nameof(IsUserLoggedOut));
     }
+
+    [ObservableProperty]
+    LoginResponse loginResponse = null!;
 }

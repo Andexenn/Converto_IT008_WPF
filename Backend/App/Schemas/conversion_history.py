@@ -10,7 +10,7 @@ class ConversionHistoryBase(BaseModel):
 class ConversionHistoryCreate(ConversionHistoryBase):
     pass 
 
-class ConversionHistory(ConversionHistoryBase):
+class ConversionHistoryResponse(ConversionHistoryBase):
     ConversionHistoryID: int 
     CreatedAt: datetime
 
@@ -27,6 +27,9 @@ class ConversionResponse(BaseModel):
     original_filename: str 
     converted_filename: str 
     file_size_bytes: int 
+    service_name: str 
+    CreateAt: datetime
+    Cost: Decimal
     conversion_history_id: Optional[int] = None 
 
     

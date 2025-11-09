@@ -11,8 +11,9 @@ if TYPE_CHECKING:
 class ConversionHistory(Base):
     __tablename__ = "CONVERSION_HISTORY"
 
-    UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID", ondelete="CASCADE"), primary_key=True)
-    ServiceID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICE.ServiceID", ondelete="CASCADE"), primary_key=True)
+    ConversionHistoryID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True) 
+    UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID", ondelete="CASCADE"))
+    ServiceID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICE.ServiceID", ondelete="CASCADE"))
     CreatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     #relationship

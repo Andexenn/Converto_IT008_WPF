@@ -4,7 +4,7 @@ from Database.connection import init_db
 from Handlers.UserHandlers import auth_handler
 from config import settings 
 
-#init_db()
+init_db()
 
 app = FastAPI(
     title=settings.APP_NAME,

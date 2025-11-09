@@ -15,7 +15,10 @@
         AllowsTransparency="True"
         ResizeMode="NoResize">
 
-    
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </Window.Resources>
+
     <Border x:Name="Skeleton" Background="#FFFBFBFB"
             CornerRadius="15"
             Padding="10" MouseDown="Skeleton_MouseDown"  >
@@ -184,12 +187,22 @@
 
                     <Button Grid.Column="1"
                             Style="{StaticResource Login}"
-                            Command="{Binding GoLoginCommand}"/>
-                    
+                            Command="{Binding GoLoginCommand}"
+                            Visibility="{Binding IsNotLoginedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                    <Image Grid.Column="1" Source="/Resources/DefaultUser.png" Height="36" Width="36" VerticalAlignment="Center"
+                           Visibility="{Binding IsLoginedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
                     <Button Grid.Column="2"
                             Style="{StaticResource Signup}"
-                            Command="{Binding GoSignUpCommand}"/>
+                            Command="{Binding GoSignUpCommand}"
+                            Visibility="{Binding IsNotLoginedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
+                    <TextBlock Grid.Column="2"
+                               Text="{Binding LoginResponse.FirstName}"
+                               Foreground="#FF4F4E4E"
+                               FontSize="18"
+                               Visibility="{Binding IsLoginedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 </Grid>
             </Border>
 

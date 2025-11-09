@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from Database.connection import get_db
 from Repositories.UserRepositories.auth_repository import AuthRepository
 from Services.UserServices.auth_service import IAuthService
-from Schemas.user import UserCreate, UserResponse, UserLogin
+from Schemas.user import UserCreate, UserResponse, UserLogin, UserLoginResponse
 
 
 router = APIRouter()
@@ -31,7 +31,7 @@ async def get_user_by_email(email: str, db: Session = Depends(get_db)):
         )
     return user
 
-@router.post("/login")
+@router.post("/login", response_model=UserLoginResponse)
 async def login(user_data: UserLogin, db: Session = Depends(get_db)):
     auth_service: IAuthService = AuthRepository(db)
     return await auth_service.login(user_data)

@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Converto_IT008_WPF.Dto.LoginDto;
+using Converto_IT008_WPF.Dto.SignUpDto;
 using Converto_IT008_WPF.ServicesFE;
 using System;
 using System.Collections.Generic;
@@ -25,9 +27,15 @@ public partial class BaseViewModel : ObservableObject, IDisposable
 
 
     [ObservableProperty]
-    private bool isOnline;
+    private bool isLoginedIn;
+    public bool IsNotLoginedIn => !IsLoginedIn;
 
+    partial void OnIsLoginedInChanged(bool value)
+    {
+        OnPropertyChanged(nameof(IsNotLoginedIn));
+    }
 
+    public LoginResponse LoginResponse = null!;
 
     public virtual void Dispose()
     {

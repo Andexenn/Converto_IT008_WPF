@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converto_IT008_WPF.Dto.SignUpDto;
+namespace Converto_IT008_WPF.Dto.LoginDto;
 
 public class LoginRequest
 {

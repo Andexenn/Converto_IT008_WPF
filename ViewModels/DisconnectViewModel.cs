@@ -24,7 +24,7 @@ public partial class DisconnectViewModel : BaseViewModel
     async Task Reload()
     {
         IsBusy = true;
-        await Task.Delay(3000);
+        await Task.Delay(2500);
         if (_networkMonitorService.IsOnline)
             _navigationService.Navigate<HomepageViewModel>();
         IsBusy = false;

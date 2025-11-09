@@ -35,3 +35,14 @@ class UserLogin(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UserLoginResponse(BaseModel):
+    Email: EmailStr 
+    FirstName: str 
+    LastName: str 
+    Address: Optional[str] = None
+    PhoneNumber: Optional[str] = None 
+    City: Optional[str] = None 
+    DateOfBirth: Optional[datetime] = None
+    class Config:
+        from_attributes = True

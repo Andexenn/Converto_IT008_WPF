@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.Dto.SignUpDto;
 using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.ServicesFE.UserServices;
@@ -43,10 +44,12 @@ public partial class LoginViewModel : BaseViewModel
                 Password = Password
             };
 
-            bool ok = await _authService.Login(loginRequest);
-            if(ok)
+            LoginResponse = await _authService.Login(loginRequest);
+            if(LoginResponse != null)
             {
                 // Navigate to the main application view upon successful login
+                
+                IsLoginedIn = true;
                 _nav.Navigate<HomepageViewModel>();
             }
             else

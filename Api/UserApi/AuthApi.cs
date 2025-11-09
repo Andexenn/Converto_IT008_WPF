@@ -1,4 +1,5 @@
 ﻿using Converto_IT008_WPF.Dto.SignUpDto;
+using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.Interfaces.IUserApi;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ public class AuthApi : IAuthApi
         }
     }
 
-    public async Task<bool> Login(LoginRequest loginRequest)
+    public async Task<LoginResponse> Login(LoginRequest loginRequest)
     {
         try
         {
@@ -80,7 +81,7 @@ public class AuthApi : IAuthApi
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<bool>(responseContent);
+                return JsonSerializer.Deserialize<LoginResponse>(responseContent);
             }
             else
             {

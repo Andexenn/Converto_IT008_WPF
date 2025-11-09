@@ -96,9 +96,11 @@ public partial class SignUpViewModel : BaseViewModel
 
         try
         {
-            
             SignUpResponse signUpReponse = await _authService.SignUp(signUpRequest);
-            _nav.Navigate<HomepageViewModel>();
+
+            MessageBox.Show("Sign up successful! Please log in with your new account.", "Sign Up Successful", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            _nav.Navigate<LoginViewModel>();
         }
         catch (Exception ex)
         {

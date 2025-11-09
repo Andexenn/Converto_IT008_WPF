@@ -1,4 +1,5 @@
 ﻿using Converto_IT008_WPF.Dto.SignUpDto;
+using Converto_IT008_WPF.Dto.LoginDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,5 @@ public interface IAuthApi
 {
     public Task<SignUpResponse> SignUp(SignUpRequest signUpRequest);
     public Task<bool> CheckMailExisting(string Email);
-    public Task<bool> Login(LoginRequest loginRequest);
+    public Task<LoginResponse> Login(LoginRequest loginRequest);
 }

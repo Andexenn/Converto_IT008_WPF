@@ -32,7 +32,8 @@
             </Rectangle>
             <Border Width="550" Height="250">
                 <StackPanel>
-                    <Button Style="{StaticResource ChooseFileBtn}" Width="230" Height="65" Margin="0,50,0,0">
+                    <Button Style="{StaticResource ChooseFileBtn}" Width="230" Height="65" Margin="0,50,0,0"
+                            Command="{Binding OpenFolderCommand}">
                         <Button.Effect>
                             <DropShadowEffect Direction="71" BlurRadius="5" ShadowDepth="0"/>
                         </Button.Effect>

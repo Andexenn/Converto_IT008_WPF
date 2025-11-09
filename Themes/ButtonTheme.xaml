@@ -200,12 +200,13 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <StackPanel VerticalAlignment="Bottom">
-                        <ContentPresenter Content="{TemplateBinding Content}"
+                    <StackPanel VerticalAlignment="Bottom" x:Name="root">
+                        <ContentPresenter Content="{TemplateBinding Content}" x:Name="contentPresenter"
                                           VerticalAlignment="{TemplateBinding VerticalAlignment}"
                                           HorizontalAlignment="{TemplateBinding HorizontalAlignment}"/>
                         <Border Height="1" BorderBrush="#23772E" BorderThickness="0.5"/>
                     </StackPanel>
+                    
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
@@ -445,6 +446,30 @@
                             <ContentPresenter Margin="10,0,0,0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </StackPanel>
                     </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                                  Storyboard.TargetName="root"
+                                                  Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                                  To="#ECE7E7" Duration="0:0:0.35"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <ColorAnimation
+                                                  Storyboard.TargetName="root"
+                                                  Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"
+                                                  To="Transparent" Duration="0:0:0.35"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>

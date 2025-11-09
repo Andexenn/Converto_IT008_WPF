@@ -198,11 +198,18 @@
                             Command="{Binding GoSignUpCommand}"
                             Visibility="{Binding _sessionState.IsUserLoggedOut, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                    <TextBlock Grid.Column="2"
-                               Text="{Binding LoginResponse.FirstName}"
-                               Foreground="#FF4F4E4E"
-                               FontSize="18"
-                               Visibility="{Binding _sessionState.IsUserLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    <Button Grid.Column="2"
+                            Content="{Binding _sessionState.LoginResponse.FirstName}"
+                            Foreground="Black"
+                            FontSize="18"
+                            VerticalAlignment="Center"
+                            Margin="15,0,15,0"
+                            Cursor="Hand"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            Style="{StaticResource CancelButton}"
+                            Command="{Binding GoMyAccountCommand}"
+                            Visibility="{Binding _sessionState.IsUserLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 </Grid>
             </Border>
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import Optional 
-from Schemas.user import UserCreate, UserResponse 
+from Schemas.user import UserCreate, UserResponse, UserLogin
 
 class IAuthService(ABC):
     @abstractmethod
@@ -15,3 +15,6 @@ class IAuthService(ABC):
     async def user_exists(self, email: str) -> bool:
         pass 
 
+    @abstractmethod
+    async def login(self, user_dat: UserLogin) -> bool:
+        pass

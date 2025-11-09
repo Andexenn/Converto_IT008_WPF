@@ -78,8 +78,8 @@ public partial class SignUpViewModel : BaseViewModel
         IsBusy = true;
         if (await _authService.CheckMailExisting(Email))
         {
-            MessageBox.Show("The email is already registered. Please use a different email.", "Email Exists", MessageBoxButton.OK, MessageBoxImage.Warning);
             IsBusy = false;
+            MessageBox.Show("The email is already registered. Please use a different email.", "Email Exists", MessageBoxButton.OK, MessageBoxImage.Warning);
             return;
         }
 

@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi import HTTPException, status 
 
 from Services.UserServices.auth_service import IAuthService
-from Schemas.user import UserCreate, UserResponse
+from Schemas.user import UserCreate, UserResponse, UserLogin
 from Entities.user import User 
 from Entities.wallet import Wallet
 from Core.security import hash_password
@@ -69,4 +69,17 @@ class AuthRepository(IAuthService):
     async def user_exists(self, email: str) -> bool:
         user = self.db.query(User).filter(User.Email == email).first()
         return user is not None
+    
+    async def login(self, user_data: UserLogin) -> bool:
+        try:
+            hashed_password = hash_password(user_data.Password)
+            user = self.db.query(User).filter(User.Email == user_data.Email and User.HashedPassword == hashed_password).first()
+            return user is not None 
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"An  error occured during login: {e}"
+            )
         
+
+

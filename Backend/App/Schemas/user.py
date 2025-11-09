@@ -28,3 +28,10 @@ class UserResponse(UserBase):
 
     class Config:
         from_attributes = True
+
+class UserLogin(BaseModel):
+    Email: EmailStr
+    Password: str 
+
+    class Config:
+        from_attributes = True

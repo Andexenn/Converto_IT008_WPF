@@ -45,6 +45,7 @@ public partial class SignUpViewModel : BaseViewModel
 
         var vm = new Terms_ConditionsPopupViewModel();
         popup.DataContext = vm;
+        popup.WindowStartupLocation = WindowStartupLocation.CenterOwner;
         popup.Owner = Application.Current.MainWindow;
 
         vm.RequestClose += () =>

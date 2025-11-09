@@ -31,7 +31,7 @@ async def get_user_by_email(email: str, db: Session = Depends(get_db)):
         )
     return user
 
-@router.post("/login", response_model=UserLoginResponse)
+@router.post("/login", response_model=dict)
 async def login(user_data: UserLogin, db: Session = Depends(get_db)):
     auth_service: IAuthService = AuthRepository(db)
     return await auth_service.login(user_data)

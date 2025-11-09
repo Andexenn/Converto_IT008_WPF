@@ -14,6 +14,7 @@ public class AuthApi : IAuthApi
 {
     private readonly HttpClient _httpClient;
     private const string BaseUrl = "http://localhost:8000/api/auth/";
+    private string _accessToken = string.Empty;
 
     public AuthApi(HttpClient httpClient)
     {
@@ -81,7 +82,9 @@ public class AuthApi : IAuthApi
             if (response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
-                return JsonSerializer.Deserialize<LoginResponse>(responseContent);
+                var deserializedResponse = JsonSerializer.Deserialize<LoginResponse>(responseContent);
+                _accessToken = deserializedResponse.access_token;
+                return deserializedResponse;
             }
             else
             {

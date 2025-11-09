@@ -8,11 +8,7 @@ namespace Converto_IT008_WPF.Dto.LoginDto;
 
 public class LoginResponse
 {
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public string Email { get; set; } = string.Empty;
-    public string Address { get; set; } = string.Empty;
-    public string City { get; set; } = string.Empty;
-    public DateTime? DateOfBirth { get; set; }
-    public string PhoneNumber { get; set; } = string.Empty;
+    public string access_token { get; set; } = "";
+    public string token_type { get; set; } = "";
+    public UserInfo user { get; set; } = null!;
 }

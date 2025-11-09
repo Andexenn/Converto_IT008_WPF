@@ -16,5 +16,5 @@ class IAuthService(ABC):
         pass 
 
     @abstractmethod
-    async def login(self, user_dat: UserLogin) -> UserLoginResponse:
+    async def login(self, user_dat: UserLogin) -> dict:
         pass

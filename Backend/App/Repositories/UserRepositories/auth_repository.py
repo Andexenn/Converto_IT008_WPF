@@ -2,13 +2,14 @@ from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from typing import Optional 
 from fastapi import HTTPException, status 
+from datetime import timedelta
 
 from Services.UserServices.auth_service import IAuthService
 from Schemas.user import UserCreate, UserResponse, UserLogin, UserLoginResponse
 from Entities.user import User 
 from Entities.wallet import Wallet
 from Core.security import hash_password, verify_password, create_access_token
-
+from config import settings
 
 class AuthRepository(IAuthService):
     def __init__(self, db: Session):
@@ -74,16 +75,35 @@ class AuthRepository(IAuthService):
         user = self.db.query(User).filter(User.Email == email).first()
         return user is not None
     
-    async def login(self, user_data: UserLogin) -> UserResponse:
+    async def login(self, user_data: UserLogin) -> dict:
         try:
-            hashed_password = hash_password(user_data.Password)
-            user = self.db.query(User).filter(User.Email == user_data.Email and verify_password(user_data.Password, User.HashedPassword)).first()
-            user_login_response = UserLoginResponse.model_validate(user)
-            return user_login_response
+            user = self.db.query(User).filter(User.Email == user_data.Email).first()
+
+            if not user or not verify_password(user_data.Password, user.HashedPassword):
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Incorrect email or password"
+                )
+
+            access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+            access_token = create_access_token(
+                data={
+                    "sub": user.Email,      # "sub" = subject (standard JWT claim)
+                    "user_id": user.UserID, # Custom claim
+                    "email": user.Email     # Custom claim
+                },
+                expires_delta=access_token_expires
+            )
+
+            return{
+                "access_token": access_token,
+                "token_type": "bearer",
+                "user": UserLoginResponse.model_validate(user)
+            }
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"An  error occured during login: {e}"
+                detail=f"An  error occured during login: {str(e)}"
             )
         
 

@@ -16,7 +16,6 @@ namespace Converto_IT008_WPF.ViewModels
         private readonly NavigationStore _navigationStore;
         private readonly INetworkMonitorService _networkMonitorService;
         public BaseViewModel CurrentViewModel => _navigationStore.CurrentViewModel;
-        public ICommand GoDisconnectCommand { get; }
         public ICommand GoHomepageCommand { get; }
         public ICommand GoAboutUsCommand { get; }
         public ICommand GoHistoryCommand { get; }
@@ -39,18 +38,15 @@ namespace Converto_IT008_WPF.ViewModels
                 }
             };
 
-            //goDisconnect.Navigate();
-            //GoDisconnectCommand = new RelayCommand(() => goDisconnect.Navigate());
-            GoDisconnectCommand = new RelayCommand(() => nav.Navigate<DisconnectViewModel>());
-            GoHomepageCommand = new RelayCommand(() => nav.Navigate<HomepageViewModel>());
-            GoAboutUsCommand = new RelayCommand(() => nav.Navigate<AboutUsViewModel>());
-            GoHistoryCommand = new RelayCommand(() => nav.Navigate<HistoryViewModel>());
-            GoCompressCommand = new RelayCommand(() => nav.Navigate<CompressViewModel>());
-            GoLoginCommand = new RelayCommand(() => nav.Navigate<UserViewModel.LoginViewModel>());
-            GoSignUpCommand = new RelayCommand(() => nav.Navigate<UserViewModel.SignUpViewModel>());
-            GoMyAccountCommand = new RelayCommand(() => nav.Navigate<UserViewModel.MyAccountViewModel>());
-            GoTextToImage = new RelayCommand(() => nav.Navigate<SideServices.TextToImageViewModel>());
-            GoRemoveBackground = new RelayCommand(() => nav.Navigate<SideServices.RemoveBackgroundViewModel>());
+            GoHomepageCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<HomepageViewModel>(); });
+            GoAboutUsCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<AboutUsViewModel>(); });
+            GoHistoryCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<HistoryViewModel>(); });
+            GoCompressCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<CompressViewModel>(); });
+            GoLoginCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<UserViewModel.LoginViewModel>(); });
+            GoSignUpCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<UserViewModel.SignUpViewModel>(); });
+            GoMyAccountCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<UserViewModel.MyAccountViewModel>(); });
+            GoTextToImage = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.TextToImageViewModel>(); });
+            GoRemoveBackground = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.RemoveBackgroundViewModel>(); });
             nav.Navigate<HomepageViewModel>();
 
             //ktra mang

@@ -3,9 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views.UserViews"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+    </UserControl.Resources>
     <Grid>
         <Border Background="White" Height="450" Width="420" BorderThickness="0.5" BorderBrush="Black" CornerRadius="5" Padding="0,10,0,10">
             <Border.Effect>
@@ -60,7 +64,13 @@
                         </StackPanel>
                     </Grid>
 
-                    <Button Background="#F24822" Foreground="White" Content="Login" Grid.Row="3" Height="40" Margin="0,22,0,0" Style="{StaticResource CTA}" TabIndex="3"/>
+                    <Button Background="#F24822" Foreground="White" Content="Login" Height="40" Margin="0,22,0,0" 
+                            Style="{StaticResource CTA}" TabIndex="3" 
+                            Command="{Binding LoginCommand}"
+                            Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
+
+                    <fa:ImageAwesome Icon="Refresh" Spin="True" Width="42" Height="42" Margin="10,15,10,0" Foreground="#23772E" HorizontalAlignment="Center"
+                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
                     <Grid Margin="0,15,0,0">
                         <Grid.ColumnDefinitions>

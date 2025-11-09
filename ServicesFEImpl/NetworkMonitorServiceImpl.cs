@@ -98,6 +98,11 @@ namespace Converto_IT008_WPF.ServicesFEImpl
             }
         }
 
+        public bool checkIsOnline()
+        {
+            return _isOnline;
+        }
+
         public void Dispose()
         {
             Stop();

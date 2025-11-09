@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Converto_IT008_WPF.ServicesFE;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -25,6 +26,8 @@ public partial class BaseViewModel : ObservableObject, IDisposable
 
     [ObservableProperty]
     private bool isOnline;
+
+
 
     public virtual void Dispose()
     {

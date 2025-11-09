@@ -12,5 +12,6 @@ namespace Converto_IT008_WPF.ServicesFE
         void Stop();
         event Action<bool> NetworkStatusChanged;
         bool IsOnline { get; }
+        bool checkIsOnline();
     }
 }

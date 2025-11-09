@@ -36,6 +36,7 @@ public partial class LoginViewModel : BaseViewModel
     {
         try
         {
+            IsBusy = true;
             LoginRequest loginRequest = new LoginRequest()
             {
                 Email = Email,
@@ -56,6 +57,10 @@ public partial class LoginViewModel : BaseViewModel
         catch (Exception ex)
         {
             MessageBox.Show($"Error during login: {ex.Message}", "Sign Up Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 

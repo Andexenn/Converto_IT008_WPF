@@ -20,6 +20,10 @@ public partial class MyAccountViewModel : BaseViewModel
     void Logout()
     {
         _sessionState.IsUserLoggedIn = false;
-        _sessionState.LoginResponse = null;
+        if (_sessionState.LoginResponse != null)
+        {
+            _sessionState.LoginResponse.access_token = string.Empty;
+            _sessionState.LoginResponse.user = null!;
+        }
     }
 }

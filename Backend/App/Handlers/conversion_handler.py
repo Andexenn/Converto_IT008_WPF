@@ -30,15 +30,14 @@ async def convert_handler(
 
     Parameter:
     ----------
-    out_format(str): output format of the target file
-    filepath(str): the path from the file in the local
-    current_user(User): the user want to use the service
-    db(Session): a session working with the database
+    - out_format(str): output format of the target file
+    - filepath(str): the path from the file in the local
+    - current_user(User): the user want to use the service
+    - db(Session): a session working with the database
     """
     # TODO: check current user
 
     filepath = r"D:\Downloads\1.webp"
-    in_format: str = filepath.rsplit('.', maxsplit=1)[-1]
 
     # FE: kiem tra file co ton tai khong? co dung dinh dang input
     filepath: Path = Path(filepath)
@@ -52,7 +51,7 @@ async def convert_handler(
 
     try:
         # Convert image (pure logic, no database)
-        converted_bytes = await ConversionRepository().convert(file_content, out_format)
+        in_format, converted_bytes = await ConversionRepository().convert(file_content, out_format)
         new_filename: str = filepath.stem + f".{out_format}"
     except ValueError as e:
         raise HTTPException(
@@ -65,14 +64,13 @@ async def convert_handler(
             detail=f"Conversion failed: {str(e)}"
         ) from e
 
-    # TODO: db log history
     conversion_repo = ConversionHistoryRepository(db)
 
-    _, _ = await conversion_repo.record_conversion(
+    await conversion_repo.record_conversion(
         user_id=current_user.UserID,
         input_format=in_format,
         output_format=out_format,
-        original_filename=filepath.stem + f".{in_format}",
+        original_filename=filepath.name,
         converted_filename=filepath.stem + f".{out_format}",
         file_size_bytes=file_content,
         converted_file_bytes=converted_bytes
@@ -80,9 +78,9 @@ async def convert_handler(
 
     return StreamingResponse(
         io.BytesIO(converted_bytes),
-        media_type="image/png",
+        media_type=f"image/{out_format.lower()}",
         headers={
             "Content-Disposition": f"attachment; filename={new_filename}",
-            "Content-Length": str(len(file_content))
+            "Content-Length": str(len(converted_bytes))
         }
     )

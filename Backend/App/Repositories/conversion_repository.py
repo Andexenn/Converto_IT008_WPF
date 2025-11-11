@@ -10,7 +10,7 @@ class ConversionRepository(IConversionService):
     """
     Conversion repository class
     """
-    async def convert(self, file_content: bytes, out_format: str) -> bytes:
+    async def convert(self, file_content: bytes, out_format: str) -> tuple[str, bytes]:
         try:
             image = Image.open(io.BytesIO(file_content))
         except Exception as e:
@@ -30,4 +30,4 @@ class ConversionRepository(IConversionService):
             raise ValueError(
                  f"Failed to convert {image.format} to {out_format.upper()}: {str(e)}"
             ) from e
-        return buffer.getvalue()
+        return str(image.format), buffer.getvalue()

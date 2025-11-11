@@ -1,19 +1,20 @@
-from sqlalchemy.orm import Session 
-from sqlalchemy.exc import IntegrityError
-from typing import Optional 
-from fastapi import HTTPException, status 
+from typing import Optional
 from datetime import timedelta
 
-from Services.UserServices.auth_service import IAuthService
+from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
+from fastapi import HTTPException, status
+
+from Services.auth_service import IAuthService
 from Schemas.user import UserCreate, UserResponse, UserLogin, UserLoginResponse
-from Entities.user import User 
+from Entities.user import User
 from Entities.wallet import Wallet
 from Core.security import hash_password, verify_password, create_access_token
 from config import settings
 
 class AuthRepository(IAuthService):
     def __init__(self, db: Session):
-        self.db = db 
+        self.db = db
 
     async def sign_up(self, user_data: UserCreate) -> UserResponse:
         try:
@@ -22,7 +23,7 @@ class AuthRepository(IAuthService):
                     status_code=status.HTTP_400_BAD_REQUEST,
                     detail="Email already registered"
                 )
-            
+
             hashed_password = hash_password(user_data.Password)
 
             new_user = User(
@@ -34,7 +35,7 @@ class AuthRepository(IAuthService):
                 City = user_data.City,
                 DateOfBirth = user_data.DateOfBirth,
                 HashedPassword = hashed_password)
-            
+
             self.db.add(new_user)
             self.db.flush()
 
@@ -54,17 +55,17 @@ class AuthRepository(IAuthService):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail = "User registration failed. Email might already exist."
-            )
+            ) from e
         except HTTPException:
             self.db.rollback()
-            raise 
+            raise
         except Exception as e:
             self.db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"An error occurred during registration: {str(e)}"
-            )
-        
+            ) from e
+
     async def get_user_by_email(self, email: str) -> Optional[UserResponse]:
         user = self.db.query(User).filter(User.Email == email).first()
         if(user):
@@ -74,8 +75,8 @@ class AuthRepository(IAuthService):
     async def user_exists(self, email: str) -> bool:
         user = self.db.query(User).filter(User.Email == email).first()
         return user is not None
-    
-    async def login(self, user_data: UserLogin) -> dict:
+
+    async def login(self, user_data: UserLogin) -> dict[str, str | UserLoginResponse]:
         try:
             user = self.db.query(User).filter(User.Email == user_data.Email).first()
 
@@ -104,7 +105,4 @@ class AuthRepository(IAuthService):
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"An  error occured during login: {str(e)}"
-            )
-        
-
-
+            ) from e

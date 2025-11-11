@@ -34,7 +34,7 @@ class ConversionResponse(BaseModel):
     message: str
     original_filename: str
     converted_filename: str
-    file_size_bytes: int
+    file_size_bytes: bytes
     service_name: str
     created_at: datetime
     cost: Decimal

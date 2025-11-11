@@ -8,7 +8,6 @@
              xmlns:usrvi="clr-namespace:Converto_IT008_WPF.Views.UserViews"
              xmlns:usrvm="clr-namespace:Converto_IT008_WPF.ViewModels.UserViewModel"
              xmlns:cvvm="clr-namespace:Converto_IT008_WPF.ViewModels.ConvertServiceViewModel"
-             xmlns:cvv="clr-namespace:Converto_IT008_WPF.Views.ServiceViews.Converters"
              xmlns:ssv="clr-namespace:Converto_IT008_WPF.ViewModels.SideServices"
              >
     <Application.Resources>
@@ -51,7 +50,7 @@
 
             <!-- ############# Convert ############# -->
             <DataTemplate DataType="{x:Type cvvm:WEBPtoPNGViewModel}">
-                <cvv:WEBPtoPNGView/>
+                <vi:ConverterView/>
             </DataTemplate>
 
             <!-- ############# User ############# -->

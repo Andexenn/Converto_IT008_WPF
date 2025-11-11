@@ -1,16 +1,23 @@
+"""
+conversion_history_repository module
+"""
+
 from sqlalchemy.orm import Session, joinedload
 from typing import List, Tuple
-from fastapi import HTTPException, status 
+from fastapi import HTTPException, status
 from decimal import Decimal
 
-from Services.ConvertServices.conversion_service import IConversionService
+from Services.conversion_history_service import IConversionHistoryService
 from Schemas.conversion import ConversionResponse
 from Entities.conversion_history import ConversionHistory
-from Entities.service import Service 
+from Entities.service import Service
 
-class ConversionRepositories(IConversionService):
+class ConversionHistoryRepository(IConversionHistoryService):
+    """
+    Implement ConversionHistoryRepository from IConversionHistoryService
+    """
     def __init__(self, db: Session):
-        self.db = db 
+        self.db = db
 
     async def get_or_create_service(self, input_format: str, output_format: str) -> Service:
         try:
@@ -21,10 +28,10 @@ class ConversionRepositories(IConversionService):
 
             if service:
                 return service
-            
+
             service_name = f"{input_format.upper()} to {output_format.upper()} Conversion"
 
-            new_service = Service( 
+            new_service = Service(
                 InputFormat = input_format,
                 OutputFormat = output_format,
                 ServiceName = service_name,
@@ -42,7 +49,7 @@ class ConversionRepositories(IConversionService):
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to get or create service: {str(e)}"
-            )
+            ) from e
 
     async def record_conversion(
         self,
@@ -51,23 +58,23 @@ class ConversionRepositories(IConversionService):
         output_format: str,
         original_filename: str,
         converted_filename: str,
-        file_size_bytes: int,
+        file_size_bytes: bytes,
         converted_file_bytes: bytes
     ) -> Tuple[ConversionResponse, bytes]:
         try:
             # Get or create service
             service = await self.get_or_create_service(input_format, output_format)
-            
+
             # Create conversion history
             new_history = ConversionHistory(
                 UserID=user_id,
                 ServiceID=service.ServiceID
             )
-            
+
             self.db.add(new_history)
             self.db.commit()
             self.db.refresh(new_history)
-            
+
             # Build response
             response = ConversionResponse(
                 success=True,
@@ -77,20 +84,20 @@ class ConversionRepositories(IConversionService):
                 file_size_bytes=file_size_bytes,
                 service_name=service.ServiceName,
                 created_at=new_history.CreatedAt,
-                cost=service.Price,
+                cost=Decimal(service.Price),
                 conversion_history_id=new_history.ConversionHistoryID
             )
-            
+
             return response, converted_file_bytes
-            
+
         except Exception as e:
             self.db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to record conversion: {str(e)}"
-            )
+            ) from e
 
-        
+
     async def get_user_conversion_history(self, user_id: int, limit: int = 50) -> List[ConversionHistory]:
         try:
             histories = self.db.query(ConversionHistory).options(
@@ -100,11 +107,11 @@ class ConversionRepositories(IConversionService):
             ).order_by(
                 ConversionHistory.CreatedAt.desc()  # Fix: remove () from desc
             ).limit(limit).all()
-            
+
             return histories
         except Exception as e:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to get user conversion history: {str(e)}"
-            )
+            ) from e
 

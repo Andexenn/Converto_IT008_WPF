@@ -1,7 +1,7 @@
-from sqlalchemy import BigInteger, DECIMAL, DATETIME, String, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from Database.connection import Base 
 from typing import List, TYPE_CHECKING
+from sqlalchemy import BigInteger, DECIMAL, String, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from Database.connection import Base
 
 if TYPE_CHECKING:
     from user import User

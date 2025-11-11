@@ -2,7 +2,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 from config import settings 
 
-SQL_ALCHEMY_DATABASE_URL = f"mysql+pymysql://{settings.DB_USER}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+SQL_ALCHEMY_DATABASE_URL = (
+    f"mysql+pymysql://"
+    f"{settings.DB_USER}:{settings.DB_PASSWORD}"
+    f"@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
+)
 
 engine = create_engine(
     SQL_ALCHEMY_DATABASE_URL,
@@ -20,10 +24,7 @@ def get_db():
         db.close()
 
 def init_db():
+    # pylint: disable=import-outside-toplevel
+    # pylint: disable=unused-import
     from Entities import User, Wallet, WalletTransaction, Service, ConversionHistory
     Base.metadata.create_all(bind=engine)
-
-
-
-
-

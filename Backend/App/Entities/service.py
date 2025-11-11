@@ -1,11 +1,11 @@
-from typing import List
-from sqlalchemy import Column, BigInteger, String, DECIMAL
+from typing import List, TYPE_CHECKING
+from sqlalchemy import BigInteger, String, DECIMAL
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from Database.connection import Base
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from conversion_history import ConversionHistory
+
 class Service(Base):
     __tablename__ = "SERVICE"
 

@@ -1,10 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+"""
+Conversion history handler
+"""
+
+from decimal import Decimal
+
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from Database.connection import get_db
 from Core.dependencies import get_current_user
 from Entities.user import User
-from Repositories.ConvertRepositories.conversion_repositories import ConversionRepository
+from Repositories.conversion_history_repository import ConversionHistoryRepository
 from Schemas.conversion import ConversionHistoryWithServiceResponse
 
 router = APIRouter()
@@ -15,13 +21,15 @@ async def get_my_conversion_history(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Get current user's conversion history"""
-    conversion_repo = ConversionRepository(db)
+    """
+    Get current user's conversion history
+    """
+    conversion_repo = ConversionHistoryRepository(db)
     histories = await conversion_repo.get_user_conversion_history(
         user_id=current_user.UserID,
         limit=limit
     )
-    
+
     return [
         ConversionHistoryWithServiceResponse(
             ConversionHistoryID=h.ConversionHistoryID,
@@ -31,8 +39,7 @@ async def get_my_conversion_history(
             ServiceName=h.service.ServiceName,
             InputFormat=h.service.InputFormat,
             OutputFormat=h.service.OutputFormat,
-            Cost=h.service.Price
+            Cost=Decimal(h.service.Price)
         )
         for h in histories
     ]
-

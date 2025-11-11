@@ -16,14 +16,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Converto_IT008_WPF.Views.ServiceViews.Converters;
+namespace Converto_IT008_WPF.Views.ServiceViews;
 
 /// <summary>
 /// Interaction logic for WEBPtoPNGView.xaml
 /// </summary>
-public partial class WEBPtoPNGView : UserControl
+public partial class ConverterView : UserControl
 {
-    public WEBPtoPNGView()
+    public ConverterView()
     {
         InitializeComponent();
         DataContext = App.ServiceProvider?.GetRequiredService<WEBPtoPNGViewModel>();

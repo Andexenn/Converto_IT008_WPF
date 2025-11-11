@@ -360,10 +360,10 @@
     <Style TargetType="Button" x:Key="TextOption">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="Foreground" Value="#FF4F4E4E"/>
+        <Setter Property="Foreground" Value="#248932"/>
         <Setter Property="FontFamily" Value="D:\Ryan\App_project\Converto_IT008_WPF\Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF"/>
         <Setter Property="FontWeight" Value="Regular"/>
-        <Setter Property="Margin" Value="0,15,0,0"/>
+        <Setter Property="Margin" Value="0,10,0,0"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="Padding" Value="15,5,15,5"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -406,7 +406,7 @@
                                         <ColorAnimation 
                                                   Storyboard.TargetName="contentPresenter"
                                                   Storyboard.TargetProperty="(TextBlock.Foreground).(SolidColorBrush.Color)"
-                                                  To="#FF4F4E4E" Duration="0:0:0.15"/>
+                                                  To="#248932" Duration="0:0:0.15"/>
                                         <ColorAnimation 
                                                     Storyboard.TargetName="root"
                                                     Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)"

@@ -1,7 +1,9 @@
 # 🚀 Converto - a project deploy by UIT Students
 
+<img width="3465" height="646" alt="image" src="https://github.com/user-attachments/assets/8ed6e8b6-f7b5-40e6-b882-1575bf96e744" />
+
 ---
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![UIT](https://www.uit.edu.vn/sites/vi/files/banner_uit.png)](https://www.uit.edu.vn/)
 
 Welcome to Converto, the final project for the Visual Programming (IT008) course.
 

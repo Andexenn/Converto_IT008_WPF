@@ -1,5 +1,10 @@
 # 🚀 Converto - a project deploy by UIT Students
 
+<img width="3465" height="646" alt="image" src="https://github.com/user-attachments/assets/8ed6e8b6-f7b5-40e6-b882-1575bf96e744" />
+
+---
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![UIT](https://img.shields.io/badge/UIT-VNU-lightblue%20)](https://www.uit.edu.vn/)
+
 Welcome to Converto, the final project for the Visual Programming (IT008) course.
 
 Converto is a client-server application for much transition beetween a lot of files tool (include Video/Audio, Image, PDF/Document and GIF convert). This project applies core concepts from the course, including visual programming by C#, how to create animation.

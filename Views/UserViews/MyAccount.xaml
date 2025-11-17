@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views.UserViews"
+             xmlns:custom="clr-namespace:PlaceholderTextBoxControl"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -55,32 +56,62 @@
 
                 <StackPanel>
                     <TextBlock Text="First name" FontSize="18"/>
-                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                    <custom:PlaceholderTextBox 
+                        Style="{StaticResource Input}" 
+                        Placeholder="e.g: Anh"
+                        Margin="0,8,0,0" 
+                        Height="35" Width="350" 
+                        BorderBrush="#FF4F4E4E"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="2">
                     <TextBlock Text="Last name" FontSize="18"/>
-                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                    <custom:PlaceholderTextBox 
+                        Style="{StaticResource Input}" 
+                        Placeholder="e.g: Nguyễn Văn"
+                        Margin="0,8,0,0" 
+                        Height="35" Width="350" 
+                        BorderBrush="#FF4F4E4E"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
                     <TextBlock Text="Address" FontSize="18"/>
-                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                    <custom:PlaceholderTextBox 
+                        Style="{StaticResource Input}" 
+                        Placeholder="e.g: Phường Tân Định, Quận 1"
+                        Margin="0,8,0,0" 
+                        Height="35" Width="350" 
+                        BorderBrush="#FF4F4E4E"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,15,0,0">
                     <TextBlock Text="City" FontSize="18"/>
-                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                    <custom:PlaceholderTextBox 
+                        Style="{StaticResource Input}" 
+                        Placeholder="e.g: Thành phố Hồ Chí Minh"
+                        Margin="0,8,0,0" 
+                        Height="35" Width="350" 
+                        BorderBrush="#FF4F4E4E"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,15,0,0">
                     <TextBlock Text="Date of Birth" FontSize="18"/>
-                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                    <custom:PlaceholderTextBox 
+                        Style="{StaticResource Input}" 
+                        Placeholder="e.g: dd/mm/yyyy"
+                        Margin="0,8,0,0" 
+                        Height="35" Width="350" 
+                        BorderBrush="#FF4F4E4E"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,15,0,0">
                     <TextBlock Text="Phone number" FontSize="18"/>
-                    <TextBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource Input}"/>
+                    <custom:PlaceholderTextBox 
+                        Style="{StaticResource Input}" 
+                        Placeholder="e.g: xxxx-xxx-xxx"
+                        Margin="0,8,0,0" 
+                        Height="35" Width="350" 
+                        BorderBrush="#FF4F4E4E"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,15,0,0">

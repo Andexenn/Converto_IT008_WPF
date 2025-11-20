@@ -7,102 +7,247 @@
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views.UserViews"
              xmlns:custom="clr-namespace:PlaceholderTextBoxControl"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="800"
+             FontFamily="Segoe UI">
+
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+
+        <Style x:Key="LeftTitleText" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="3" ShadowDepth="1" Opacity="0.3"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="InputContainer" TargetType="Border">
+            <Setter Property="Background" Value="#F5F5F5"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Height" Value="35"/>
+            <Setter Property="Margin" Value="0,4,0,12"/>
+        </Style>
     </UserControl.Resources>
+
     <Grid>
-        <Border Background="White" Height="450" Width="420" BorderThickness="0.5" BorderBrush="Black" CornerRadius="5" Padding="0,10,0,10">
-            <Border.Effect>
-                <DropShadowEffect/>
-            </Border.Effect>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="350"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" ClipToBounds="True">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                <Image Source="/Converto_IT008_WPF;component/Resources/LoginBackground.png"
+                       Stretch="UniformToFill"
+                       VerticalAlignment="Top">
+                </Image>
 
-                <TextBlock Text="Login" 
-                           Foreground="#F24822"
-                           FontWeight="SemiBold"
-                           HorizontalAlignment="Center"
-                           FontSize="40"/>
+                <Grid>
+                    <TextBlock Text="CONVERTO" 
+                               HorizontalAlignment="Left" VerticalAlignment="Top"
+                               Margin="25,80,0,0"
+                               FontFamily="/Converto_IT008_WPF;component/Resources/#Montserrat"
+                               FontSize="36" 
+                               FontWeight="Medium" 
+                               LineHeight="45"
+                               LineStackingStrategy="BlockLineHeight"
+                               Style="{StaticResource LeftTitleText}"/>
 
-                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Margin="0,20,0,0">
-                    <TextBlock Text="Email*" 
-                               HorizontalAlignment="Left"
-                               Foreground="Black"
-                               FontWeight="SemiBold"
-                               FontSize="18"/>
-                    <custom:PlaceholderTextBox 
-                        Style="{StaticResource Input}" 
-                        Placeholder="e.g: example@gmail.com"
-                        Margin="0,8,0,0" 
-                        Height="35" Width="300"
-                        Padding="8 2"
-                        BorderBrush="#FF4F4E4E"
-                        TabIndex="0" 
-                        Text="{Binding Email, Mode=TwoWay}"/>
-                </StackPanel>
+                    <TextBlock Text="Welcome Back" 
+                               HorizontalAlignment="Left" VerticalAlignment="Top"
+                               Margin="25,130,0,0"
+                               FontFamily="/Converto_IT008_WPF;component/Resources/#Montserrat"
+                               FontSize="20" 
+                               FontWeight="Medium" 
+                               LineHeight="30"
+                               Style="{StaticResource LeftTitleText}"/>
 
-                <StackPanel Grid.Row="2" HorizontalAlignment="Center" Margin="0,10,0,0">
-                    <TextBlock Text="Password*" 
-                               HorizontalAlignment="Left"
-                               Foreground="Black"
-                               FontWeight="SemiBold"
-                               FontSize="18"/>
+                    <TextBlock Text="Sign in to access your account and continue your journey with us." 
+                               HorizontalAlignment="Left" VerticalAlignment="Top"
+                               Margin="25,160,0,0"
+                               Width="280" TextWrapping="Wrap"
+                               FontFamily="/Converto_IT008_WPF;component/Resources/#Inter"
+                               FontSize="11"
+                               LineHeight="16"
+                               Style="{StaticResource LeftTitleText}"/>
 
-                    <PasswordBox Margin="0,5,0,0" Style="{StaticResource PasswordBoxv2}" TabIndex="1"
-                                 PasswordChanged="PasswordBox_PasswordChanged"/>
-
-                    <Grid Margin="0,10,0,0">
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,220,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-
-                        <CheckBox Cursor="Hand" Margin="0,0,7,0" Background="#23772E" VerticalAlignment="Center" BorderBrush="Transparent" IsChecked="False" Content="Remember me" Foreground="#23772E" FontWeight="SemiBold" TabIndex="2"/>
-
-                        <StackPanel Grid.Column="3" Cursor="Hand">
-                            <TextBlock Text="Forgot Password?" Grid.Column="3" FontWeight="SemiBold" Foreground="#23772E"/>
-                            <Border Height="1" BorderThickness="0.5" BorderBrush="#23772E"/> 
+                        <Border Background="White" Width="38" Height="38" CornerRadius="6">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.2" Color="Black"/>
+                            </Border.Effect>
+                            <fa:ImageAwesome Icon="Lock" Foreground="#F73637" VerticalAlignment="Center" HorizontalAlignment="Center" Height="20" Width="20"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0,0,0">
+                            <TextBlock Text="Secure &amp; Reliable" FontSize="14" FontWeight="Medium" Style="{StaticResource LeftTitleText}" FontFamily="/Converto_IT008_WPF;component/Resources/#Inter"/>
+                            <TextBlock Text="Your data is protected..." FontSize="10" Style="{StaticResource LeftTitleText}" FontFamily="/Converto_IT008_WPF;component/Resources/#Inter" Opacity="0.9"/>
                         </StackPanel>
                     </Grid>
 
-                    <Button Background="#F24822" Foreground="White" Content="Login" Height="40" Margin="0,22,0,0" 
-                            Style="{StaticResource CTA}" TabIndex="3" 
-                            Command="{Binding LoginCommand}"
-                            Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <fa:ImageAwesome Icon="Refresh" Spin="True" Width="42" Height="42" Margin="10,15,10,0" Foreground="#23772E" HorizontalAlignment="Center"
-                 Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
-
-                    <Grid Margin="0,15,0,0">
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,280,0,0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-
-                        <Border Height="1" BorderThickness="0.5" BorderBrush="#4F4E4E"/>
-
-                        <TextBlock Grid.Column="1" Text="Or login with" HorizontalAlignment="Center" Foreground="#4F4E4E"/>
-                        <Border Grid.Column="2" Height="1" BorderThickness="0.5" BorderBrush="#4F4E4E"/>
-                        
+                        <Border Background="White" Width="38" Height="38" CornerRadius="6">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.2" Color="Black"/>
+                            </Border.Effect>
+                            <fa:ImageAwesome Icon="Refresh" Foreground="#F73637" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0,0,0">
+                            <TextBlock Text="Fast &amp; Efficient" FontSize="14" FontWeight="Medium" Style="{StaticResource LeftTitleText}" FontFamily="/Converto_IT008_WPF;component/Resources/#Inter"/>
+                            <TextBlock Text="Access instantly..." FontSize="10" Style="{StaticResource LeftTitleText}" FontFamily="/Converto_IT008_WPF;component/Resources/#Inter" Opacity="0.9"/>
+                        </StackPanel>
                     </Grid>
 
-                    <Button Margin="0,15,0,0" Height="40" Style="{StaticResource GoogleLogin}" TabIndex="4"/>
-
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock FontWeight="SemiBold" Margin="0,10,0,0" HorizontalAlignment="Center" Text="Don't have an account?" />
-                        <Button Command="{Binding GoSignUpCommand}" Margin="3,0,0,0" Content="Sign Up" Style="{StaticResource SignUpButtonv2}"/>
-                    </StackPanel>
-                </StackPanel>
-
+                    <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Margin="25,340,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Background="White" Width="38" Height="38" CornerRadius="6">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="5" ShadowDepth="2" Direction="270" Opacity="0.2" Color="Black"/>
+                            </Border.Effect>
+                            <fa:ImageAwesome Icon="CheckCircle" Foreground="#F73637" Height="20" Width="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="15,0,0,0">
+                            <TextBlock Text="24/7 Support" FontSize="14" FontWeight="Medium" Style="{StaticResource LeftTitleText}" FontFamily="/Converto_IT008_WPF;component/Resources/#Inter"/>
+                            <TextBlock Text="Always here to help..." FontSize="10" Style="{StaticResource LeftTitleText}" FontFamily="/Converto_IT008_WPF;component/Resources/#Inter" Opacity="0.9"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
             </Grid>
         </Border>
+
+        <Grid Grid.Column="1" Background="White">
+            <StackPanel VerticalAlignment="Center" Margin="40,0">
+                <TextBlock Text="Sign In" FontSize="24" FontWeight="Bold" Foreground="#D32F2F" Margin="0,0,0,5"/>
+                <TextBlock Text="Enter your credentials to access your account" Foreground="#757575" FontSize="12" Margin="0,0,0,25"/>
+
+                <TextBlock Text="Email Address" FontWeight="SemiBold" Foreground="#424242" FontSize="12" Margin="0,0,0,3"/>
+                <Border Style="{StaticResource InputContainer}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <fa:ImageAwesome Icon="Envelope" Width="14" Foreground="#9E9E9E" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <custom:PlaceholderTextBox Grid.Column="1" Placeholder="name@example.com" Text="{Binding Email, Mode=TwoWay}" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" FontSize="13" Padding="0,0,10,0" TabIndex="0"/>
+                    </Grid>
+                </Border>
+
+                <TextBlock Text="Password" FontWeight="SemiBold" Foreground="#424242" FontSize="12" Margin="0,0,0,3"/>
+                <Border Style="{StaticResource InputContainer}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <fa:ImageAwesome Icon="Lock" Width="14" Foreground="#9E9E9E" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                        <PasswordBox Grid.Column="1" PasswordChanged="PasswordBox_PasswordChanged" Background="Transparent" BorderThickness="0" VerticalContentAlignment="Center" FontSize="13" Padding="0,0,10,0" TabIndex="1"/>
+                    </Grid>
+                </Border>
+
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <CheckBox Content="Remember me" IsChecked="False" Foreground="#616161" VerticalAlignment="Center" Cursor="Hand" FontSize="12" TabIndex="2"/>
+                    <Button Grid.Column="1" Content="Forgot password?" Foreground="#D32F2F" FontWeight="SemiBold" Cursor="Hand" Background="Transparent" BorderThickness="0" FontSize="12">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <ContentPresenter/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </Grid>
+
+                <Grid Height="40">
+                    <Button Content="Sign In" Command="{Binding LoginCommand}" TabIndex="3" FontSize="14" FontWeight="Bold" Foreground="White" Cursor="Hand" Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="#D32F2F"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#B71C1C"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <fa:ImageAwesome Icon="Refresh" Spin="True" Width="24" Height="24" Foreground="#D32F2F" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </Grid>
+
+                <Grid Margin="0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Separator Grid.Column="0" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="1" Text="or Sign In with" Foreground="#9E9E9E" Margin="10,0" FontSize="11"/>
+                    <Separator Grid.Column="2" VerticalAlignment="Center"/>
+                </Grid>
+
+                <Button Height="40" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" Cursor="Hand" TabIndex="4">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <fa:ImageAwesome Icon="Google" Foreground="#D32F2F" Width="16" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                    <TextBlock Text="Login With Google" FontWeight="SemiBold" Foreground="#424242" FontSize="13" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#FAFAFA"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <TextBlock Text="Don't have an account? " Foreground="#757575" FontSize="12"/>
+                    <Button Command="{Binding GoSignUpCommand}" Content="Sign Up" Foreground="#D32F2F" FontWeight="Bold" Cursor="Hand" Background="Transparent" BorderThickness="0" FontSize="12">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <ContentPresenter/>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+
+            </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

@@ -1,3 +1,7 @@
+"""
+service entity
+"""
+
 from typing import List, TYPE_CHECKING
 from sqlalchemy import BigInteger, String, DECIMAL
 from sqlalchemy.orm import relationship, Mapped, mapped_column

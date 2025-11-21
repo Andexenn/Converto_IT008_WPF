@@ -2,10 +2,11 @@
 conversion_history_repository module
 """
 
-from sqlalchemy.orm import Session, joinedload
-from typing import List, Tuple
-from fastapi import HTTPException, status
 from decimal import Decimal
+
+from typing import List, Tuple
+from sqlalchemy.orm import Session, joinedload
+from fastapi import HTTPException, status
 
 from Services.conversion_history_service import IConversionHistoryService
 from Schemas.conversion import ConversionResponse

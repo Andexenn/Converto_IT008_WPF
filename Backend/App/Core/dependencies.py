@@ -2,14 +2,14 @@
 dependencies module
 """
 
-from fastapi import Depends, HTTPException, status 
+from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
-from sqlalchemy.orm import Session 
+from sqlalchemy.orm import Session
 
 from config import settings
 from Database.connection import get_db
-from Entities.user import User 
+from Entities.user import User
 
 
 security = HTTPBearer()
@@ -18,6 +18,14 @@ async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     db: Session = Depends(get_db)
 ) -> User :
+    """
+    Get the current user and authorize that one
+
+    Parameters:
+    -----------
+    credentials(HTTPAuthorizationCredentials): depend on security
+    db(Session): depend on get_db
+    """
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -31,19 +39,19 @@ async def get_current_user(
             settings.SECRET_KEY,
             algorithms=[settings.ALGORITHM]
         )
-        email: str = payload.get("sub")
-        user_id: int = payload.get("user_id")
-        
+        email: str | None = payload.get("sub")
+        user_id: int | None = payload.get("user_id")
+
         if email is None or user_id is None:
             raise credentials_exception
-    except JWTError:
-        raise credentials_exception
-    
+    except JWTError as e:
+        raise credentials_exception from e
+
     user = db.query(User).filter(User.UserID == user_id).first()
     if user is None:
         raise credentials_exception
-    
-    return user 
+
+    return user
 
 async def get_current_user_optional(
     credentials: HTTPAuthorizationCredentials = Depends(security),

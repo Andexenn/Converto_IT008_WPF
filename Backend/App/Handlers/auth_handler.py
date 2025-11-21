@@ -10,7 +10,6 @@ from Repositories.auth_repository import AuthRepository
 from Services.auth_service import IAuthService
 from Schemas.user import UserCreate, UserResponse, UserLogin, UserLoginResponse
 
-
 router = APIRouter()
 
 @router.post("/signup", response_model=UserResponse, status_code=status.HTTP_201_CREATED)

@@ -1,8 +1,12 @@
-from sqlalchemy import DateTime, BigInteger, ForeignKey, func
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from Database.connection import Base
+"""
+conversion history entity
+"""
 from datetime import datetime
 from typing import TYPE_CHECKING
+from sqlalchemy import DateTime, BigInteger, ForeignKey, func
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from Database.connection import Base
 
 if TYPE_CHECKING:
     from user import User
@@ -11,7 +15,7 @@ if TYPE_CHECKING:
 class ConversionHistory(Base):
     __tablename__ = "CONVERSION_HISTORY"
 
-    ConversionHistoryID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True) 
+    ConversionHistoryID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID", ondelete="CASCADE"))
     ServiceID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICE.ServiceID", ondelete="CASCADE"))
     # pylint: disable=not-callable
@@ -20,4 +24,3 @@ class ConversionHistory(Base):
     #relationship
     user: Mapped["User"] = relationship(back_populates="conversion_histories")
     service: Mapped["Service"] = relationship(back_populates="conversion_histories")
-    

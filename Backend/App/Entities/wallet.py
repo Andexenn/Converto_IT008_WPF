@@ -1,3 +1,7 @@
+"""
+wallet entity
+"""
+
 from typing import List, TYPE_CHECKING
 from sqlalchemy import BigInteger, DECIMAL, String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship

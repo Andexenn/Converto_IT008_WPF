@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware 
 from Database.connection import init_db
-from Handlers import auth_handler, conversion_handler
+from Handlers import auth_handler, conversion_handler, conversion_history_handler
 from config import settings 
 
 init_db()
@@ -23,6 +23,7 @@ app.add_middleware(
 
 app.include_router(auth_handler.router, prefix="/api/auth", tags=["Authentication"])
 app.include_router(conversion_handler.router, prefix="/api", tags=["Authentication"] )
+app.include_router(conversion_history_handler.router, prefix="/api", tags=["Authentication"])
 
 @app.get("/")
 def root():

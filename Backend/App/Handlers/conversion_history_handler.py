@@ -33,12 +33,8 @@ async def get_my_conversion_history(
     return [
         ConversionHistoryWithServiceResponse(
             ConversionHistoryID=h.ConversionHistoryID,
-            UserID=h.UserID,
-            ServiceID=h.ServiceID,
             CreatedAt=h.CreatedAt,
             ServiceName=h.service.ServiceName,
-            InputFormat=h.service.InputFormat,
-            OutputFormat=h.service.OutputFormat,
             Cost=Decimal(h.service.Price)
         )
         for h in histories

@@ -17,12 +17,8 @@ class ConversionHistoryResponse(ConversionHistoryBase):
 class ConversionHistoryWithServiceResponse(BaseModel):
     """Conversion history with service details"""
     ConversionHistoryID: int
-    UserID: int
-    ServiceID: int
     CreatedAt: datetime
     ServiceName: str
-    InputFormat: str
-    OutputFormat: str
     Cost: Decimal
     
     class Config:

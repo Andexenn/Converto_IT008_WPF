@@ -5,7 +5,7 @@ Conversion handler module
 import io
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
@@ -18,15 +18,15 @@ from Schemas.conversion import ConversionResponse
 
 router = APIRouter()
 
-@router.post("/convert_to/{out_format}/{filepath}", response_model=ConversionResponse)
-async def convert_handler(
+@router.post("/convert_to/image/{out_format}", response_model=ConversionResponse)
+async def convert_image_handler(
     out_format: str,
-    filepath: str, # type: ignore
+    filepath: str = Query(...), # type: ignore
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ) -> StreamingResponse | None:
     """
-    Mount a function to an endpoint, use to convert fileformat
+    Mount a function to an endpoint, used to convert fileformat
 
     Parameter:
     ----------
@@ -35,9 +35,8 @@ async def convert_handler(
     - current_user(User): the user want to use the service
     - db(Session): a session working with the database
     """
-    # TODO: check current user
 
-    filepath = r"D:\Downloads\1.webp"
+    print(filepath)
 
     # FE: kiem tra file co ton tai khong? co dung dinh dang input
     filepath: Path = Path(filepath)
@@ -51,7 +50,7 @@ async def convert_handler(
 
     try:
         # Convert image (pure logic, no database)
-        in_format, converted_bytes = await ConversionRepository().convert(file_content, out_format)
+        in_format, converted_bytes = await ConversionRepository().convert_image(file_content, out_format)
         new_filename: str = filepath.stem + f".{out_format}"
     except ValueError as e:
         raise HTTPException(
@@ -84,3 +83,5 @@ async def convert_handler(
             "Content-Length": str(len(converted_bytes))
         }
     )
+
+# @router.post("/convert_to/vid_aud/{out_format}",)

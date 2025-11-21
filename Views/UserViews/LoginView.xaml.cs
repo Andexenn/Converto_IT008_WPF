@@ -26,4 +26,9 @@ public partial class LoginView : UserControl
         if (DataContext != null)
             ((LoginViewModel)DataContext).Password = ((PasswordBox)sender).Password;
     }
+
+    private void PlaceholderTextBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+
+    }
 }

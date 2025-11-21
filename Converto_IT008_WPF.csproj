@@ -25,6 +25,7 @@
     <None Remove="Resources\HT.jpg" />
     <None Remove="Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF" />
     <None Remove="Resources\INTER-VARIABLEFONT_OPSZ,WGHT.TTF" />
+    <None Remove="Resources\LoginBackground.png" />
     <None Remove="Resources\Logo.png" />
     <None Remove="Resources\MONTSERRAT-REGULAR.TTF" />
     <None Remove="Resources\MONTSERRAT-SEMIBOLD.TTF" />
@@ -49,6 +50,7 @@
     <Resource Include="Resources\HT.jpg" />
     <Resource Include="Resources\INTER-ITALIC-VARIABLEFONT_OPSZ,WGHT.TTF" />
     <Resource Include="Resources\INTER-VARIABLEFONT_OPSZ,WGHT.TTF" />
+    <Resource Include="Resources\LoginBackground.png" />
     <Resource Include="Resources\Logo.png" />
     <Resource Include="Resources\MONTSERRAT-REGULAR.TTF" />
     <Resource Include="Resources\MONTSERRAT-SEMIBOLD.TTF" />

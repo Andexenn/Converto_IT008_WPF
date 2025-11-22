@@ -19,13 +19,13 @@ from Schemas.conversion import ConversionResponse
 
 router = APIRouter()
 
-@router.post("/convert_to/image/{out_format}", response_model=ConversionResponse)
+@router.post("/convert_to/image/", response_model=dict)
 async def convert_image_handler(
-    out_format: str,
-    filepath: str, # type: ignore
+    input_path: str, # type: ignore
+    output_path: str,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
-) -> StreamingResponse | None:
+) -> dict:
     """
     Mount a function to an endpoint, used to convert fileformat
 
@@ -37,21 +37,20 @@ async def convert_image_handler(
     - db(Session): a session working with the database
     """
 
-    print(filepath)
 
     # FE: kiem tra file co ton tai khong? co dung dinh dang input
-    filepath: Path = Path(filepath)
-
+    filepath: Path = Path(input_path)
+    out_format = Path(output_path).suffix.lstrip('.').lower()
     try:
         with open(filepath, "rb") as fp:
             file_content = fp.read()
     except Exception as e: # pylint: disable=broad-exception-caught
         print(str(e))
-        return None
+        return {}
 
     try:
         # Convert image (pure logic, no database)
-        in_format, converted_bytes = await ConversionRepository().convert_image(file_content, out_format)
+        in_format, converted_bytes = await ConversionRepository().convert_image(file_content, out_format, output_path)
         new_filename: str = filepath.stem + f".{out_format}"
     except ValueError as e:
         raise HTTPException(
@@ -66,26 +65,26 @@ async def convert_image_handler(
 
     conversion_history_repo = ConversionHistoryRepository(db)
 
-    await conversion_history_repo.record_conversion(
-        user_id=current_user.UserID,
-        input_format=in_format,
-        output_format=out_format,
-        original_filename=filepath.name,
-        converted_filename=filepath.stem + f".{out_format}",
-        file_size_bytes=file_content,
-        converted_file_bytes=converted_bytes
-    )
+    try:
+        await conversion_history_repo.record_conversion(
+            user_id=current_user.UserID,
+            input_format=in_format,
+            output_format=out_format,
+            original_filename=filepath.name,
+            converted_filename=new_filename,
+            file_size_bytes=file_content,
+            converted_file_bytes=converted_bytes
+        )
+    except Exception as e:
+        print(f"Failed to record: {str(e)}")
 
-    return StreamingResponse(
-        io.BytesIO(converted_bytes),
-        media_type=f"image/{out_format.lower()}",
-        headers={
-            "Content-Disposition": f"attachment; filename={new_filename}",
-            "Content-Length": str(len(converted_bytes))
-        }
-    )
+    return {
+        "success": "True",
+        "message": "Conversion completed successfully",
+        "output_path": output_path
+    }
 
-@router.post("/convert_to/vid_au")
+@router.post("/convert_to/vid_au", response_model=dict)
 async def convert_video_audio(
     input_path: str,
     output_path: str,

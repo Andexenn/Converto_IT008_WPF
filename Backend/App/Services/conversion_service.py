@@ -9,7 +9,7 @@ class IConversionService(ABC):
     Conversion service interface
     """
     @abstractmethod
-    async def convert_image(self, file_content: bytes, out_format: str) -> tuple[str, bytes]:
+    async def convert_image(self, file_content: bytes, out_format: str, output_path: str) -> tuple[str, bytes]:
         """
         Converts image file content to out format
         

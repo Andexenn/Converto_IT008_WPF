@@ -38,7 +38,7 @@ class ConversionRepository(IConversionService):
 
         return str(ffmpeg_path.absolute())
 
-    async def convert_image(self, file_content: bytes, out_format: str) -> tuple[str, bytes]:
+    async def convert_image(self, file_content: bytes, out_format: str, output_path: str) -> tuple[str, bytes]:
         """
         Convert image from various types using Pillow
 
@@ -59,7 +59,7 @@ class ConversionRepository(IConversionService):
             image = Image.open(io.BytesIO(file_content))
         except Exception as e:
             raise ValueError(
-                f"Failed to convert to {out_format.upper()}: {str(e)}"
+                f"Failed to convert to open input file: {str(e)}"
             ) from e
 
         if image.mode in ("RGBA", "LA"):
@@ -76,7 +76,16 @@ class ConversionRepository(IConversionService):
             raise ValueError(
                  f"Failed to convert {image.format} to {out_format.upper()}: {str(e)}"
             ) from e
-        return str(image.format), buffer.getvalue()
+        
+        output_bytes = buffer.getvalue()
+
+        try:
+            with open(output_path, "wb") as f:
+                f.write(output_bytes)
+        except Exception as e:
+            raise ValueError(f"Failed to save file to local path {str(e)}") from e
+        
+        return str(image.format), output_bytes
 
     async def convert_video_audio(self, input_path: str, output_path: str, timeout: int = 300) -> bool:
         """

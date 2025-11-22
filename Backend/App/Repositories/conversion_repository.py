@@ -8,6 +8,7 @@ from pathlib import Path
 import subprocess
 
 from PIL import Image
+from fastapi import HTTPException, status
 
 from Services.conversion_service import IConversionService
 
@@ -99,12 +100,23 @@ class ConversionRepository(IConversionService):
         if not os.path.exists(input_path):
             raise FileNotFoundError(f"Input file not found: {input_path}")
 
+        output_dir = Path(output_path).parent
+
+        if not os.path.exists(output_dir):
+            try:
+                output_dir.mkdir(parents=True, exist_ok=True)
+            except Exception as e:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Can not create a folder for output file"
+                ) from e
+            
         output_format = Path(output_path).suffix.lstrip('.').lower()
-
+        
         try:
-            success = await self._run_ffmpeg_conversion(input_path, output_path, output_format)
+            is_success = await self._run_ffmpeg_conversion(input_path, output_path, output_format, timeout)
 
-            if success is False:
+            if is_success is False:
                 raise ValueError(f"FFmpeg conversion to {output_format.upper()} failed")
 
             if not os.path.exists(output_path):
@@ -118,7 +130,6 @@ class ConversionRepository(IConversionService):
             raise ValueError(f"Conversion to {output_format.upper()} is timed out. Files maybe too large or complex") from e
         except Exception as e:
             raise ValueError(f"The conversion was failed: {str(e)}") from e
-
 
     async def _run_ffmpeg_conversion(self, input_path: str, output_path: str, output_format: str, timeout: int = 300) -> bool:
         """

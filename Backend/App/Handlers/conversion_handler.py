@@ -3,9 +3,10 @@ Conversion handler module
 """
 
 import io
+import os
 from pathlib import Path
 
-from fastapi import APIRouter, Depends, HTTPException, status, Query
+from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 
@@ -63,9 +64,9 @@ async def convert_image_handler(
             detail=f"Conversion failed: {str(e)}"
         ) from e
 
-    conversion_repo = ConversionHistoryRepository(db)
+    conversion_history_repo = ConversionHistoryRepository(db)
 
-    await conversion_repo.record_conversion(
+    await conversion_history_repo.record_conversion(
         user_id=current_user.UserID,
         input_format=in_format,
         output_format=out_format,
@@ -105,16 +106,14 @@ async def convert_video_audio(
     --------
         True if convert successfully else False
     """
+
+    input_format = Path(input_path).suffix.lstrip('.').upper()
+    output_format = Path(output_path).suffix.lstrip('.').upper()
+
     try:
         is_success = await ConversionRepository().convert_video_audio(input_path, output_path)
 
-        if is_success:
-            return {
-                "success": True,
-                "message": "Conversion completed successfully",
-                "output_path": output_path
-            }
-        else:
+        if not is_success:
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Conversion failed"
@@ -129,3 +128,26 @@ async def convert_video_audio(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Conversion failed: {str(e)}"
         ) from e
+    
+    conversion_history_repo = ConversionHistoryRepository(db)
+    try:
+        original_file_size = os.path.getsize(input_path)
+        converted_file_size = os.path.getsize(output_path)
+
+        await conversion_history_repo.record_conversion(
+            user_id=current_user.UserID,
+            input_format=input_format,
+            output_format=output_format,
+            original_filename=Path(input_path).name,
+            converted_filename=Path(output_path).name,
+            file_size_bytes=original_file_size,
+            converted_file_bytes=converted_file_size
+        )
+    except Exception as e:
+        print(f"Failed to record conversion: {str(e)}")
+
+    return {
+        "success": "True",
+        "message": "Conversion completed successfully",
+        "output_path": output_path
+    }

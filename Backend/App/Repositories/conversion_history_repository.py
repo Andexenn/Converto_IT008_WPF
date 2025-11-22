@@ -59,8 +59,8 @@ class ConversionHistoryRepository(IConversionHistoryService):
         output_format: str,
         original_filename: str,
         converted_filename: str,
-        file_size_bytes: bytes,
-        converted_file_bytes: bytes
+        file_size_bytes: bytes | int,
+        converted_file_bytes: bytes | int
     ) -> Tuple[ConversionResponse, bytes]:
         try:
             # Get or create service

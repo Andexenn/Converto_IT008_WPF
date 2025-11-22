@@ -57,7 +57,7 @@
 
         <!-- LEFT SIDE -->
         <Grid Grid.Column="0" ClipToBounds="True">
-            
+
             <Image Source="/Converto_IT008_WPF;component/Resources/LoginBackground.png"
                    Stretch="UniformToFill"/>
 
@@ -87,7 +87,7 @@
 
                 <!-- Features List -->
                 <StackPanel>
-                    
+
                     <!-- Features 1 -->
                     <Grid Margin="0,0,0,15">
                         <Grid.ColumnDefinitions>
@@ -101,14 +101,14 @@
                                              VerticalAlignment="Center" 
                                              HorizontalAlignment="Center"/>
                         </Border>
-                        
+
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="Secure &amp; Reliable" 
                                        FontFamily="/Converto_IT008_WPF;component/Resources/#Inter" 
                                        FontWeight="Medium" 
                                        FontSize="18"
                                        Style="{StaticResource LeftTitleText}"/>
-                            
+
                             <TextBlock Text="Your data is protected with enterprise grade security" 
                                        FontFamily="/Converto_IT008_WPF;component/Resources/#Inter" 
                                        FontSize="12" 
@@ -131,14 +131,14 @@
                                              VerticalAlignment="Center" 
                                              HorizontalAlignment="Center"/>
                         </Border>
-                        
+
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="Fast &amp; Efficient" 
                                        FontFamily="/Converto_IT008_WPF;component/Resources/#Inter" 
                                        FontWeight="Medium" 
                                        FontSize="18" 
                                        Style="{StaticResource LeftTitleText}"/>
-                            
+
                             <TextBlock Text="Access your account instantly from anywhere" 
                                        FontFamily="/Converto_IT008_WPF;component/Resources/#Inter" 
                                        FontSize="12" 
@@ -161,14 +161,14 @@
                                              VerticalAlignment="Center" 
                                              HorizontalAlignment="Center"/>
                         </Border>
-                        
+
                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
                             <TextBlock Text="24/7 Support" 
                                        FontFamily="/Converto_IT008_WPF;component/Resources/#Inter" 
                                        FontWeight="Medium" 
                                        FontSize="18" 
                                        Style="{StaticResource LeftTitleText}"/>
-                            
+
                             <TextBlock Text="Our team is always here to help you" 
                                        FontFamily="/Converto_IT008_WPF;component/Resources/#Inter" 
                                        FontSize="12" 
@@ -182,7 +182,7 @@
 
         <!-- RIGHT SIDE -->
         <Grid Grid.Column="1" Background="White" ClipToBounds="True">
-            
+
             <StackPanel VerticalAlignment="Center" Margin="60,0" MaxWidth="450">
 
                 <TextBlock Text="Sign In" 
@@ -206,7 +206,7 @@
                            Foreground="#4F4E4E" 
                            FontWeight="Medium" 
                            Margin="0,0,0,5"/>
-                
+
                 <Border Style="{StaticResource InputContainer}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -240,7 +240,7 @@
                            Foreground="#4F4E4E" 
                            FontWeight="Medium" 
                            Margin="0,0,0,5"/>
-                
+
                 <Border Style="{StaticResource InputContainer}">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -279,7 +279,7 @@
                               VerticalAlignment="Center" 
                               Cursor="Hand" 
                               TabIndex="2"/>
-                    
+
                     <Button Grid.Column="1" 
                             Content="Forgot password?"
                             Foreground="#F73637"
@@ -318,12 +318,12 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                    
+
                     <fa:ImageAwesome Icon="Refresh" 
                                      Spin="True" 
                                      Width="24" 
                                      Height="24" 
-                                     Foreground="#D32F2F" 
+                                     Foreground="#F73637" 
                                      Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 </Grid>
 
@@ -350,6 +350,7 @@
                         BorderThickness="1" 
                         Cursor="Hand" 
                         TabIndex="5" 
+                        Command="{Binding LoginWithGoogleCommand}"
                         Margin="0,0,0,20">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
@@ -365,7 +366,7 @@
                                            Width="16" Height="16"
                                            Margin="0,0,10,0" 
                                            VerticalAlignment="Center"/>
-                                    
+
                                     <TextBlock Text="Login With Google" 
                                                FontWeight="SemiBold" 
                                                Foreground="#424242" 
@@ -386,10 +387,10 @@
                     <TextBlock Text="Don't have an account? " 
                                Foreground="#757575" 
                                FontSize="14"/>
-                    
+
                     <Button Command="{Binding GoSignUpCommand}" 
                             Content="Sign Up" 
-                            Foreground="#D32F2F" 
+                            Foreground="#F73637" 
                             FontWeight="Bold" 
                             Cursor="Hand" 
                             FontSize="14"

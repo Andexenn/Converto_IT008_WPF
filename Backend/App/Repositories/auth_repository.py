@@ -176,7 +176,7 @@ class AuthRepository(IAuthService):
                     detail=f"Email not provided by Google"
                 )
 
-            user = self.db.query(User).filter(User.email == email).first()
+            user = self.db.query(User).filter(User.Email == email).first()
 
             if not user:
                 user = User(
@@ -191,7 +191,7 @@ class AuthRepository(IAuthService):
                 )
 
                 self.db.add(user)
-                self.db.flush(user)
+                self.db.flush()
 
                 new_wallet = Wallet(
                     UserID=user.UserID,

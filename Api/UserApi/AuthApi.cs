@@ -13,7 +13,7 @@ namespace Converto_IT008_WPF.Api.UserApi;
 public class AuthApi : IAuthApi
 {
     private readonly HttpClient _httpClient;
-    private const string BaseUrl = "http://localhost:8000/api/auth/";
+    private const string BaseUrl = "http://localhost:5050/api/auth/";
     private string _accessToken = string.Empty;
 
     public AuthApi(HttpClient httpClient)

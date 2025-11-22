@@ -49,8 +49,8 @@ class UserLoginResponse(BaseModel):
 
 class GoogleUserData(BaseModel):
     email: EmailStr
-    given_name: str
-    family_name: str
+    given_name: Optional[str]
+    family_name: Optional[str]
     picture: Optional[str] = None
     id_token: Optional[str] = None
 

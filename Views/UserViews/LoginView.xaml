@@ -350,6 +350,7 @@
                         BorderThickness="1" 
                         Cursor="Hand" 
                         TabIndex="5" 
+                        Command="{Binding LoginWithGoogleCommand}"
                         Margin="0,0,0,20">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">

@@ -70,4 +70,33 @@ public partial class LoginViewModel : BaseViewModel
         }
     }
 
+    [RelayCommand]
+    async Task LoginWithGoogle()
+    {
+        try
+        {
+            IsBusy = true;
+            _sessionState.LoginResponse =  await _authService.SignInWithGoolge();
+
+            if(_sessionState.LoginResponse != null)
+            {
+                // Navigate to the main application view upon successful login
+                _sessionState.IsUserLoggedIn = true;
+                _nav.Navigate<HomepageViewModel>();
+            }
+            else
+            {
+                MessageBox.Show("Google login failed. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error during Google login: {ex.Message}", "Google Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
 }

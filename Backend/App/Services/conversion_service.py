@@ -20,12 +20,17 @@ class IConversionService(ABC):
         """
 
     @abstractmethod
-    async def convert_video_audio(self, file_content: bytes, out_format: str) -> tuple[str, bytes]:
+    async def convert_video_audio(self, input_path: str, output_path: str, timeout: int) -> bool:
         """
         Converts video, audio file content to out format
 
         Parameter:
         ----------
-        - file_content (bytes): video, audio to out format
-        - out_format (str): target output format
+            file_content (bytes): video, audio to out format
+            out_format (str): target output format
+            timeout(int): timeout in second
+        
+        Return:
+        -------
+            True if convert successfully else False
         """

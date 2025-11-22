@@ -21,7 +21,7 @@ router = APIRouter()
 @router.post("/convert_to/image/{out_format}", response_model=ConversionResponse)
 async def convert_image_handler(
     out_format: str,
-    filepath: str = Query(...), # type: ignore
+    filepath: str, # type: ignore
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ) -> StreamingResponse | None:
@@ -84,4 +84,48 @@ async def convert_image_handler(
         }
     )
 
-# @router.post("/convert_to/vid_aud/{out_format}",)
+@router.post("/convert_to/vid_au")
+async def convert_video_audio(
+    input_path: str,
+    output_path: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+) -> dict:
+    """
+    Mount a function to an endpoint, convert audio and video
+
+    Parameters:
+    -----------
+        input_path(str): the input path from the original file
+        output_path(str): the output path to the converted file
+        current_user(User): the user who use the service
+        db(Session): the session with database
+
+    Return:
+    --------
+        True if convert successfully else False
+    """
+    try:
+        is_success = await ConversionRepository().convert_video_audio(input_path, output_path)
+
+        if is_success:
+            return {
+                "success": True,
+                "message": "Conversion completed successfully",
+                "output_path": output_path
+            }
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Conversion failed"
+            )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"The request was bad: {str(e)}"
+        ) from e 
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Conversion failed: {str(e)}"
+        ) from e

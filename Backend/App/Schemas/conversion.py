@@ -1,7 +1,10 @@
-from pydantic import BaseModel
+"""
+conversion schema
+"""
 from typing import Optional
 from datetime import datetime
 from decimal import Decimal
+from pydantic import BaseModel
 
 class ConversionHistoryBase(BaseModel):
     UserID: int

@@ -1,48 +1,66 @@
-from pydantic import BaseModel, EmailStr 
+from pydantic import BaseModel, EmailStr
 from typing import Optional
-from datetime import datetime 
+from datetime import datetime
 
 class UserBase(BaseModel):
-    Email: EmailStr 
+    Email: EmailStr
     FirstName: str
     LastName: str
-    Address: Optional[str] = None 
-    PhoneNumber: Optional[str] = None 
-    City: Optional[str] = None 
-    DateOfBirth: Optional[datetime] = None 
+    Address: Optional[str] = None
+    PhoneNumber: Optional[str] = None
+    City: Optional[str] = None
+    DateOfBirth: Optional[datetime] = None
 
 class UserCreate(UserBase):
-    Password: str 
+    Password: str
 
 class UserUpdate(BaseModel):
-    FirstName: Optional[str] = None 
-    LastName: Optional[str] = None 
-    Address: Optional[str] = None 
-    PhoneNumber: Optional[str] = None 
-    City: Optional[str] = None 
+    FirstName: Optional[str] = None
+    LastName: Optional[str] = None
+    Address: Optional[str] = None
+    PhoneNumber: Optional[str] = None
+    City: Optional[str] = None
     DateOfBirth: Optional[datetime] = None
     Password: Optional[str] = None
 
 class UserResponse(UserBase):
-    UserID: int 
+    UserID: int
 
     class Config:
         from_attributes = True
 
 class UserLogin(BaseModel):
     Email: EmailStr
-    Password: str 
+    Password: str
 
     class Config:
         from_attributes = True
 
 class UserLoginResponse(BaseModel):
-    Email: EmailStr 
-    FirstName: str 
-    LastName: str 
+    Email: EmailStr
+    FirstName: str
+    LastName: str
     Address: Optional[str] = None
-    PhoneNumber: Optional[str] = None 
-    City: Optional[str] = None 
+    PhoneNumber: Optional[str] = None
+    City: Optional[str] = None
     DateOfBirth: Optional[datetime] = None
+    class Config:
+        from_attributes = True
+
+class GoogleUserData(BaseModel):
+    email: EmailStr
+    given_name: str
+    family_name: str
+    picture: Optional[str] = None
+    id_token: Optional[str] = None
+
+    class Config:
+        from_attributes = True
+
+class GoogleAuthResponse(BaseModel):
+    access_token: str
+    token_type: str
+    user: UserLoginResponse
+
     class Config:
         from_attributes = True

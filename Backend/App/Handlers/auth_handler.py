@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from Database.connection import get_db
 from Repositories.auth_repository import AuthRepository
 from Services.auth_service import IAuthService
-from Schemas.user import UserCreate, UserResponse, UserLogin, UserLoginResponse
+from Schemas.user import UserCreate, UserResponse, UserLogin, UserLoginResponse, GoogleUserData
 
 router = APIRouter()
 
@@ -62,3 +62,15 @@ async def login(
     """
     auth_service: IAuthService = AuthRepository(db)
     return await auth_service.login(user_data)
+
+@router.post("/google_login", response_model=dict)
+async def google_login(
+    google_data: GoogleUserData,
+    db: Session = Depends(get_db)
+)->dict[str, str | UserLoginResponse]:
+    """
+        Mount a function to google login
+    """
+    auth_service: IAuthService = AuthRepository(db)
+    return await auth_service.google_auth(google_data)
+

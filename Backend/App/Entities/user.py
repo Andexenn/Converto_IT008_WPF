@@ -2,11 +2,12 @@
 user entity
 """
 
+from datetime import datetime
+from typing import List, TYPE_CHECKING, Optional
+
 from sqlalchemy import BigInteger, String, DateTime, LargeBinary 
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 from Database.connection import Base 
-from datetime import datetime
-from typing import List, TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from conversion_history import ConversionHistory

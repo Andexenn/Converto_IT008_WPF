@@ -25,4 +25,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "Converto"
     DEBUG: bool = True
 
+    GOOGLE_CLIENT_ID: str
+    GOOGLE_CLINET_SECRET: str
+
 settings = Settings() # type: ignore

@@ -4,7 +4,7 @@ auth service module
 
 from abc import ABC, abstractmethod
 from typing import Optional
-from Schemas.user import UserCreate, UserResponse, UserLogin
+from Schemas.user import UserCreate, UserResponse, UserLogin, GoogleUserData, UserLoginResponse
 
 class IAuthService(ABC):
     @abstractmethod
@@ -20,5 +20,9 @@ class IAuthService(ABC):
         pass
 
     @abstractmethod
-    async def login(self, user_data: UserLogin) -> dict:
+    async def login(self, user_data: UserLogin) -> dict[str, str | UserLoginResponse]:
+        pass
+
+    @abstractmethod
+    async def google_auth(self, google_data: GoogleUserData) -> dict[str, str | UserLoginResponse]:
         pass

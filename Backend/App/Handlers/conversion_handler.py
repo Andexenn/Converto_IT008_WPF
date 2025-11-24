@@ -2,7 +2,6 @@
 Conversion handler module
 """
 
-import io
 import os
 from pathlib import Path
 
@@ -19,7 +18,7 @@ router = APIRouter()
 
 @router.post("/convert_to/image/", response_model=dict)
 async def convert_image_handler(
-    input_path: str, # type: ignore
+    input_path: str, 
     output_path: str,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
@@ -31,25 +30,15 @@ async def convert_image_handler(
     ----------
     - out_format(str): output format of the target file
     - filepath(str): the path from the file in the local
-    - current_user(User): the user want to use the service
-    - db(Session): a session working with the database
     """
 
 
-    # FE: kiem tra file co ton tai khong? co dung dinh dang input
-    filepath: Path = Path(input_path)
-    out_format = Path(output_path).suffix.lstrip('.').lower()
-    try:
-        with open(filepath, "rb") as fp:
-            file_content = fp.read()
-    except Exception as e: # pylint: disable=broad-exception-caught
-        print(str(e))
-        return {}
+    input_format = Path(input_path).suffix.lstrip('.').upper()
+    output_format = Path(output_path).suffix.lstrip('.').upper()
 
     try:
         # Convert image (pure logic, no database)
-        in_format, converted_bytes = await ConversionRepository().convert_image(file_content, out_format, output_path)
-        new_filename: str = filepath.stem + f".{out_format}"
+        await ConversionRepository().convert_image(input_path, output_path)
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -66,12 +55,12 @@ async def convert_image_handler(
     try:
         await conversion_history_repo.record_conversion(
             user_id=current_user.UserID,
-            input_format=in_format,
-            output_format=out_format,
-            original_filename=filepath.name,
-            converted_filename=new_filename,
-            file_size_bytes=file_content,
-            converted_file_bytes=converted_bytes
+            input_format=input_format,
+            output_format=output_format,
+            original_filename=Path(input_path).name,
+            converted_filename=Path(output_path).name,
+            file_size_bytes=os.path.getsize(input_path),
+            converted_file_bytes=os.path.getsize(output_path)
         )
     except Exception as e:
         print(f"Failed to record: {str(e)}")
@@ -128,8 +117,6 @@ async def convert_video_audio(
     
     conversion_history_repo = ConversionHistoryRepository(db)
     try:
-        original_file_size = os.path.getsize(input_path)
-        converted_file_size = os.path.getsize(output_path)
 
         await conversion_history_repo.record_conversion(
             user_id=current_user.UserID,
@@ -137,8 +124,8 @@ async def convert_video_audio(
             output_format=output_format,
             original_filename=Path(input_path).name,
             converted_filename=Path(output_path).name,
-            file_size_bytes=original_file_size,
-            converted_file_bytes=converted_file_size
+            file_size_bytes=os.path.getsize(input_path),
+            converted_file_bytes=os.path.getsize(output_path)
         )
     except Exception as e:
         print(f"Failed to record conversion: {str(e)}")
@@ -171,8 +158,8 @@ async def convert_gif(
         True if convert successfully else False
     """
 
-    input_format = Path(input_path).suffix.lstrip('.').lower()
-    output_format = Path(output_path).suffix.lstrip('.').lower()
+    input_format = Path(input_path).suffix.lstrip('.').upper()
+    output_format = Path(output_path).suffix.lstrip('.').upper()
 
     try:
         is_success = await ConversionRepository().convert_gif(input_path, output_path, 300)
@@ -196,8 +183,6 @@ async def convert_gif(
     conversion_history_repo = ConversionHistoryRepository(db)
 
     try:
-        original_file_size = os.path.getsize(input_path)
-        converted_file_size = os.path.getsize(output_path)
 
         await conversion_history_repo.record_conversion(
             user_id=current_user.UserID,
@@ -205,8 +190,8 @@ async def convert_gif(
             output_format=output_format,
             original_filename=Path(input_path).name,
             converted_filename=Path(output_path).name,
-            file_size_bytes=original_file_size,
-            converted_file_bytes=converted_file_size
+            file_size_bytes=os.path.getsize(input_path),
+            converted_file_bytes=os.path.getsize(output_path)
         )
     except Exception as e:
         print(f"Failed to record conversion: {str(e)}")
@@ -217,3 +202,68 @@ async def convert_gif(
         "output_path": output_path
     }
 
+@router.post('/convert_to/pdf', response_model=dict)
+async def convert_pdf(
+    input_path: str,
+    output_path: str,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+) -> dict: 
+    """
+    Mount a function to an endpoint, convert pdf
+
+    Parameters:
+    -----------
+        input_path(str): the input path from the original file
+        output_path(str): the output path to the converted file
+        current_user(User): the user who use the service
+        db(Session): the session with database
+
+    Return:
+    --------
+        True if convert successfully else False
+    """
+
+    input_format = Path(input_path).suffix.lstrip('.').upper()
+    output_format = Path(output_path).suffix.lstrip('.').upper()
+
+    try:
+        is_success = await ConversionRepository().convert_pdf_office(input_path, output_path, 300)
+
+        if not is_success:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Conversion failed"
+            )
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"Conversion failed: {str(e)}"
+        ) from e
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Conversion failed: {str(e)}"
+        ) from e 
+    
+    conversion_history_repo = ConversionHistoryRepository(db)
+
+    try:
+
+        await conversion_history_repo.record_conversion(
+            user_id=current_user.UserID,
+            input_format=input_format,
+            output_format=output_format,
+            original_filename=Path(input_path).name,
+            converted_filename=Path(output_path).name,
+            file_size_bytes=os.path.getsize(input_path),
+            converted_file_bytes=os.path.getsize(output_path)
+        )
+    except Exception as e:
+        print(f"Failed to record conversion: {str(e)}")
+
+    return {
+        "success": "True",
+        "message": "Conversion completed successfully",
+        "output_path": output_path
+    }

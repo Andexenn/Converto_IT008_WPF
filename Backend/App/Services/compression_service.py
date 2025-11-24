@@ -8,12 +8,16 @@ class ICompressionSerivce(ABC):
     A compress interface
     """
     @abstractmethod
-    async def compress(self, file_content: bytes, out_format: str) -> tuple[str, bytes]:
+    async def compress(self, input_path: str, output_path: str) -> bool:
         """
         Compress image file content to smaller size
 
         Parameters:
         -----------
-        file_contents(bytes): the image loaded as bytes
-        out_format: target format for compression
+        input_path(str): the path of the original file
+        output_path(str): the path of the converted file
+
+        Return:
+        -------
+        True if succeed else False
         """

@@ -9,7 +9,7 @@ class IConversionService(ABC):
     Conversion service interface
     """
     @abstractmethod
-    async def convert_image(self, file_content: bytes, out_format: str, output_path: str) -> tuple[str, bytes]:
+    async def convert_image(self, input_path: str, output_path: str) -> bool:
         """
         Converts image file content to out format
         
@@ -54,7 +54,7 @@ class IConversionService(ABC):
     @abstractmethod
     async def convert_pdf_office(self, input_path: str, output_path: str, timeout: int) -> bool:
         """
-        Convert GIF using FFmpeg
+        Convert PDF to office or office to PDF 
 
         Parameter:
         ----------

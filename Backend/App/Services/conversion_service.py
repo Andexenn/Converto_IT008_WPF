@@ -50,3 +50,20 @@ class IConversionService(ABC):
         -------
             True if convert successfully else False
         """
+
+    @abstractmethod
+    async def convert_pdf_office(self, input_path: str, output_path: str, timeout: int) -> bool:
+        """
+        Convert GIF using FFmpeg
+
+        Parameter:
+        ----------
+            input_path(str): contains the original file path
+            output_path(str): contains the final file path
+            timeout(int): timeout in second
+        
+        Return:
+        -------
+            True if convert successfully else False
+        """
+        

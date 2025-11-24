@@ -26,8 +26,24 @@ class IConversionService(ABC):
 
         Parameter:
         ----------
-            file_content (bytes): video, audio to out format
-            out_format (str): target output format
+            input_path(str): contains the original file path
+            output_path(str): contains the final file path
+            timeout(int): timeout in second
+        
+        Return:
+        -------
+            True if convert successfully else False
+        """
+
+    @abstractmethod
+    async def convert_gif(self, input_path: str, output_path: str, timeout: int) -> bool:
+        """
+        Convert GIF using FFmpeg
+
+        Parameter:
+        ----------
+            input_path(str): contains the original file path
+            output_path(str): contains the final file path
             timeout(int): timeout in second
         
         Return:

@@ -11,9 +11,13 @@
 
   <ItemGroup>
     <Compile Remove="Models\**" />
+    <Compile Remove="ViewModels\CompressServiceViewModel\**" />
     <EmbeddedResource Remove="Models\**" />
+    <EmbeddedResource Remove="ViewModels\CompressServiceViewModel\**" />
     <None Remove="Models\**" />
+    <None Remove="ViewModels\CompressServiceViewModel\**" />
     <Page Remove="Models\**" />
+    <Page Remove="ViewModels\CompressServiceViewModel\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,6 +34,7 @@
     <None Remove="Resources\MONTSERRAT-REGULAR.TTF" />
     <None Remove="Resources\MONTSERRAT-SEMIBOLD.TTF" />
     <None Remove="Resources\no-connection.png" />
+    <None Remove="Resources\SignUpBackground.png" />
     <None Remove="Resources\user %282%29.png" />
   </ItemGroup>
 
@@ -56,10 +61,7 @@
     <Resource Include="Resources\MONTSERRAT-REGULAR.TTF" />
     <Resource Include="Resources\MONTSERRAT-SEMIBOLD.TTF" />
     <Resource Include="Resources\no-connection.png" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ViewModels\CompressServiceViewModel\" />
+    <Resource Include="Resources\SignUpBackground.png" />
   </ItemGroup>
 
 </Project>

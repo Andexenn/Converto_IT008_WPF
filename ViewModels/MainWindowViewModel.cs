@@ -13,6 +13,9 @@ namespace Converto_IT008_WPF.ViewModels
 {
     public partial class MainWindowViewModel : BaseViewModel
     {
+        private bool _isLoginVisible;
+        private bool _isSignUpVisible;
+
         private readonly NavigationStore _navigationStore;
         private readonly INetworkMonitorService _networkMonitorService;
         public SessionState _sessionState { get; }
@@ -26,6 +29,11 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand GoMyAccountCommand { get; }
         public ICommand GoTextToImage { get; }
         public ICommand GoRemoveBackground { get; }
+
+        public ICommand ShowLoginOverlayCommand { get; set; }
+        public ICommand HideLoginOverlayCommand { get; set; }
+        public ICommand ShowSignUpOverlayCommand { get; set; }
+        public ICommand HideSignUpOverlayCommand { get; set; }
 
         public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService, SessionState sessionState)
         {
@@ -51,6 +59,21 @@ namespace Converto_IT008_WPF.ViewModels
             GoRemoveBackground = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.RemoveBackgroundViewModel>(); });
             nav.Navigate<HomepageViewModel>();
 
+            ShowLoginOverlayCommand = new RelayCommand(() =>
+            {
+                IsLoginVisible = true;
+                IsSignUpVisible = false;
+            });
+
+            ShowSignUpOverlayCommand = new RelayCommand(() =>
+            {
+                IsSignUpVisible = true;
+                IsLoginVisible = false;
+            });
+
+            HideLoginOverlayCommand = new RelayCommand(() => IsLoginVisible = false);
+            HideSignUpOverlayCommand = new RelayCommand(() => IsSignUpVisible = false);
+
             //ktra mang
             _networkMonitorService.Start();
         }
@@ -63,6 +86,22 @@ namespace Converto_IT008_WPF.ViewModels
             {
                 Application.Current.Shutdown();
             }
+        }
+
+        public bool IsLoginVisible
+        {
+            get { return _isLoginVisible; }
+            set
+            {
+                _isLoginVisible = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsSignUpVisible
+        {
+            get { return _isSignUpVisible; }
+            set { _isSignUpVisible = value; OnPropertyChanged(); }
         }
     }
 

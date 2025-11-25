@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Converto_IT008_WPF.Views"
+        xmlns:userviews="clr-namespace:Converto_IT008_WPF.Views.UserViews"
         xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
         xmlns:vm="clr-namespace:Converto_IT008_WPF.ViewModels" 
         xmlns:animate="clr-namespace:Converto_IT008_WPF.Views.Animations"
@@ -21,203 +22,125 @@
 
     <Border x:Name="Skeleton" Background="#FFFBFBFB"
             CornerRadius="15"
-            Padding="10" MouseDown="Skeleton_MouseDown"  >
+            Padding="10" MouseDown="Skeleton_MouseDown">
+
         <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="92*" />
-                <ColumnDefinition Width="393*"/>
 
-            </Grid.ColumnDefinitions>
+            <Grid x:Name="MainAppLayer">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="92*" />
+                    <ColumnDefinition Width="393*"/>
+                </Grid.ColumnDefinitions>
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="39*"/>
-                <RowDefinition Height="271*"/>
-            </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="39*"/>
+                    <RowDefinition Height="271*"/>
+                </Grid.RowDefinitions>
 
-            <Border BorderThickness="0.5" Grid.RowSpan="2" Background="White" CornerRadius="10,10,10,10" BorderBrush="#7F4F4E4E">
-                <Border.Effect>
-                    <DropShadowEffect Color="#FF4F4E4E" BlurRadius="10" Direction="209" Opacity="0.3" ShadowDepth="0" RenderingBias="Quality"/>
-                </Border.Effect>
+                <Border BorderThickness="0.5" Grid.RowSpan="2" Background="White" CornerRadius="10,10,10,10" BorderBrush="#7F4F4E4E">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#FF4F4E4E" BlurRadius="10" Direction="209" Opacity="0.3" ShadowDepth="0" RenderingBias="Quality"/>
+                    </Border.Effect>
 
-                <Grid>
-                    <StackPanel VerticalAlignment="Top" >
-                        <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Resources/Logo.png" Width="150" Margin="6,20,0,0"/>
-                        <Border BorderBrush="#CECECE"  BorderThickness="0.5" Margin="0, 12, 0, 0"/>
+                    <Grid>
+                        <StackPanel VerticalAlignment="Top" >
+                            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Resources/Logo.png" Width="150" Margin="6,20,0,0"/>
+                            <Border BorderBrush="#CECECE"  BorderThickness="0.5" Margin="0, 12, 0, 0"/>
 
-                        <StackPanel  Margin="0,24,0,0" >
-                            <RadioButton x:Name="Convert" Content="Convert"
-                                         Command="{Binding GoHomepageCommand}"
-                                         Tag="{x:Static fa:FontAwesomeIcon.Exchange}"
-                                         Style="{StaticResource MenuButtonTheme}">
-                                <RadioButton.ToolTip>
-                                    <ToolTip Background="White" >
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
+                            <StackPanel  Margin="0,24,0,0" >
+                                <RadioButton x:Name="Convert" Content="Convert" Command="{Binding GoHomepageCommand}" Tag="{x:Static fa:FontAwesomeIcon.Exchange}" Style="{StaticResource MenuButtonTheme}">
+                                    <RadioButton.ToolTip>
+                                        <ToolTip Background="White">
+                                            <TextBlock Text="Convert files format"/>
+                                        </ToolTip>
+                                    </RadioButton.ToolTip>
+                                </RadioButton>
 
-                                            <fa:FontAwesome Grid.RowSpan="2" Icon="{x:Static fa:FontAwesomeIcon.Exchange}" Foreground="#F24822" FontSize="28" Margin="0,0,15,0" VerticalAlignment="Center"/>
-                                            <TextBlock Grid.Column="1" Text="Convert files format" FontWeight="SemiBold" Foreground="#F24822"/>
-                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="Easily convert files between various formats." FontSize="12" Foreground="Gray"/>
-                                        </Grid>
-                                    </ToolTip>
-                                </RadioButton.ToolTip>
-                            </RadioButton>
+                                <RadioButton x:Name="Compress" Content="Compress" Tag="{x:Static fa:FontAwesomeIcon.Compress}" Command="{Binding GoCompressCommand}" Style="{StaticResource MenuButtonTheme}" BorderBrush="{x:Null}"/>
+                                <RadioButton x:Name="Tex_to_Image" Content="Text to Image" Tag="{x:Static fa:FontAwesomeIcon.Steam}" Command="{Binding GoTextToImage}" Style="{StaticResource MenuButtonTheme}"/>
+                                <RadioButton x:Name="Remove_Background" Content="Remove Background" Tag="{x:Static fa:FontAwesomeIcon.Image}" Command="{Binding GoRemoveBackground}" Style="{StaticResource MenuButtonTheme}"/>
 
-                            <RadioButton x:Name="Compress" Content="Compress"
-                                         Tag="{x:Static fa:FontAwesomeIcon.Compress}"
-                                         Command="{Binding GoCompressCommand}"
-                                         Style="{StaticResource MenuButtonTheme}" BorderBrush="{x:Null}">
-                                <RadioButton.ToolTip>
-                                    <ToolTip Background="White" >
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
+                                <Border HorizontalAlignment="Left" Height="1" Background="#CECECE" Width="120" Margin="24,20,0,20"/>
 
-                                            <fa:FontAwesome Grid.RowSpan="2" Icon="{x:Static fa:FontAwesomeIcon.Compress}" Foreground="#F24822" FontSize="28" Margin="0,0,15,0" VerticalAlignment="Center"/>
-                                            <TextBlock Grid.Column="1" Text="Compress files" FontWeight="SemiBold" Foreground="#F24822"/>
-                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="Compress your files quickly." FontSize="12" Foreground="Gray"/>
-                                        </Grid>
-                                    </ToolTip>
-                                </RadioButton.ToolTip>
-                            </RadioButton>
+                                <RadioButton x:Name="My_Account" Content="My Account" Tag="{x:Static fa:FontAwesomeIcon.User}" Style="{StaticResource MenuButtonTheme}" Command="{Binding GoMyAccountCommand}"/>
+                                <RadioButton x:Name="About_Us" Content="About Us" Tag="{x:Static fa:FontAwesomeIcon.Group}" Style="{StaticResource MenuButtonTheme}" Command="{Binding GoAboutUsCommand}"/>
+                                <RadioButton x:Name="History" Content="History" Tag="{x:Static fa:FontAwesomeIcon.History}" Command="{Binding GoHistoryCommand}" Style="{StaticResource MenuButtonTheme}"/>
 
-                            <RadioButton x:Name="Tex_to_Image" Content="Text to Image"
-                                         Tag="{x:Static fa:FontAwesomeIcon.Steam}"
-                                         Command="{Binding GoTextToImage}"
-                                         Style="{StaticResource MenuButtonTheme}">
-                                <RadioButton.ToolTip>
-                                    <ToolTip Background="White" >
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-
-                                            <fa:FontAwesome Grid.RowSpan="2" Icon="{x:Static fa:FontAwesomeIcon.Steam}" Foreground="#F24822" FontSize="28" Margin="0,0,15,0" VerticalAlignment="Center"/>
-                                            <TextBlock Grid.Column="1" Text="Text to Image" FontWeight="SemiBold" Foreground="#F24822"/>
-                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="Prompt and see the magic happens." FontSize="12" Foreground="Gray"/>
-                                        </Grid>
-                                    </ToolTip>
-                                </RadioButton.ToolTip>
-                            </RadioButton>
-
-                            <RadioButton x:Name="Remove_Background" Content="Remove Background"
-                                         Tag="{x:Static fa:FontAwesomeIcon.Image}"
-                                         Command="{Binding GoRemoveBackground}"
-                                         Style="{StaticResource MenuButtonTheme}">
-                                <RadioButton.ToolTip>
-                                    <ToolTip Background="White" >
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="Auto"/>
-                                                <ColumnDefinition Width="*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-
-                                            <fa:FontAwesome Grid.RowSpan="2" Icon="{x:Static fa:FontAwesomeIcon.Image}" Foreground="#F24822" FontSize="28" Margin="0,0,15,0" VerticalAlignment="Center"/>
-                                            <TextBlock Grid.Column="1" Text="Remove background" FontWeight="SemiBold" Foreground="#F24822"/>
-                                            <TextBlock Grid.Column="1" Grid.Row="1" Text="Remove background in one click." FontSize="12" Foreground="Gray"/>
-                                        </Grid>
-                                    </ToolTip>
-                                </RadioButton.ToolTip>
-                            </RadioButton>
-
-                            <Border HorizontalAlignment="Left" Height="1" Background="#CECECE" Width="120" Margin="24,20,0,20"/>
-
-                            <RadioButton x:Name="My_Account" Content="My Account"
-                                         Tag="{x:Static fa:FontAwesomeIcon.User}"
-                                         Style="{StaticResource MenuButtonTheme}"
-                                         Command="{Binding GoMyAccountCommand}"/>
-
-                            <RadioButton x:Name="About_Us" Content="About Us"
-                                         Tag="{x:Static fa:FontAwesomeIcon.Group}" 
-                                         Style="{StaticResource MenuButtonTheme}"
-                                         Command="{Binding GoAboutUsCommand}"/>
-
-                            <RadioButton x:Name="History" Content="History"
-                                         Tag="{x:Static fa:FontAwesomeIcon.History}"
-                                         Command="{Binding GoHistoryCommand}"
-                                         Style="{StaticResource MenuButtonTheme}"/>
-
-                            <RadioButton x:Name="Exit" Grid.Row="1"
-                                         Tag="{x:Static fa:FontAwesomeIcon.SignOut}"
-                                         Content="Exit"
-                                         Style="{StaticResource MenuButtonTheme}"
-                                         Height="35"
-                                         Command="{Binding CloseAppCommand}"/>
-                            
+                                <RadioButton x:Name="Exit" Grid.Row="1" Tag="{x:Static fa:FontAwesomeIcon.SignOut}" Content="Exit" Style="{StaticResource MenuButtonTheme}" Height="35" Command="{Binding CloseAppCommand}"/>
+                            </StackPanel>
                         </StackPanel>
-                    </StackPanel>
+                    </Grid>
+                </Border>
 
-                </Grid>
-            </Border>
-            
-            
+                <Border BorderThickness="0.5" Grid.Column="1" Background="White" CornerRadius="10,10,10,10" Margin="13,0,0,20" BorderBrush="#7F4F4E4E">
+                    <Border.Effect>
+                        <DropShadowEffect Color="#FF4F4E4E" Opacity="0.3" ShadowDepth="0" RenderingBias="Quality" Direction="209" BlurRadius="10" />
+                    </Border.Effect>
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-            <Border BorderThickness="0.5" Grid.Column="1" Background="White" CornerRadius="10,10,10,10" Margin="13,0,0,20" BorderBrush="#7F4F4E4E">
-                <Border.Effect>
-                    <DropShadowEffect Color="#FF4F4E4E" Opacity="0.3" ShadowDepth="0" RenderingBias="Quality" Direction="209" BlurRadius="10" />
-                </Border.Effect>
-                <Grid VerticalAlignment="Center">
+                        <Button Grid.Column="1"
+                                Content="Login"
+                                Style="{StaticResource Login}"
+                                Command="{Binding DataContext.ShowLoginOverlayCommand, 
+                                          RelativeSource={RelativeSource AncestorType=Window}}"
+                                Visibility="{Binding _sessionState.IsUserLoggedOut, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
+                        <Image Grid.Column="1" Source="/Resources/DefaultUser.png" Height="36" Width="36" VerticalAlignment="Center"
+                               Visibility="{Binding _sessionState.IsUserLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                    <Button Grid.Column="1"
-                            Style="{StaticResource Login}"
-                            Command="{Binding GoLoginCommand}"
-                            Visibility="{Binding _sessionState.IsUserLoggedOut, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <Button Grid.Column="2" 
+                                Style="{StaticResource Signup}" 
+                                Command="{Binding ShowSignUpOverlayCommand}" 
+                                Visibility="{Binding _sessionState.IsUserLoggedOut, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        
+                        <Button Grid.Column="2" Content="{Binding _sessionState.LoginResponse.FirstName}" Foreground="Black" FontSize="18" VerticalAlignment="Center" Margin="15,0,15,0" Cursor="Hand" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource CancelButton}" Command="{Binding GoMyAccountCommand}" Visibility="{Binding _sessionState.IsUserLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                    </Grid>
+                </Border>
 
-                    <Image Grid.Column="1" Source="/Resources/DefaultUser.png" Height="36" Width="36" VerticalAlignment="Center"
-                           Visibility="{Binding _sessionState.IsUserLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                <ContentControl Grid.Column="1" Grid.Row="1"
+                                x:Name="MainContentControl"
+                                Margin="13,0,10,10"
+                                Content="{Binding CurrentViewModel}"/>
+            </Grid>
 
-                    <Button Grid.Column="2"
-                            Style="{StaticResource Signup}"
-                            Command="{Binding GoSignUpCommand}"
-                            Visibility="{Binding _sessionState.IsUserLoggedOut, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <Grid x:Name="LoginOverlay" 
+                  Visibility="{Binding IsLoginVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" 
+                  Background="Transparent">
+                
+                <userviews:LoginView x:Name="MyLoginView"/>
 
-                    <Button Grid.Column="2"
-                            Content="{Binding _sessionState.LoginResponse.FirstName}"
-                            Foreground="Black"
-                            FontSize="18"
-                            VerticalAlignment="Center"
-                            Margin="15,0,15,0"
-                            Cursor="Hand"
-                            Background="Transparent"
-                            BorderBrush="Transparent"
-                            Style="{StaticResource CancelButton}"
-                            Command="{Binding GoMyAccountCommand}"
-                            Visibility="{Binding _sessionState.IsUserLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                </Grid>
-            </Border>
+                <Button HorizontalAlignment="Right" 
+                        VerticalAlignment="Top" 
+                        Margin="20" 
+                        Content="✕" 
+                        FontSize="20" 
+                        Background="Transparent" 
+                        BorderThickness="0"
+                        Command="{Binding HideLoginOverlayCommand}"/>
+            </Grid>
 
-            <ContentControl Grid.Column="1" Grid.Row="1"
-                            x:Name="MainContentControl"
-                            Margin="13,0,10,10"
-                            Content="{Binding CurrentViewModel}"/>
+            <Grid x:Name="SignUpOverlay" 
+                  Visibility="{Binding IsSignUpVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" 
+                  Background="Transparent">
+                
+                <userviews:SignUpView x:Name="MySignUpView"/>
 
+                <Button HorizontalAlignment="Right" 
+                        VerticalAlignment="Top" 
+                        Margin="20" 
+                        Content="✕" 
+                        FontSize="20"
+                        Foreground="White"
+                        Background="Transparent" 
+                        BorderThickness="0" 
+                        Cursor="Hand"
+                        Command="{Binding HideSignUpOverlayCommand}"/>
+            </Grid>
         </Grid>
     </Border>
 </Window>

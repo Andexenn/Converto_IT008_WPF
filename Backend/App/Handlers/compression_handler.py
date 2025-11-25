@@ -31,7 +31,6 @@ def cleanup_temp_file(filepath: str):
 @router.post("/compress/image")
 async def compress_image(
     input_path: str,
-    reduce_colors: bool = False,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ) -> FileResponse:
@@ -57,7 +56,7 @@ async def compress_image(
 
     try:
         output_path, compressed_size = await CompressionRepository().compress_image(
-            input_path, reduce_colors
+            input_path
         )
         
         # Verify output file exists

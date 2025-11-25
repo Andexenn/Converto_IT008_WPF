@@ -12,9 +12,10 @@ import pythoncom
 import tempfile
 
 from PIL import Image
-from fastapi import HTTPException, status
 
 from Services.conversion_service import IConversionService
+
+#TODO: multiprocessing for converting image and office, pdf
 
 FFMPEG_EXECUTABLE_NAME = 'ffmpeg.exe'
 class ConversionRepository(IConversionService):
@@ -42,7 +43,7 @@ class ConversionRepository(IConversionService):
         return str(ffmpeg_path.absolute())
 
     @staticmethod
-    def _execute_ffmpeg(cmd: list) -> int:
+    def _execute_ffmpeg(cmd: List) -> int:
         """
         Execute the ffmpeg with config statistic
 
@@ -260,6 +261,9 @@ class ConversionRepository(IConversionService):
                 result = pool.apply_async(self._execute_ffmpeg, (cmd, ))
                 return_code = result.get(timeout=timeout)
             return return_code == 0
+        except subprocess.TimeoutExpired:
+            if Path(output_path).exists():
+                os.unlink(output_path)
         except Exception as e:
             raise ValueError(f"run ffmpeg conversion failed: {e}") from e
 

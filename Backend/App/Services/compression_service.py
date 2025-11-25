@@ -2,13 +2,14 @@
 compression service interface
 """
 from abc import ABC, abstractmethod
+from typing import Tuple
 
 class ICompressionSerivce(ABC):
     """
     A compress interface
     """
     @abstractmethod
-    async def compress(self, input_path: str, output_path: str) -> bool:
+    async def compress_image(self, input_path: str, reduce_colors: bool = False) -> Tuple[str, int]:
         """
         Compress image file content to smaller size
 

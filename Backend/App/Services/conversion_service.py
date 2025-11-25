@@ -3,13 +3,14 @@ Conversion service interface
 """
 
 from abc import ABC, abstractmethod
+from typing import Tuple
 
 class IConversionService(ABC):
     """
     Conversion service interface
     """
     @abstractmethod
-    async def convert_image(self, input_path: str, output_path: str) -> bool:
+    async def convert_image(self, input_path: str, output_format: str) -> Tuple[str, int]:
         """
         Converts image file content to out format
         
@@ -20,7 +21,7 @@ class IConversionService(ABC):
         """
 
     @abstractmethod
-    async def convert_video_audio(self, input_path: str, output_path: str, timeout: int) -> bool:
+    async def convert_video_audio(self, input_path: str, output_format: str, timeout: int) -> Tuple[str, int]:
         """
         Converts video, audio file content to out format
 
@@ -36,7 +37,7 @@ class IConversionService(ABC):
         """
 
     @abstractmethod
-    async def convert_gif(self, input_path: str, output_path: str, timeout: int) -> bool:
+    async def convert_gif(self, input_path: str, output_format: str, timeout: int) -> Tuple[str, int]:
         """
         Convert GIF using FFmpeg
 
@@ -52,7 +53,7 @@ class IConversionService(ABC):
         """
 
     @abstractmethod
-    async def convert_pdf_office(self, input_path: str, output_path: str, timeout: int) -> bool:
+    async def convert_pdf_office(self, input_path: str, output_format: str, timeout: int) -> Tuple[str, int]:
         """
         Convert PDF to office or office to PDF 
 

@@ -6,9 +6,10 @@ import os
 import multiprocessing
 from pathlib import Path
 import subprocess
-from typing import List
+from typing import List, Tuple
 import win32com.client
 import pythoncom
+import tempfile
 
 from PIL import Image
 from fastapi import HTTPException, status
@@ -31,8 +32,7 @@ class ConversionRepository(IConversionService):
         """
         Get the ffmpeg path
         """
-        current_dir = Path(__file__).parent.parent.parent.parent
-        ffmpeg_path = current_dir / 'bin' / 'Debug' / 'net9.0-windows' / FFMPEG_EXECUTABLE_NAME
+        ffmpeg_path = Path(__file__).parent.parent.parent.parent / 'bin' / 'Debug' / 'net9.0-windows' / FFMPEG_EXECUTABLE_NAME
 
         if not ffmpeg_path.exists():
             raise FileNotFoundError(
@@ -68,49 +68,58 @@ class ConversionRepository(IConversionService):
             return 1
 
     @staticmethod
-    def _verify_path(input_path: str, output_path: str) -> None:
+    def _verify_path(input_path: str) -> None:
         if not Path(input_path).exists():
             raise FileNotFoundError(f"Input file not found: {input_path}")
 
-        output_dir = Path(output_path).parent
-
-        if not output_dir.exists():
-            try:
-                output_dir.mkdir(parents=True, exist_ok=True)
-            except Exception as e:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Can not create a folder for output file"
-                ) from e
-
-    #================ IMAGE ================
-
-    async def convert_image(self, input_path: str, output_path: str) -> bool:
+    @staticmethod
+    def create_temp_output_file(suffix: str) -> str:
         """
-        Convert image from various types using Pillow
+        Create a temporary file
 
-        Paramenters:
-        ------------
-            input_path(str): the path of the original file
-            output_path(str): the path of the output file
+        Parameters:
+        -----------
+            suffix(str): file extension
 
         Returns:
         --------
-            True if succeed else False
+            return the temporary file
+        """
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
+        temp_file.close()
+        return temp_file.name
+
+
+    #================ IMAGE ================
+
+    async def convert_image(self, input_path: str, output_format: str) -> Tuple[str, int]:
+        """
+        Convert image from various types using Pillow
+        Returns path to temporary output file and its size
+
+        Parameters:
+        ------------
+            input_path(str): the path of the original file
+            output_format(str): desired output format (e.g., 'png', 'jpg')
+
+        Returns:
+        --------
+            Tuple[str, int]: (output_file_path, file_size_bytes)
 
         Raises:
         -------
             Exception: if convert failed
         """
 
+        self._verify_path(input_path)
+
         try:
             with open(input_path, "rb") as fp:
                 file_content = fp.read()
-        except Exception as e: # pylint: disable=broad-exception-caught
-            print(str(e))
-            return False
+        except Exception as e:
+            raise ValueError(f"Failed to read input files: {str(e)}") from e
 
-        output_format = Path(output_path).suffix.lstrip('.').lower()
+        output_format = output_format.lstrip('.').lower()
 
         try:
             image = Image.open(io.BytesIO(file_content))
@@ -119,34 +128,31 @@ class ConversionRepository(IConversionService):
                 f"Failed to convert to open input file: {str(e)}"
             ) from e
 
-        if image.mode in ("RGBA", "LA"):
+        if output_format in ['jpg', 'jpeg'] and image.mode in ("RGBA", "LA"):
             background = Image.new("RGB", image.size, (255, 255, 255))
             background.paste(image, mask=image.split()[-1])
             image = background
-        elif image.mode != "RGB":
+        elif image.mode not in ["RGB", "RGBA"] and output_format not in ['png']:
             image = image.convert("RGB")
 
-        buffer = io.BytesIO()
+        output_path = self.create_temp_output_file(f'.{output_format}')
+
         try:
-            image.save(buffer, format=output_format.upper(), optimize=True)
+            image.save(output_path, format=output_format.upper(), optimize=True)
         except Exception as e:
+            if os.path.exists(output_path):
+                os.unlink(output_path)
             raise ValueError(
                  f"Failed to convert {image.format} to {output_format.upper()}: {str(e)}"
             ) from e
 
-        output_bytes = buffer.getvalue()
-
-        try:
-            with open(output_path, "wb") as f:
-                f.write(output_bytes)
-        except Exception as e:
-            raise ValueError(f"Failed to save file to local path {str(e)}") from e
-
-        return True
+        file_size = os.path.getsize(output_path)
+        
+        return output_path, file_size
 
     #================ VIDEO & AUDIO ================
 
-    async def convert_video_audio(self, input_path: str, output_path: str, timeout: int = 300) -> bool:
+    async def convert_video_audio(self, input_path: str, output_format: str, timeout: int = 300) -> Tuple[str, int]:
         """
         Convert audio and video from various types using ffmpeg with multiprocessing
 
@@ -158,33 +164,42 @@ class ConversionRepository(IConversionService):
 
         Returns:
         --------
-            True if convert successfully else False
+            Tuple[str, int]: (output_file_path, file_size_bytes)
 
         Raises:
             ValueError: If conversion failed
             FileNotFoundError: If input file doesn't exist
         """
 
-        self._verify_path(input_path, output_path)
+        self._verify_path(input_path)
 
-        output_format = Path(output_path).suffix.lstrip('.').lower()
+        output_format = output_format.lstrip('.').lower()
+        output_path = self.create_temp_output_file(f'.{output_format}')
 
         try:
             is_success = await self._convert_video_audio_ffmpeg(input_path, output_path, output_format, timeout)
 
             if is_success is False:
+                if os.path.exists(output_path):
+                    os.unlink(output_path)
                 raise ValueError(f"FFmpeg conversion to {output_format.upper()} failed")
 
-            if not Path(output_path).exists:
+            if not Path(output_path).exists():
                 raise FileNotFoundError(f"output file not found: {output_path}")
 
             if os.path.getsize(output_path) == 0:
+                os.unlink(output_path)
                 raise ValueError(f"The produced file was empty: {output_path}")
 
-            return True
+            file_size = os.path.getsize(output_path)
+            return output_path, file_size
         except subprocess.TimeoutExpired as e:
+            if os.path.exists(output_path):
+                os.unlink(output_path)
             raise ValueError(f"Conversion to {output_format.upper()} is timed out. Files maybe too large or complex") from e
         except Exception as e:
+            if os.path.exists(output_path):
+                os.unlink(output_path)
             raise ValueError(f"The conversion was failed: {str(e)}") from e
 
     async def _convert_video_audio_ffmpeg(self, input_path: str, output_path: str, output_format: str, timeout: int = 300) -> bool:
@@ -251,24 +266,25 @@ class ConversionRepository(IConversionService):
 
 
     #================ GIF ================
-    async def convert_gif(self, input_path: str, output_path: str, timeout: int) -> bool:
+    async def convert_gif(self, input_path: str, output_format: str, timeout: int) -> Tuple[str, int]:
         """
         Convert GIF using FFmpeg
 
         Parameter:
         ----------
             input_path(str): contains the original file path
-            output_path(str): contains the final file path
+            output_format(str): desired output format
             timeout(int): timeout in second
 
         Return:
         -------
-            True if convert successfully else False
+            Tuple[str, int]: (output_file_path, file_size_bytes)
         """
-        self._verify_path(input_path, output_path)
+        self._verify_path(input_path)
 
-        output_format = Path(output_path).suffix.lstrip('.').lower()
+        output_format = output_format.lstrip('.').lower()
         input_format = Path(input_path).suffix.lstrip('.').lower()
+        output_path = self.create_temp_output_file(f'.{output_format}')
 
         cmd = [
             self.ffmpeg_path,
@@ -279,35 +295,42 @@ class ConversionRepository(IConversionService):
         try:
             # GIF to Image
             if input_format == "gif" and output_format in ["png", "jpg", "jpeg", "webp", "bmp", "tiff", "ppm", "pgm", "pbm", "tga"]:
-                is_success = await self.convert_gif_to_image(input_format, output_format, timeout, output_path, cmd)
+                is_success = await self.convert_gif_to_image(output_format, timeout, output_path, cmd)
 
             # Image to GIF
             elif input_format in ["png", "jpg", "jpeg", "webp", "bmp", "tiff", "ppm", "pgm", "pbm", "tga"] and output_format == "gif":
-                is_success = await self.convert_image_to_gif(input_format, output_format, timeout, output_path, cmd)
+                is_success = await self.convert_image_to_gif(output_format, timeout, output_path, cmd)
 
             # GIF to Video
             elif input_format == "gif" and output_format in ["mp4", "webm", "avi", "mov", "mkv", "flv", "wmv", "mpeg", "mpg", "ogv", "3gp"]:
-                is_success = await self.convert_gif_to_video(input_format, output_format, timeout, output_path, cmd)
+                is_success = await self.convert_gif_to_video(output_format, timeout, output_path, cmd)
 
             # Video to GIF
             elif input_format in ["mp4", "webm", "avi", "mov", "mkv", "flv", "wmv", "mpeg", "mpg", "ogv", "3gp"] and output_format == "gif":
-                is_success = await self.convert_video_to_gif(input_format, output_format, timeout, output_path, cmd)
+                is_success = await self.convert_video_to_gif(output_format, timeout, output_path, cmd)
 
             else:
+                if Path(output_path).exists():
+                    os.unlink(output_path)
                 raise ValueError(f"Unsupported conversion: {input_format} to {output_format}")
 
             if not is_success:
+                if Path(output_path).exists():
+                    os.unlink(output_path)
                 raise ValueError(f"Failed to convert from {input_format} to {output_format}")
 
             if not Path(output_path).exists():
                 raise FileNotFoundError(f"Output file not created: {output_path}")
 
-            return True
+            file_size = os.path.getsize(output_path)
+            return output_path, file_size
 
         except Exception as e:
+            if Path(output_path).exists():
+                os.unlink(output_path)
             raise ValueError(f"Conversion failed: {str(e)}") from e
 
-    async def convert_gif_to_image(self, input_format: str, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
+    async def convert_gif_to_image(self, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
         """
         Convert from GIF to image using FFmpeg
         Parameter:
@@ -340,7 +363,7 @@ class ConversionRepository(IConversionService):
         except Exception as e:
             raise ValueError(f"Conversion from GIF to {output_format} failed: {str(e)}") from e
 
-    async def convert_image_to_gif(self, input_format: str, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
+    async def convert_image_to_gif(self, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
         """
         Convert from image to GIF using FFmpeg
         Parameter:
@@ -369,7 +392,7 @@ class ConversionRepository(IConversionService):
         except Exception as e:
             raise ValueError(f"Image to GIF conversion failed: {str(e)}") from e
 
-    async def convert_video_to_gif(self, input_format: str, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
+    async def convert_video_to_gif(self, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
         """
         Convert from video to GIF using FFmpeg
         Parameter:
@@ -406,7 +429,7 @@ class ConversionRepository(IConversionService):
         except Exception as e:
             raise ValueError(f"Video to GIF conversion failed: {str(e)}") from e
 
-    async def convert_gif_to_video(self, input_format: str, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
+    async def convert_gif_to_video(self, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
         """
         Convert from GIF to video using FFmpeg
         Parameter:
@@ -492,7 +515,7 @@ class ConversionRepository(IConversionService):
 
         #================ PDF & OFFICE ================
 
-    async def convert_pdf_office(self, input_path: str, output_path: str, timeout: int) -> bool:
+    async def convert_pdf_office(self, input_path: str, output_format: str, timeout: int) -> Tuple[str, int]:
         """
         Convert PDF to office or office to PDF
 
@@ -506,10 +529,12 @@ class ConversionRepository(IConversionService):
         -------
             True if convert successfully else False
         """
-        self._verify_path(input_path, output_path)
+        self._verify_path(input_path)
 
         input_format = Path(input_path).suffix.lstrip('.').lower()
-        output_format = Path(output_path).suffix.lstrip('.').lower()
+        output_format = output_format.lstrip('.').lower()
+
+        output_path = self.create_temp_output_file(f'.{output_format}')
 
         cmd = [
             self.ffmpeg_path,
@@ -525,16 +550,23 @@ class ConversionRepository(IConversionService):
                 is_success = await self.convert_pdf_to_office(output_path, timeout, cmd)
 
             else:
+                if Path(output_path).exists():
+                    os.unlink(output_path)
                 raise ValueError(f"Unsupported conversion: {input_format} to {output_format}")
 
             if not is_success:
+                if Path(output_path).exists():
+                    os.unlink(output_path)
                 raise ValueError(f"Convert from {input_format} to {output_format} failed")
 
             if not Path(output_path).exists():
                 raise FileNotFoundError(f"Output file {str(output_path)} was not created")
 
-            return True
+            file_size = os.path.getsize(output_path)
+            return output_path, file_size
         except Exception as e:
+            if Path(output_path).exists():
+                os.unlink(output_path)
             raise ValueError(f"Conversion failed: {str(e)}") from e
 
 

@@ -4,10 +4,11 @@ Improved compression repository module with temporary file handling
 
 import tempfile
 import os
+import asyncio
+import subprocess
 from pathlib import Path
 from typing import Tuple, List
-import subprocess
-import multiprocessing
+from concurrent.futures import ProcessPoolExecutor, as_completed
 
 from Services.compression_service import ICompressionSerivce
 
@@ -21,6 +22,7 @@ class CompressionRepository(ICompressionSerivce):
     def __init__(self):
         """Initialize with path to magickpath"""
         self.magick_path = self._get_magick_path
+        self.max_workers = max(1, os.cpu_count() - 1)
 
     @property
     def _get_magick_path(self) -> str:
@@ -53,30 +55,19 @@ class CompressionRepository(ICompressionSerivce):
         --------
             str: path to temporary file
         """
-
         temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=suffix)
         temp_file.close()
         return temp_file.name
     
     @staticmethod
-    def _execute_magick(cmd: List) -> int:
-        """Execute the subprocess with magick"""
-        try:
-            result = subprocess.run(
-                cmd,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                check=False
-            )
-
-            return result.returncode
-        except Exception as e:
-            raise ValueError(f"execute magick failed: {str(e)}") from e 
-
+    async def _run_in_executor(func, *args):
+        """Helper to run sync function for single file processing"""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, func, *args)
 
     #================ IMAGE ================
 
-    async def compress_image(self, input_path: str, quality: int = 50) -> Tuple[str, int]:
+    async def compress_image(self, input_path: str, quality: int = 50, timeout: int = 300) -> Tuple[str, int]:
         """
         Compress image file keeping the same format (PNG stays PNG, JPEG stays JPEG)
         Returns path to temporary output file and its size
@@ -84,7 +75,8 @@ class CompressionRepository(ICompressionSerivce):
         Parameters:
         ------------
             input_path(str): the path of the original file
-            reduce_colors(bool): for PNG, reduce to 256 colors for better compression
+            quality(int): compression quality (1-100)
+            timeout(int): timeout in seconds
 
         Returns:
         --------
@@ -92,34 +84,70 @@ class CompressionRepository(ICompressionSerivce):
 
         Raises:
         -------
-            Exception: if compress failed
+            ValueError: if compression failed
         """
+        return await self._run_in_executor(
+            self._compress_with_imagemagick_sync,
+            input_path,
+            self.magick_path,
+            quality,
+            timeout
+        )
+    
+    async def compress_images_batch(
+        self, 
+        input_paths: List[str], 
+        quality: int = 50, 
+        timeout: int = 300
+    ) -> List[Tuple[str, str, int, bool]]:
+        """
+        Compress multiple images in parallel
 
-        self._verify_input_path(input_path)
-        output_path = self.create_temp_output_file(Path(input_path).suffix)
+        Parameters:
+        -----------
+            input_paths(List[str]): list of input file paths
+            quality(int): compression quality
+            timeout(int): timeout per file
 
-        try:
-            is_success = await self._compress_with_imagemagick(input_path, output_path, quality, 300)
-
-            if not is_success:
-                if Path(output_path).exists():
-                    os.unlink(output_path)
-            
-            if not Path(output_path).exists():
-                raise FileExistsError("Ouput file was not created")
-            
-            if os.path.getsize(output_path) == 0:
-                os.unlink(output_path)
-                raise ValueError("The produced file was empty")
-        except Exception as e:
-            if Path(output_path).exists():
-                os.unlink(output_path)
-            raise ValueError(f"Compress {input_path} failed") from e 
+        Returns:
+        --------
+            List[Tuple[str, str, int, bool]]: (input_path, output_path, size, success)
+        """
+        if not input_paths:
+            return []
         
-        file_size = os.path.getsize(output_path)
-        return output_path, file_size
-        
-    async def _compress_with_imagemagick(self, input_path: str, output_path: str, quality: int, timeout: int = 300) -> bool:
+        with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
+            # ✅ Fixed: Correct parameter order
+            future_to_path = {
+                executor.submit(
+                    self._compress_with_imagemagick_sync,
+                    input_path,          # First parameter
+                    self.magick_path,    # Second parameter
+                    quality,             # Third parameter
+                    timeout              # Fourth parameter
+                ): input_path for input_path in input_paths
+            }
+
+            results = []
+
+            for future in as_completed(future_to_path):
+                input_path = future_to_path[future]
+                try:
+                    output_path, file_converted_size = future.result(timeout=timeout + 10)
+                    results.append((input_path, output_path, file_converted_size, True))
+                except Exception as e:
+                    print(f"Failed to compress {input_path}: {str(e)}")
+                    results.append((input_path, "", 0, False))
+
+            return results
+
+    @staticmethod    
+    def _compress_with_imagemagick_sync(
+        input_path: str, 
+        magick_path: str, 
+        quality: int, 
+        timeout: int = 300
+    ) -> Tuple[str, int]:
         """
         Compress image using ImageMagick (Universal - ALL formats)
         
@@ -134,17 +162,22 @@ class CompressionRepository(ICompressionSerivce):
         Parameters:
         -----------
             input_path(str): input file path
+            magick_path(str): path to ImageMagick executable
             quality(int): quality level (1-100)
+            timeout(int): timeout in seconds
             
         Returns:
         --------
             Tuple[str, int]: (output_file_path, file_size_bytes)
         """
+        # Verify input exists
+        if not Path(input_path).exists():
+            raise FileNotFoundError(f"Input file not found: {input_path}")
 
         input_format = Path(input_path).suffix.lstrip('.').lower()
     
         # Build ImageMagick command based on format
-        cmd = [self.magick_path, input_path]
+        cmd = [magick_path, input_path]
         
         # Format-specific optimizations
         if input_format in ['jpg', 'jpeg']:
@@ -228,21 +261,45 @@ class CompressionRepository(ICompressionSerivce):
                 '-compress', 'LZW'
             ])
         
-        # Add output path
+        # Create output path
+        output_path = CompressionRepository.create_temp_output_file(f'.{input_format}')
         cmd.append(output_path)
 
         try:
-            with multiprocessing.Pool() as pool:
-                result = pool.apply_async(self._execute_magick, (cmd, ))
-                return_code = result.get(timeout=timeout)
-            return return_code == 0
-        except subprocess.TimeoutExpired:
+            # ✅ Fixed: Use subprocess directly instead of multiprocessing
+            result = subprocess.run(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                timeout=timeout,
+                check=False
+            )
+            
+            if result.returncode != 0:
+                error_msg = result.stderr.decode() if result.stderr else "Unknown error"
+                if Path(output_path).exists():
+                    os.unlink(output_path)
+                raise ValueError(f"ImageMagick compression failed: {error_msg}")
+            
+            # Verify output file exists and is not empty
+            if not Path(output_path).exists():
+                raise FileNotFoundError("Output file was not created")
+            
+            file_size = os.path.getsize(output_path)
+            
+            if file_size == 0:
+                os.unlink(output_path)
+                raise ValueError("The created file was empty")
+            
+            # ✅ Fixed: Return the tuple!
+            return output_path, file_size
+            
+        except subprocess.TimeoutExpired as e:
             if Path(output_path).exists():
                 os.unlink(output_path)
+            raise ValueError(f"Compression timed out after {timeout} seconds") from e
+            
         except Exception as e:
             if Path(output_path).exists():
                 os.unlink(output_path)
-            raise ValueError(f"run ffmpeg conversion failed: {e}") from e
-
-           
-            
+            raise ValueError(f"Compression failed: {str(e)}") from e

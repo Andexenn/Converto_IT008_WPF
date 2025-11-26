@@ -4,13 +4,15 @@ conversion_repository module
 import io
 import os
 import multiprocessing
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 import subprocess
 from typing import List, Tuple
+import tempfile
+import asyncio
+
 import win32com.client
 import pythoncom
-import tempfile
-
 from PIL import Image
 
 from Services.conversion_service import IConversionService
@@ -18,6 +20,7 @@ from Services.conversion_service import IConversionService
 #TODO: multiprocessing for converting image and office, pdf
 
 FFMPEG_EXECUTABLE_NAME = 'ffmpeg.exe'
+SOFFICE_EXECUTABLE_NAME = 'soffice.exe'
 class ConversionRepository(IConversionService):
     """
     Conversion repository class
@@ -27,6 +30,8 @@ class ConversionRepository(IConversionService):
         Initialize with ffmpeg path
         """
         self.ffmpeg_path = self._get_ffmpeg_path
+        self.max_workers = max(1, multiprocessing.cpu_count() - 1)
+        self.soffice_path = self._get_soffice_path
 
     @property
     def _get_ffmpeg_path(self) -> str:
@@ -41,15 +46,29 @@ class ConversionRepository(IConversionService):
             )
 
         return str(ffmpeg_path.absolute())
+    
+    @property
+    def _get_soffice_path(self) -> str:
+        """
+        Get soffice path
+        """
+        soffice_path = Path(__file__).parent.parent.parent.parent / 'bin' / 'Debug' / 'net9.0-windows' / SOFFICE_EXECUTABLE_NAME
+
+        if not soffice_path.exists():
+            raise FileNotFoundError(
+                f"Soffice executable not found. Please ensure {SOFFICE_EXECUTABLE_NAME} exists"
+            )
+        
+        return str(soffice_path)
 
     @staticmethod
-    def _execute_ffmpeg(cmd: List) -> int:
+    def _execute_subprocess(cmd: List) -> int:
         """
         Execute the ffmpeg with config statistic
 
         Parameter:
         ----------
-            cmd(list): FFmpeg command as input
+            cmd(list): FFmpeg/soffice command as input
         Returns:
         --------
             int: Return code from the ffmpeg
@@ -114,21 +133,100 @@ class ConversionRepository(IConversionService):
 
         self._verify_path(input_path)
 
+        return await self._run_in_executor(
+            self._convert_image_sync,
+            input_path,
+            output_format
+        )
+
+    async def convert_images_batch(self, input_paths: List[str], output_format: str) -> List[Tuple[str, str, int, bool]]:
+        """
+        Convert multiple images in parallel using multiprocessing
+
+        Parameters:
+        ------------
+            input_paths(List[str]): list of input file paths
+            output_format(str): desired output format (e.g., 'png', 'jpg')
+
+        Returns:
+        --------
+            List[Tuple[str, str, int, bool]]: List of (input_path, output_path, file_size, success)
+
+        Example:
+        --------
+            results = await convert_images_batch([
+                "image1.png",
+                "image2.bmp",
+                "image3.tiff"
+            ], "jpg")
+
+            for input_path, output_path, size, success in results:
+                if success:
+                    print(f"Converted {input_path} -> {size} bytes")
+                else:
+                    print(f"Failed to convert {input_path}")
+        """
+        if not input_paths:
+            return []
+
+        # Use ProcessPoolExecutor for parallel processing
+        with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
+            # Submit all conversion tasks
+            future_to_path = {
+                executor.submit(
+                    self._convert_image_sync,
+                    input_path,
+                    output_format
+                ): input_path
+                for input_path in input_paths
+            }
+
+            results = []
+            # Collect results as they complete
+            for future in as_completed(future_to_path):
+                input_path = future_to_path[future]
+                try:
+                    output_path, file_size = future.result()
+                    results.append((input_path, output_path, file_size, True))
+                except Exception as e:
+                    print(f"Failed to convert {input_path}: {str(e)}")
+                    results.append((input_path, None, 0, False))
+
+            return results
+
+    @staticmethod
+    def _convert_image_sync(input_path: str, output_format: str) -> Tuple[str, int]:
+        """
+        Synchronous image conversion function for multiprocessing
+        This is called by each worker process
+
+        Parameters:
+        -----------
+            input_path(str): input file path
+            output_format(str): desired output format (e.g., 'png', 'jpg')
+
+        Returns:
+        --------
+            Tuple[str, int]: (output_file_path, file_size_bytes)
+        """
+
+        if not Path(input_path).exists():
+            raise FileNotFoundError(f"File not found: {input_path}")
+
         try:
             with open(input_path, "rb") as fp:
                 file_content = fp.read()
         except Exception as e:
-            raise ValueError(f"Failed to read input files: {str(e)}") from e
+            raise ValueError(f"Failed to read input file: {str(e)}") from e
 
         output_format = output_format.lstrip('.').lower()
 
         try:
             image = Image.open(io.BytesIO(file_content))
         except Exception as e:
-            raise ValueError(
-                f"Failed to convert to open input file: {str(e)}"
-            ) from e
+            raise ValueError(f"Failed to open input file: {str(e)}") from e
 
+        # Handle transparency for JPEG
         if output_format in ['jpg', 'jpeg'] and image.mode in ("RGBA", "LA"):
             background = Image.new("RGB", image.size, (255, 255, 255))
             background.paste(image, mask=image.split()[-1])
@@ -136,31 +234,32 @@ class ConversionRepository(IConversionService):
         elif image.mode not in ["RGB", "RGBA"] and output_format not in ['png']:
             image = image.convert("RGB")
 
-        output_path = self.create_temp_output_file(f'.{output_format}')
+        # Create temp output file
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f'.{output_format}')
+        output_path = temp_file.name
+        temp_file.close()
 
         try:
             image.save(output_path, format=output_format.upper(), optimize=True)
         except Exception as e:
             if os.path.exists(output_path):
                 os.unlink(output_path)
-            raise ValueError(
-                 f"Failed to convert {image.format} to {output_format.upper()}: {str(e)}"
-            ) from e
+            raise ValueError(f"Failed to convert to {output_format.upper()}: {str(e)}") from e
 
         file_size = os.path.getsize(output_path)
-        
         return output_path, file_size
 
     #================ VIDEO & AUDIO ================
 
     async def convert_video_audio(self, input_path: str, output_format: str, timeout: int = 300) -> Tuple[str, int]:
         """
-        Convert audio and video from various types using ffmpeg with multiprocessing
+        Convert audio and video from various types using ffmpeg
+        Returns path to temporary output file and its size
 
-        Paramenters:
+        Parameters:
         ------------
-            file_content(bytes): the input file as bytes
-            out_format(str): desired output format
+            input_path(str): the input file path
+            output_format(str): desired output format (e.g., 'mp4', 'mp3')
             timeout(int): maximum time in seconds
 
         Returns:
@@ -171,103 +270,123 @@ class ConversionRepository(IConversionService):
             ValueError: If conversion failed
             FileNotFoundError: If input file doesn't exist
         """
+        # Just use the sync method directly for single file
+        return await self._run_in_executor(
+            self._convert_video_audio_sync,
+            input_path,
+            output_format,
+            self.ffmpeg_path,
+            timeout
+        )
 
-        self._verify_path(input_path)
-
-        output_format = output_format.lstrip('.').lower()
-        output_path = self.create_temp_output_file(f'.{output_format}')
-
-        try:
-            is_success = await self._convert_video_audio_ffmpeg(input_path, output_path, output_format, timeout)
-
-            if is_success is False:
-                if os.path.exists(output_path):
-                    os.unlink(output_path)
-                raise ValueError(f"FFmpeg conversion to {output_format.upper()} failed")
-
-            if not Path(output_path).exists():
-                raise FileNotFoundError(f"output file not found: {output_path}")
-
-            if os.path.getsize(output_path) == 0:
-                os.unlink(output_path)
-                raise ValueError(f"The produced file was empty: {output_path}")
-
-            file_size = os.path.getsize(output_path)
-            return output_path, file_size
-        except subprocess.TimeoutExpired as e:
-            if os.path.exists(output_path):
-                os.unlink(output_path)
-            raise ValueError(f"Conversion to {output_format.upper()} is timed out. Files maybe too large or complex") from e
-        except Exception as e:
-            if os.path.exists(output_path):
-                os.unlink(output_path)
-            raise ValueError(f"The conversion was failed: {str(e)}") from e
-
-    async def _convert_video_audio_ffmpeg(self, input_path: str, output_path: str, output_format: str, timeout: int = 300) -> bool:
+    async def convert_video_audio_batch(self, input_paths: List[str], output_format: str, timeout: int = 300) -> List[Tuple[str, str, int, bool]]:
         """
-        Run FFmpeg conversion in separate process
+        Convert multiple video/audio files in parallel using multiprocessing
 
-        Parameter:
-        ----------
-            input_path(str): the filepath to the file want to convert
-            output_path(str): desired the conversion
-            output_format(str): the desired output format
-            timeout(int): maximum time in seconds
+        Parameters:
+        ------------
+            input_paths(List[str]): list of input file paths
+            output_format(str): desired output format (e.g., 'mp4', 'mp3')
+            timeout(int): maximum time in seconds per file
 
         Returns:
         --------
-            True if run successfully else False
+            List[Tuple[str, str, int, bool]]: List of (input_path, output_path, file_size, success)
+        """
+        if not input_paths:
+            return []
+
+        with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
+            future_to_path = {
+                executor.submit(
+                    self._convert_video_audio_sync,
+                    input_path,
+                    output_format,
+                    self.ffmpeg_path,
+                    timeout
+                ): input_path
+                for input_path in input_paths
+            }
+
+            results = []
+            for future in as_completed(future_to_path):
+                input_path = future_to_path[future]
+                try:
+                    output_path, file_size = future.result()
+                    results.append((input_path, output_path, file_size, True))
+                except Exception as e:
+                    print(f"Failed to convert {input_path}: {str(e)}")
+                    results.append((input_path, None, 0, False))
+
+            return results
+
+    @staticmethod
+    async def _run_in_executor(func, *args):
+        """Helper to run sync function in executor for single file processing"""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, func, *args)
+
+    @staticmethod
+    def _convert_video_audio_sync(input_path: str, output_format: str, ffmpeg_path: str, timeout: int) -> Tuple[str, int]:
+        """
+        Synchronous video/audio conversion for multiprocessing
+        Used by both single and batch conversions
         """
 
-        cmd = [
-            self.ffmpeg_path,
-            '-i', input_path,
-            '-y',
-        ]
+        if not Path(input_path).exists():
+            raise FileNotFoundError(f"File not found: {input_path}")
 
-        if output_format in ['mp4', 'mov', 'avi', 'mkv', 'webm']:
-            if output_format == 'webm':
-                cmd.extend([
-                    '-c:v', 'libvpx',  # VP8 codec (LGPL-compatible)
-                    '-b:v', '1M',
-                    '-c:a', 'libvorbis',  # Vorbis audio (LGPL-compatible)
-                    '-b:a', '128k',
-                ])
-            else:
-                cmd.extend([
-                    '-c:v', 'mpeg4', # video codec
-                    '-q:v', '5', # Encoding speed/quality
-                    '-c:a', 'aac', #Audio codec
-                    '-b:a', '128k', #audio bitrate
-                ])
-        elif output_format in ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a']:
-            if output_format == 'mp3':
-                cmd.extend(['-c:a', 'mp2', '-b:a' ,'192k']) #MP2 as fallback
-            elif output_format == 'wav':
-                cmd.extend(['-c:a', 'pcm_s16le'])
-            elif output_format == 'aac':
-                cmd.extend(['-c:a', 'aac', '-b:a', '192k'])
-            elif output_format == 'ogg':
-                cmd.extend(['-c:a', 'libvorbis', '-q:a', '6'])
-            elif output_format == 'flac':
-                cmd.extend(['-c:a', 'flac', '-compression_level', '5'])
-            elif output_format == 'm4a':
-                cmd.extend(['-c:a', 'aac', '-b:a', '192k'])
-
-        cmd.append(output_path)
+        output_format = output_format.lstrip('.').lower()
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f'.{output_format}')
+        output_path = temp_file.name
+        temp_file.close()
 
         try:
-            with multiprocessing.Pool() as pool:
-                result = pool.apply_async(self._execute_ffmpeg, (cmd, ))
+            cmd = [ffmpeg_path, '-i', input_path, '-y']
+
+            if output_format in ['mp4', 'mov', 'avi', 'mkv', 'webm']:
+                if output_format == 'webm':
+                    cmd.extend(['-c:v', 'libvpx', '-b:v', '1M', '-c:a', 'libvorbis', '-b:a', '128k'])
+                else:
+                    cmd.extend(['-c:v', 'mpeg4', '-q:v', '5', '-c:a', 'aac', '-b:a', '128k'])
+
+            elif output_format in ['mp3', 'wav', 'aac', 'ogg', 'flac', 'm4a']:
+                if output_format == 'mp3':
+                    cmd.extend(['-vn', '-c:a', 'libmp3lame', '-b:a', '192k'])
+                elif output_format == 'wav':
+                    cmd.extend(['-vn', '-c:a', 'pcm_s16le', '-ar', '44100'])
+                elif output_format == 'aac':
+                    cmd.extend(['-vn', '-c:a', 'aac', '-b:a', '192k'])
+                elif output_format == 'ogg':
+                    cmd.extend(['-vn', '-c:a', 'libvorbis', '-q:a', '6'])
+                elif output_format == 'flac':
+                    cmd.extend(['-vn', '-c:a', 'flac', '-compression_level', '5'])
+                elif output_format == 'm4a':
+                    cmd.extend(['-vn', '-c:a', 'aac', '-b:a', '192k'])
+
+            cmd.append(output_path)
+
+            # Execute FFmpeg with timeout
+            with multiprocessing.Pool(processes=1) as pool:
+                result = pool.apply_async(ConversionRepository._execute_subprocess, (cmd,))
                 return_code = result.get(timeout=timeout)
-            return return_code == 0
-        except subprocess.TimeoutExpired:
-            if Path(output_path).exists():
-                os.unlink(output_path)
+
+            if return_code != 0:
+                raise ValueError("FFmpeg conversion failed")
+
+            if not os.path.exists(output_path):
+                raise FileNotFoundError("Output file not created")
+
+            if os.path.getsize(output_path) == 0:
+                raise ValueError("Output file is empty")
+
+            file_size = os.path.getsize(output_path)
+            return output_path, file_size
+
         except Exception as e:
-            raise ValueError(f"run ffmpeg conversion failed: {e}") from e
-
-
+            if os.path.exists(output_path):
+                os.unlink(output_path)
+            raise
 
     #================ GIF ================
     async def convert_gif(self, input_path: str, output_format: str, timeout: int) -> Tuple[str, int]:
@@ -284,240 +403,152 @@ class ConversionRepository(IConversionService):
         -------
             Tuple[str, int]: (output_file_path, file_size_bytes)
         """
-        self._verify_path(input_path)
-
-        output_format = output_format.lstrip('.').lower()
-        input_format = Path(input_path).suffix.lstrip('.').lower()
-        output_path = self.create_temp_output_file(f'.{output_format}')
-
-        cmd = [
+        return await self._run_in_executor(
+            self._convert_gif_sync,
+            input_path,
+            output_format,
             self.ffmpeg_path,
-            '-i', input_path,
-            '-y',
-        ]
+            timeout
+        )
+
+    async def convert_gif_batch(self, input_paths: List[str], output_format: str, timeout: int = 300) -> List[Tuple[str, str, int, bool]]:
+        """
+        Convert multiple GIF/image/video files in parallel using multiprocessing
+
+        Parameters:
+        ------------
+            input_paths(List[str]): list of input file paths
+            output_format(str): desired output format
+            timeout(int): maximum time in seconds per file
+
+        Returns:
+        --------
+            List[Tuple[str, str, int, bool]]: List of (input_path, output_path, file_size, success)
+        """
+        if not input_paths:
+            return []
+
+        with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
+            future_to_path = {
+                executor.submit(
+                    self._convert_gif_sync,
+                    input_path,
+                    output_format,
+                    self.ffmpeg_path,
+                    timeout
+                ) : input_path for input_path in input_paths
+            }
+
+            results = []
+            for future in as_completed(future_to_path):
+                input_path = future_to_path[future]
+                try:
+                    output_path, file_size = future.result()
+                    results.append((input_path, output_path, file_size, True))
+                except Exception as e:
+                    print(f"Failed to convert {input_path}: {str(e)}")
+                    results.append((input_path, None, 0, False))
+
+            return results
+
+    @staticmethod
+    def _convert_gif_sync(input_path: str, output_format: str, ffmpeg_path: str, timeout: int) -> Tuple[str, int]:
+        """
+        Synchronous GIF conversion for multiprocessing
+        Handles: GIF↔Image, GIF↔Video conversions
+        """
+
+        if not Path(input_path).exists():
+            raise FileNotFoundError(f"File not found: {input_path}")
+
+        input_format = Path(input_path).suffix.lstrip('.').lower()
+        output_format = output_format.lstrip('.').lower()
+
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f'.{output_format}')
+        output_path = temp_file.name
+        temp_file.close()
 
         try:
+            cmd = [ffmpeg_path, '-i', input_path, '-y']
+
             # GIF to Image
             if input_format == "gif" and output_format in ["png", "jpg", "jpeg", "webp", "bmp", "tiff", "ppm", "pgm", "pbm", "tga"]:
-                is_success = await self.convert_gif_to_image(output_format, timeout, output_path, cmd)
+                cmd.extend(['-vframes', '1'])
+                if output_format in ['jpg', 'jpeg']:
+                    cmd.extend(['-q:v', '2'])
+                elif output_format == 'png':
+                    cmd.extend(['-compression_level', '6'])
+                elif output_format == 'webp':
+                    cmd.extend(['-q:v', '90'])
 
             # Image to GIF
             elif input_format in ["png", "jpg", "jpeg", "webp", "bmp", "tiff", "ppm", "pgm", "pbm", "tga"] and output_format == "gif":
-                is_success = await self.convert_image_to_gif(output_format, timeout, output_path, cmd)
+                cmd.extend(['-t', '1', '-loop', '0'])
 
             # GIF to Video
             elif input_format == "gif" and output_format in ["mp4", "webm", "avi", "mov", "mkv", "flv", "wmv", "mpeg", "mpg", "ogv", "3gp"]:
-                is_success = await self.convert_gif_to_video(output_format, timeout, output_path, cmd)
+                if output_format == 'webm':
+                    cmd.extend([
+                        '-c:v', 'libvpx',
+                        '-b:v', '1M',
+                        '-crf', '10',
+                        '-pix_fmt', 'yuv420p',
+                        '-auto-alt-ref', '0',
+                    ])
+                elif output_format == 'mp4':
+                    cmd.extend([
+                        '-c:v', 'mpeg4',
+                        '-q:v', '5',
+                        '-pix_fmt', 'yuv420p',
+                        '-movflags', '+faststart',
+                    ])
+                elif output_format in ['avi', 'mkv', 'mov']:
+                    cmd.extend(['-c:v', 'mpeg4', '-q:v', '5', '-pix_fmt', 'yuv420p'])
+                elif output_format in ['mpeg', 'mpg']:
+                    cmd.extend(['-c:v', 'mpeg2video', '-b:v', '2M', '-pix_fmt', 'yuv420p'])
+                elif output_format == 'ogv':
+                    cmd.extend(['-c:v', 'libtheora', '-q:v', '7'])
+                elif output_format == '3gp':
+                    cmd.extend(['-c:v', 'mpeg4', '-s', '176x144', '-b:v', '256k'])
+                else:
+                    cmd.extend(['-c:v', 'mpeg4', '-q:v', '5', '-pix_fmt', 'yuv420p'])
 
             # Video to GIF
             elif input_format in ["mp4", "webm", "avi", "mov", "mkv", "flv", "wmv", "mpeg", "mpg", "ogv", "3gp"] and output_format == "gif":
-                is_success = await self.convert_video_to_gif(output_format, timeout, output_path, cmd)
+                cmd.extend([
+                    '-vf', 'fps=15,scale=640:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=256[p];[s1][p]paletteuse=dither=bayer:bayer_scale=5',
+                    '-loop', '0',
+                ])
 
             else:
-                if Path(output_path).exists():
-                    os.unlink(output_path)
                 raise ValueError(f"Unsupported conversion: {input_format} to {output_format}")
 
-            if not is_success:
-                if Path(output_path).exists():
-                    os.unlink(output_path)
-                raise ValueError(f"Failed to convert from {input_format} to {output_format}")
+            cmd.append(output_path)
 
-            if not Path(output_path).exists():
-                raise FileNotFoundError(f"Output file not created: {output_path}")
+            # Execute FFmpeg with timeout
+            with multiprocessing.Pool(processes=1) as pool:
+                result = pool.apply_async(ConversionRepository._execute_subprocess, (cmd,))
+                return_code = result.get(timeout=timeout)
+
+            if return_code != 0:
+                raise ValueError("FFmpeg conversion failed")
+
+            if not os.path.exists(output_path):
+                raise FileNotFoundError("Output file not created")
+
+            if os.path.getsize(output_path) == 0:
+                raise ValueError("Output file is empty")
 
             file_size = os.path.getsize(output_path)
             return output_path, file_size
-
-        except Exception as e:
-            if Path(output_path).exists():
+        
+        #pylint: disable = unused-variable
+        except Exception as e: 
+            if os.path.exists(output_path):
                 os.unlink(output_path)
-            raise ValueError(f"Conversion failed: {str(e)}") from e
+            raise
 
-    async def convert_gif_to_image(self, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
-        """
-        Convert from GIF to image using FFmpeg
-        Parameter:
-        ----------
-            input_path(str): contains the original file path
-            output_path(str): contains the final file path
-            timeout(int): timeout in second
-            cmd(List(str)): contains the list of parameters to create a subprocess
-        Return:
-        -------
-            True if convert successfully else False
-        """
-        try:
-            cmd.extend(['-vframes', '1'])
-
-            if output_format in ['jpg', 'jpeg']:
-                cmd.extend(['-q:v', '2'])
-            elif output_format == 'png':
-                cmd.extend(['-compression_level', '6',])
-            elif output_format == 'webp':
-                cmd.extend(['-q:v', '90'])
-
-            cmd.append(output_path)
-
-            with multiprocessing.Pool() as pool:
-                result  = pool.apply_async(self._execute_ffmpeg, (cmd, ))
-                return_code = result.get(timeout=timeout)
-
-            return return_code == 0
-        except Exception as e:
-            raise ValueError(f"Conversion from GIF to {output_format} failed: {str(e)}") from e
-
-    async def convert_image_to_gif(self, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
-        """
-        Convert from image to GIF using FFmpeg
-        Parameter:
-        ----------
-            input_path(str): contains the original file path
-            output_path(str): contains the final file path
-            timeout(int): timeout in second
-
-        Return:
-        -------
-            True if convert successfully else False
-        """
-        try:
-            cmd.extend([
-                '-t', '1',
-                '-loop', '0',
-            ])
-
-            cmd.append(output_path)
-
-            with multiprocessing.Pool() as pool:
-                result = pool.apply_async(self._execute_ffmpeg, (cmd, ))
-                return_code = result.get(timeout=timeout)
-
-            return return_code == 0
-        except Exception as e:
-            raise ValueError(f"Image to GIF conversion failed: {str(e)}") from e
-
-    async def convert_video_to_gif(self, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
-        """
-        Convert from video to GIF using FFmpeg
-        Parameter:
-        ----------
-            input_path(str): contains the original file path
-            output_path(str): contains the final file path
-            timeout(int): timeout in second
-
-        Return:
-        -------
-            True if convert successfully else False
-        """
-
-        try:
-            # High-quality GIF conversion with palette generation
-            # This creates a 2-pass conversion for better quality
-            cmd.extend([
-                '-vf', 'fps=15,scale=640:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=256[p];[s1][p]paletteuse=dither=bayer:bayer_scale=5',
-                # fps=15: 15 frames per second (good balance)
-                # scale=640:-1: resize to 640px width, maintain aspect ratio
-                # palettegen: generate optimal 256 color palette
-                # paletteuse: apply palette with dithering for smoother colors
-                '-loop', '0',  # Loop forever
-            ])
-
-            cmd.append(output_path)
-
-            # Execute FFmpeg
-            with multiprocessing.Pool() as pool:
-                result = pool.apply_async(self._execute_ffmpeg, (cmd,))
-                return_code = result.get(timeout=timeout)
-
-            return return_code == 0
-        except Exception as e:
-            raise ValueError(f"Video to GIF conversion failed: {str(e)}") from e
-
-    async def convert_gif_to_video(self, output_format: str, timeout: int, output_path: str, cmd: List) -> bool:
-        """
-        Convert from GIF to video using FFmpeg
-        Parameter:
-        ----------
-            input_path(str): contains the original file path
-            output_path(str): contains the final file path
-            timeout(int): timeout in second
-
-        Return:
-        -------
-            True if convert successfully else False
-        """
-        try:
-            # Video format-specific settings (LGPL-compatible codecs)
-            if output_format == 'webm':
-                cmd.extend([
-                    '-c:v', 'libvpx',  # VP8 video codec (LGPL)
-                    '-b:v', '1M',  # Video bitrate
-                    '-crf', '10',  # Quality (4-63, lower = better)
-                    '-pix_fmt', 'yuv420p',  # Pixel format for compatibility
-                    '-auto-alt-ref', '0',  # Disable alt reference frames
-                ])
-            elif output_format == 'mp4':
-                cmd.extend([
-                    '-c:v', 'mpeg4',  # MPEG-4 video codec (LGPL)
-                    '-q:v', '5',  # Quality (1-31, lower = better)
-                    '-pix_fmt', 'yuv420p',  # Pixel format
-                    '-movflags', '+faststart',  # Enable streaming
-                ])
-            elif output_format in ['avi', 'mkv']:
-                cmd.extend([
-                    '-c:v', 'mpeg4',  # MPEG-4 codec
-                    '-q:v', '5',
-                    '-pix_fmt', 'yuv420p',
-                ])
-            elif output_format == 'mov':
-                cmd.extend([
-                    '-c:v', 'mpeg4',
-                    '-q:v', '5',
-                    '-pix_fmt', 'yuv420p',
-                ])
-            elif output_format in ['mpeg', 'mpg']:
-                cmd.extend([
-                    '-c:v', 'mpeg2video',  # MPEG-2 codec
-                    '-b:v', '2M',
-                    '-pix_fmt', 'yuv420p',
-                ])
-            elif output_format == 'ogv':
-                cmd.extend([
-                    '-c:v', 'libtheora',  # Theora codec (LGPL)
-                    '-q:v', '7',  # Quality (0-10)
-                ])
-            elif output_format == '3gp':
-                cmd.extend([
-                    '-c:v', 'mpeg4',
-                    '-s', '176x144',  # Standard 3GP resolution
-                    '-b:v', '256k',
-                ])
-            elif output_format in ['flv', 'wmv']:
-                cmd.extend([
-                    '-c:v', 'mpeg4',
-                    '-q:v', '5',
-                ])
-            else:
-                # Default fallback
-                cmd.extend([
-                    '-c:v', 'mpeg4',
-                    '-q:v', '5',
-                    '-pix_fmt', 'yuv420p',
-                ])
-
-            cmd.append(output_path)
-
-            # Execute FFmpeg
-            with multiprocessing.Pool() as pool:
-                result = pool.apply_async(self._execute_ffmpeg, (cmd,))
-                return_code = result.get(timeout=timeout)
-
-            return return_code == 0
-
-        except Exception as e:
-            raise ValueError(f"GIF to video conversion failed: {str(e)}") from e
-
-        #================ PDF & OFFICE ================
+    #================ PDF & OFFICE ================
 
     async def convert_pdf_office(self, input_path: str, output_format: str, timeout: int) -> Tuple[str, int]:
         """
@@ -538,43 +569,91 @@ class ConversionRepository(IConversionService):
         input_format = Path(input_path).suffix.lstrip('.').lower()
         output_format = output_format.lstrip('.').lower()
 
-        output_path = self.create_temp_output_file(f'.{output_format}')
-
-        cmd = [
-            self.ffmpeg_path,
-            '-i', input_path,
-            '-y',
-        ]
-
         try:
             if input_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt'] and output_format == 'pdf':
-                is_success = await self.convert_office_to_pdf(input_path, input_format, output_path, timeout)
+                return await self._run_in_executor(
+                    self._convert_office_to_pdf_sync,
+                    input_path
+                )
 
             elif input_format == 'pdf' and output_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt']:
-                is_success = await self.convert_pdf_to_office(output_path, timeout, cmd)
+                return await self._run_in_executor(
+                    self._convert_pdf_to_office_sync,
+                    input_path,
+                    output_format,
+                    self.soffice_path,
+                    timeout
+                )
 
-            else:
-                if Path(output_path).exists():
-                    os.unlink(output_path)
-                raise ValueError(f"Unsupported conversion: {input_format} to {output_format}")
-
-            if not is_success:
-                if Path(output_path).exists():
-                    os.unlink(output_path)
-                raise ValueError(f"Convert from {input_format} to {output_format} failed")
-
-            if not Path(output_path).exists():
-                raise FileNotFoundError(f"Output file {str(output_path)} was not created")
-
-            file_size = os.path.getsize(output_path)
-            return output_path, file_size
         except Exception as e:
-            if Path(output_path).exists():
-                os.unlink(output_path)
             raise ValueError(f"Conversion failed: {str(e)}") from e
 
+    async def convert_pdf_office_batch(
+        self, 
+        input_paths: List[str], 
+        output_format: str, 
+        timeout: int = 300
+    ) -> List[Tuple[str, str, int, bool]]:
+        """
+        Batch convert multiple files
 
-    async def convert_office_to_pdf(self, input_path:str, input_format: str, output_path: str, timeout: int) -> bool:
+        Parameters:
+        -----------
+            input_paths (List[str]): List of input file paths
+            output_format (str): Desired output format
+            timeout (int): Timeout per file in seconds
+
+        Returns:
+        --------
+            List[Tuple[str, str, int, bool]]: List of (input_path, output_path, size, success)
+        """
+        if not input_paths:
+            return []
+
+        results = []
+        
+        # Determine conversion type based on first file
+        first_format = Path(input_paths[0]).suffix.lstrip('.').lower()
+        is_office_to_pdf = first_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt']
+        
+        with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
+            # Submit all conversion tasks
+            future_to_path = {}
+            
+            for input_path in input_paths:
+                if is_office_to_pdf:
+                    # Office to PDF
+                    future = executor.submit(
+                        self._convert_office_to_pdf_sync,
+                        input_path
+                    )
+                else:
+                    # PDF to Office
+                    future = executor.submit(
+                        self._convert_pdf_to_office_sync,
+                        input_path,
+                        output_format,
+                        self.soffice_path,
+                        timeout
+                    )
+                
+                future_to_path[future] = input_path
+            
+            # Collect results as they complete
+            for future in as_completed(future_to_path):
+                input_path = future_to_path[future]
+                
+                try:
+                    output_path, file_size = future.result(timeout=timeout)
+                    results.append((input_path, output_path, file_size, True))
+                except Exception as e:
+                    print(f"Failed to convert {input_path}: {str(e)}")
+                    results.append((input_path, "", 0, False))
+        
+        return results
+
+    @staticmethod
+    def _convert_office_to_pdf_sync( input_path:str) -> Tuple[str, int]:
         """
         Convert from office to PDF
 
@@ -588,8 +667,16 @@ class ConversionRepository(IConversionService):
             True if success else False
         """
 
-        input_path = str(Path(input_path).absolute())
-        output_path = str(Path(output_path).absolute())
+        if not Path(input_path).exists():
+            raise FileNotFoundError(f"File {input_path} not found!")
+
+        input_format = Path(input_path).suffix.lstrip('.').lower()
+        
+        output_format = 'pdf'
+
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f'.{output_format}')
+        output_path = temp_file.name
+        temp_file.close()
 
         pythoncom.CoInitialize() #pylint: disable=no-member
 
@@ -658,11 +745,73 @@ class ConversionRepository(IConversionService):
             else:
                 raise ValueError(f"Unsupported input format: {input_format}")
 
-            return True
+            return output_path, os.path.getsize(output_path)
         except Exception as e:
             raise ValueError(f"Conversion failed: {str(e)}") from e
         finally:
             pythoncom.CoUninitialize() #pylint: disable=no-member
 
-    async def convert_pdf_to_office(self, output_path: str, timeout: int, cmd: List) -> bool:
-        return True
+    @staticmethod
+    def _convert_pdf_to_office_sync(input_path: str, output_format: str, soffice_path: str , timeout: int = 300) -> Tuple[str, int]:
+        """Convert from pdf to office"""
+        
+        if not Path(input_path).exists():
+            raise FileNotFoundError(f"File not found: {input_path}")
+
+        output_format = output_format.lstrip('.').lower()
+
+        format_to_filter = {
+            'docx': 'docx',  
+            'doc':  'doc',
+            'xlsx': 'xlsx',
+            'xls':  'xls',
+            'pptx': 'pptx',
+            'ppt':  'ppt',
+        }
+
+        if output_format not in format_to_filter:
+            raise ValueError(f"Unsupported convert from PDF to {output_format}")
+
+        libreoffice_filter = format_to_filter[output_format]
+
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f'.{output_format}')
+        output_path = temp_file.name
+        temp_file.close()
+
+        try:
+            cmd = [
+                "soffice",
+                "--headless",
+                "--invisible",
+                "--nocrashreport",
+                "--nodefault",
+                "--nofirststartwizard",
+                "--nologo",
+                "--norestore",
+                '--convert-to', libreoffice_filter,
+                output_path,
+                '--outdir', str(Path(output_path).parent),
+                str(input_path)
+            ]
+
+            with multiprocessing.Pool(processes=1) as pool:
+                result = pool.apply_async(ConversionRepository._execute_subprocess, (cmd, ))
+                return_code = result.get(timeout=timeout)
+
+            if return_code != 0:
+                raise ValueError("Soffice conversion failed")
+            
+            if not os.path.exists(output_path):
+                raise FileNotFoundError("Output file not created")
+
+            if os.path.getsize(output_path) == 0:
+                raise ValueError("Output file is empty")
+
+            file_size = os.path.getsize(output_path)
+            return output_path, file_size
+        
+        #pylint: disable=unused-variable
+        except Exception as e:
+            if Path(output_path).exists():
+                os.unlink(output_path)
+            raise

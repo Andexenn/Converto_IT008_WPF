@@ -121,6 +121,7 @@ public class AuthServiceImpl : IAuthService
             }
 
             var loginResponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
+
             return loginResponse;
         }
         catch (Exception ex)

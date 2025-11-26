@@ -9,7 +9,7 @@ class ICompressionSerivce(ABC):
     A compress interface
     """
     @abstractmethod
-    async def compress_image(self, input_path: str, quality: int = 85) -> Tuple[str, int]:
+    async def compress_image(self, input_path: str, quality: int = 50, timeout: int = 300) -> Tuple[str, int]:
         """
         Compress image file content to smaller size
 

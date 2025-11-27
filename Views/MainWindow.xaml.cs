@@ -1,4 +1,5 @@
-﻿using Converto_IT008_WPF.ViewModels;
+﻿using Converto;
+using Converto_IT008_WPF.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,5 +31,19 @@ public partial class MainWindow : Window
     {
         if(e.ChangedButton == MouseButton.Left)
             this.DragMove();
+    }
+
+    private void ExitButton_Click(object sender, RoutedEventArgs e)
+    {
+        ExitConfirmationDialog dialog = new ExitConfirmationDialog();
+
+        dialog.Owner = this;
+
+        bool? result = dialog.ShowDialog();
+
+        if (result == true)
+        {
+            Application.Current.Shutdown();
+        }
     }
 }

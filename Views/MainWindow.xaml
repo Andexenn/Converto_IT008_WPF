@@ -66,7 +66,13 @@
                                 <RadioButton x:Name="About_Us" Content="About Us" Tag="{x:Static fa:FontAwesomeIcon.Group}" Style="{StaticResource MenuButtonTheme}" Command="{Binding GoAboutUsCommand}"/>
                                 <RadioButton x:Name="History" Content="History" Tag="{x:Static fa:FontAwesomeIcon.History}" Command="{Binding GoHistoryCommand}" Style="{StaticResource MenuButtonTheme}"/>
 
-                                <RadioButton x:Name="Exit" Grid.Row="1" Tag="{x:Static fa:FontAwesomeIcon.SignOut}" Content="Exit" Style="{StaticResource MenuButtonTheme}" Height="35" Command="{Binding CloseAppCommand}"/>
+                                <RadioButton x:Name="Exit" 
+                                             Grid.Row="1" 
+                                             Tag="{x:Static fa:FontAwesomeIcon.SignOut}" 
+                                             Content="Exit" 
+                                             Style="{StaticResource MenuButtonTheme}" 
+                                             Height="35"
+                                             Click="ExitButton_Click"/>
                             </StackPanel>
                         </StackPanel>
                     </Grid>

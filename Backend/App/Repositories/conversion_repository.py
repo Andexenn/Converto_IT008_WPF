@@ -86,6 +86,12 @@ class ConversionRepository(IConversionService):
         except Exception as e:
             print(f"FFmpeg execution error: {str(e)}")
             return 1
+        
+    @staticmethod
+    async def _run_in_executor(func, *args):
+        """Helper to run sync function in executor for single file processing"""
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, func, *args)
 
     @staticmethod
     def _verify_path(input_path: str) -> None:
@@ -320,11 +326,7 @@ class ConversionRepository(IConversionService):
 
             return results
 
-    @staticmethod
-    async def _run_in_executor(func, *args):
-        """Helper to run sync function in executor for single file processing"""
-        loop = asyncio.get_event_loop()
-        return await loop.run_in_executor(None, func, *args)
+
 
     @staticmethod
     def _convert_video_audio_sync(input_path: str, output_format: str, ffmpeg_path: str, timeout: int) -> Tuple[str, int]:

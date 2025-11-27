@@ -4,7 +4,7 @@ Entry point for the server
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from Database.connection import init_db
-from Handlers import auth_handler, conversion_handler, conversion_history_handler, compression_handler
+from Handlers import auth_handler, conversion_handler, conversion_history_handler, compression_handler, remove_background_handler
 
 from config import settings
 
@@ -29,6 +29,7 @@ app.include_router(auth_handler.router, prefix="/api/auth", tags=["Authenticatio
 app.include_router(conversion_handler.router, prefix="/api", tags=["Authentication"] )
 app.include_router(conversion_history_handler.router, prefix="/api", tags=["Authentication"])
 app.include_router(compression_handler.router, prefix="/api", tags=["Authentication"])
+app.include_router(remove_background_handler.router, prefix="/api", tags=["Authentication"])
 
 @app.get("/")
 def root():

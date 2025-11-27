@@ -317,7 +317,7 @@ class CompressionRepository(ICompressionSerivce):
     async def compress_video(
         self,
         input_path: str,
-        quality: str = "medium",
+        quality: str = "low",
         timeout: int = 600
     ) -> Tuple[str, int]:
         """
@@ -353,7 +353,7 @@ class CompressionRepository(ICompressionSerivce):
     async def compress_audio(
         self,
         input_path: str,
-        bitrate: str = "128k",  
+        bitrate: str = "64k",  
         timeout: int = 300
     ) -> Tuple[str, int]:
         """
@@ -384,7 +384,7 @@ class CompressionRepository(ICompressionSerivce):
     async def compress_videos_batch(
         self,
         input_paths: List[str],
-        quality: str = "medium",
+        quality: str = "low",
         timeout: int = 600
     ) -> List[Tuple[str, str, int, bool]]:
         """
@@ -430,7 +430,7 @@ class CompressionRepository(ICompressionSerivce):
     async def compress_audios_batch(
         self,
         input_paths: List[str],
-        bitrate: str = "128k",
+        bitrate: str = "64k",
         timeout: int = 300
     ) -> List[Tuple[str, str, int, bool]]:
         """
@@ -477,7 +477,7 @@ class CompressionRepository(ICompressionSerivce):
     def _compress_video_sync(
         input_path: str,
         ffmpeg_path: str,
-        quality: str = "medium",
+        quality: str = "low",
         timeout: int = 600
     ) -> Tuple[str, int]:
         """
@@ -624,7 +624,7 @@ class CompressionRepository(ICompressionSerivce):
     def _compress_audio_sync(
         input_path: str,
         ffmpeg_path: str,
-        bitrate: str = "128k",
+        bitrate: str = "64k",
         timeout: int = 300
     ) -> Tuple[str, int]:
         """

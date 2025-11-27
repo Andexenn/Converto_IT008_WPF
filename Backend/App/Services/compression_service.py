@@ -2,7 +2,7 @@
 compression service interface
 """
 from abc import ABC, abstractmethod
-from typing import Tuple
+from typing import Tuple, List
 
 class ICompressionSerivce(ABC):
     """
@@ -22,3 +22,25 @@ class ICompressionSerivce(ABC):
         -------
         True if succeed else False
         """
+
+    @abstractmethod
+    async def compress_images_batch(self, input_paths: List[str], quality: int = 50, timeout: int = 300) -> List[Tuple[str, str, int, bool]]:
+        """
+        Compress images batch
+        
+        Parameters:
+        -----------
+            input_paths(List[str]): a list of input paths
+            quality(int): the quality of the image after compressing
+            timeout(int): timeout in seconds
+        
+        Returns:
+        --------
+            List[Tuple[str, str, int, bool]]: a list of compression results
+        """
+
+    # @abstractmethod
+    # async def 
+    
+
+

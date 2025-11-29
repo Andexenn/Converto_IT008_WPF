@@ -27,7 +27,7 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand GoLoginCommand { get; }
         public ICommand GoSignUpCommand { get; }
         public ICommand GoMyAccountCommand { get; }
-        public ICommand GoTextToImage { get; }
+        public ICommand GoMarkdownToTextCommand { get; }
         public ICommand GoRemoveBackground { get; }
 
         public ICommand ShowLoginOverlayCommand { get; set; }
@@ -55,7 +55,7 @@ namespace Converto_IT008_WPF.ViewModels
             GoLoginCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<UserViewModel.LoginViewModel>(); });
             GoSignUpCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<UserViewModel.SignUpViewModel>(); });
             GoMyAccountCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<UserViewModel.MyAccountViewModel>(); });
-            GoTextToImage = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.TextToImageViewModel>(); });
+            GoMarkdownToTextCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.MarkdownToTextViewModel>(); });
             GoRemoveBackground = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.RemoveBackgroundViewModel>(); });
             nav.Navigate<HomepageViewModel>();
 

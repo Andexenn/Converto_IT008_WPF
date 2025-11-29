@@ -35,8 +35,8 @@
                 <v:HistoryView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type ssv:TextToImageViewModel}">
-                <vi:TextToImageView/>
+            <DataTemplate DataType="{x:Type ssv:MarkdownToTextViewModel}">
+                <vi:MarkdownToTextView/>
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type ssv:RemoveBackgroundViewModel}">

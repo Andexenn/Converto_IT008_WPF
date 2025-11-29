@@ -57,7 +57,11 @@
                                 </RadioButton>
 
                                 <RadioButton x:Name="Compress" Content="Compress" Tag="{x:Static fa:FontAwesomeIcon.Compress}" Command="{Binding GoCompressCommand}" Style="{StaticResource MenuButtonTheme}" BorderBrush="{x:Null}"/>
-                                <RadioButton x:Name="Tex_to_Image" Content="Text to Image" Tag="{x:Static fa:FontAwesomeIcon.Steam}" Command="{Binding GoTextToImage}" Style="{StaticResource MenuButtonTheme}"/>
+                                <RadioButton x:Name="Markdown_To_Text" 
+                                             Content="Markdown to Text" 
+                                             Tag="{x:Static fa:FontAwesomeIcon.FileText}" 
+                                             Command="{Binding GoMarkdownToTextCommand}" 
+                                             Style="{StaticResource MenuButtonTheme}"/>
                                 <RadioButton x:Name="Remove_Background" Content="Remove Background" Tag="{x:Static fa:FontAwesomeIcon.Image}" Command="{Binding GoRemoveBackground}" Style="{StaticResource MenuButtonTheme}"/>
 
                                 <Border HorizontalAlignment="Left" Height="1" Background="#CECECE" Width="120" Margin="24,20,0,20"/>

@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Converto_IT008_WPF.Dto;
 using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.Dto.SignUpDto;
 using Converto_IT008_WPF.ServicesFE;
@@ -20,7 +22,7 @@ public partial class LoginViewModel : BaseViewModel
     public ICommand GoSignUpCommand { get; }
     private readonly IAuthService _authService;
     private readonly INavigationService _nav;
-    private readonly SessionState _sessionState;
+    private SessionState _sessionState;
 
     [ObservableProperty]
     string email = string.Empty;
@@ -53,6 +55,9 @@ public partial class LoginViewModel : BaseViewModel
                 // Navigate to the main application view upon successful login
                 
                 _sessionState.IsUserLoggedIn = true;
+
+                WeakReferenceMessenger.Default.Send(
+                    new CloseOverlayMessage { CloseLogin = true });
                 _nav.Navigate<HomepageViewModel>();
             }
             else
@@ -82,6 +87,9 @@ public partial class LoginViewModel : BaseViewModel
             {
                 // Navigate to the main application view upon successful login
                 _sessionState.IsUserLoggedIn = true;
+                WeakReferenceMessenger.Default.Send(
+                    new CloseOverlayMessage { CloseLogin = true });
+                _nav.Navigate<HomepageViewModel>();
                 _nav.Navigate<HomepageViewModel>();
             }
             else

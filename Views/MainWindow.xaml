@@ -9,12 +9,7 @@
         xmlns:vm="clr-namespace:Converto_IT008_WPF.ViewModels" 
         xmlns:animate="clr-namespace:Converto_IT008_WPF.Views.Animations"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
-        mc:Ignorable="d"
-        Height="650" Width="1000"
-        WindowStyle="None"
-        Background="Transparent"
-        AllowsTransparency="True"
-        ResizeMode="NoResize">
+        mc:Ignorable="d">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>

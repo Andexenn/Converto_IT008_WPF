@@ -12,12 +12,15 @@ using System.Windows;
 using System.Windows.Input;
 using Converto_IT008_WPF.ServicesFE.UserServices;
 using Converto_IT008_WPF.ServicesFE;
+using Converto_IT008_WPF.Stores;
 
 namespace Converto_IT008_WPF.ViewModels.UserViewModel;
 
 public partial class SignUpViewModel : BaseViewModel
 {
     private readonly IAuthService _authService;
+    private SessionState _sessionState;
+
     [ObservableProperty]
     string firstName = string.Empty;
     [ObservableProperty]
@@ -30,11 +33,11 @@ public partial class SignUpViewModel : BaseViewModel
 
     private readonly INavigationService _nav;
 
-    public SignUpViewModel(IAuthService authService, INavigationService navigationService)
+    public SignUpViewModel(IAuthService authService, INavigationService navigationService, SessionState sessionState)
     {
         _authService = authService;
         _nav = navigationService;
-
+        _sessionState = sessionState;
         GoLoginCommand = new RelayCommand(() => _nav.Navigate<LoginViewModel>());
     }
 
@@ -98,9 +101,9 @@ public partial class SignUpViewModel : BaseViewModel
         try
         {
             SignUpResponse signUpReponse = await _authService.SignUp(signUpRequest);
-
+            _sessionState.IsUserLoggedIn = true;
             MessageBox.Show("Sign up successful! Please log in with your new account.", "Sign Up Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-
+            
             _nav.Navigate<LoginViewModel>();
         }
         catch (Exception ex)

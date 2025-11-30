@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Converto_IT008_WPF.Dto;
 using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.Stores;
 using System;
@@ -47,6 +49,14 @@ namespace Converto_IT008_WPF.ViewModels
                     OnPropertyChanged(nameof(CurrentViewModel));
                 }
             };
+            
+            WeakReferenceMessenger.Default.Register<CloseOverlayMessage>(this, (r, m) =>
+            {
+                if(m.CloseLogin)
+                    IsLoginVisible = false;
+                if(m.CloseSignUp)
+                    IsSignUpVisible = false;
+            });
 
             GoHomepageCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<HomepageViewModel>(); });
             GoAboutUsCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<AboutUsViewModel>(); });
@@ -102,6 +112,12 @@ namespace Converto_IT008_WPF.ViewModels
         {
             get { return _isSignUpVisible; }
             set { _isSignUpVisible = value; OnPropertyChanged(); }
+        }
+
+        ~MainWindowViewModel()
+        {
+            _networkMonitorService.Stop();
+            WeakReferenceMessenger.Default.UnregisterAll(this);
         }
     }
 

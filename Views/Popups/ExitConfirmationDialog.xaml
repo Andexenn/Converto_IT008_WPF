@@ -21,8 +21,8 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
                         <Border Background="{TemplateBinding Background}" 
-                    CornerRadius="8" 
-                    Padding="10,5">
+                                CornerRadius="8" 
+                                Padding="10,5">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>

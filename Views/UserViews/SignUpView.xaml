@@ -8,61 +8,365 @@
              xmlns:userviewmodel="clr-namespace:Converto_IT008_WPF.ViewModels.UserViewModel" 
              d:DataContext="{d:DesignInstance Type=userviewmodel:SignUpViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="650" d:DesignWidth="1000"
-             FontFamily="Segoe UI"
-             Background="Transparent">
+             d:DesignHeight="850" d:DesignWidth="1200"
+             FontFamily="/Converto_IT008_WPF;component/Resources/#Inter"
+             FontSize="14">
 
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Converto_IT008_WPF;component/Resources/Colors.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-        <Style x:Key="InputContainer" TargetType="Border">
-            <Setter Property="Background" Value="#F3F3F5"/>
-            <Setter Property="CornerRadius" Value="5"/>
-            <Setter Property="Height" Value="40"/>
-            <Setter Property="Margin" Value="0,5,0,15"/>
-        </Style>
+            <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
-        <Style x:Key="InputLabel" TargetType="TextBlock">
-            <Setter Property="FontFamily" Value="/Converto_IT008_WPF;component/Resources/#Inter"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="#4F4E4E"/>
-            <Setter Property="FontWeight" Value="Medium"/>
-            <Setter Property="Margin" Value="0,0,0,2"/>
-        </Style>
+            <Style x:Key="InputContainerStyle" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource Brush.Stroke}"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Height" Value="50"/>
+                <Setter Property="Margin" Value="0,0,0,15"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect Color="{StaticResource Color.Line}" BlurRadius="0" ShadowDepth="0" Opacity="0" RenderingBias="Performance"/>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="BorderBrush" Value="White"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect Color="{StaticResource Color.Line}" BlurRadius="10" ShadowDepth="0" Opacity="0.6" RenderingBias="Performance"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                    <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                        <Setter Property="BorderBrush" Value="#007ACC"/>
+                        <Setter Property="Background" Value="#1A1A1A"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect Color="{StaticResource Color.Line}" BlurRadius="20" ShadowDepth="0" Opacity="1" RenderingBias="Performance"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
 
-        <Style x:Key="RightTextWhite" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontFamily" Value="/Converto_IT008_WPF;component/Resources/#Inter"/>
-        </Style>
+            <Style TargetType="{x:Type custom:PlaceholderTextBox}">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="CaretBrush" Value="{StaticResource Brush.Brand}"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Padding" Value="15,0,10,0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type custom:PlaceholderTextBox}">
+                            <Grid>
+                                <ScrollViewer x:Name="PART_ContentHost" Background="Transparent" VerticalAlignment="Center"/>
+                                <TextBlock x:Name="placeholder" 
+                                           Text="{TemplateBinding Placeholder}"
+                                           Foreground="{StaticResource Brush.Text.Secondary}"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           VerticalAlignment="Center"
+                                           Margin="15,0,0,0"
+                                           IsHitTestVisible="False"
+                                           Visibility="Collapsed"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="Text" Value="">
+                                    <Setter TargetName="placeholder" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+                                <Trigger Property="Text" Value="{x:Null}">
+                                    <Setter TargetName="placeholder" Property="Visibility" Value="Visible"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="SocialButtonStyle" TargetType="Button">
+                <Setter Property="Height" Value="45"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Background" Value="{StaticResource Brush.MainBG}"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="RenderTransformOrigin" Value="0.5, 0.5"/>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1" ScaleY="1"/>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <Trigger Property="IsMouseOver" Value="True">
+                        <Setter Property="RenderTransform">
+                            <Setter.Value>
+                                <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                            </Setter.Value>
+                        </Setter>
+                        <Setter Property="Background" Value="#252525"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </UserControl.Resources>
 
-    <Border CornerRadius="10" Background="White">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+    <Grid Background="{StaticResource Brush.BG.Gradient}">
 
-            <!-- LEFT SIDE -->
-            <Grid Grid.Column="0" ClipToBounds="True">
-                <StackPanel VerticalAlignment="Center" Margin="50,0">
+        <Border Background="{StaticResource Brush.BG.Shape}"
+                CornerRadius="20"
+                Width="450"
+                Height="640"
+                VerticalAlignment="Center"
+                HorizontalAlignment="Center"
+                Padding="40,40,40,20"
+                BorderThickness="1"
+                BorderBrush="{StaticResource Brush.Line}">
 
-                    <!-- Header -->
-                    <TextBlock Text="Sign Up" 
-                               FontFamily="/Converto_IT008_WPF;component/Resources/#Inter"
-                               FontSize="32" 
-                               Foreground="#F73637" 
-                               FontWeight="Medium" 
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="100" 
+                                  ShadowDepth="1" 
+                                  Opacity="1" 
+                                  Color="{StaticResource Color.Line}"/>
+            </Border.Effect>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,0,0,25">
+                    <TextBlock Text="Get Started Now" 
+                               Foreground="White" 
+                               FontSize="28" 
+                               FontWeight="Bold" 
+                               HorizontalAlignment="Center"
                                Margin="0,0,0,5"/>
-
-                    <TextBlock Text="Create your account to start the journey" 
-                               FontFamily="/Converto_IT008_WPF;component/Resources/#Inter"
+                    <TextBlock Text="Simplify your workflow." 
+                               Foreground="{StaticResource Brush.Text.Secondary}" 
                                FontSize="14" 
-                               Foreground="#4F4E4E" 
-                               FontWeight="Regular" 
-                               Margin="0,0,0,25"/>
+                               HorizontalAlignment="Center"/>
+                </StackPanel>
 
-                    <!-- Row 1: First Name & Last Name -->
+                <Border Grid.Row="1"
+                        Background="{StaticResource Brush.MainBG}" 
+                        CornerRadius="10" 
+                        Height="50" 
+                        Margin="0,0,0,25"
+                        Padding="4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border x:Name="SlidingBox" Grid.ColumnSpan="2"
+                                Width="181" 
+                                HorizontalAlignment="Left"
+                                Background="{StaticResource Brush.Brand}" 
+                                CornerRadius="8">
+                            <Border.Effect>
+                                <DropShadowEffect Color="{StaticResource Color.Brand}" BlurRadius="15" ShadowDepth="0" Opacity="0.4"/>
+                            </Border.Effect>
+                            <Border.RenderTransform>
+                                <TranslateTransform x:Name="SliderTransform" X="0"/>
+                            </Border.RenderTransform>
+                        </Border>
+
+                        <Button x:Name="btnSignUp"
+                                Grid.Column="0"
+                                Content="Sign Up"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                FontWeight="Bold"
+                                Cursor="Hand">
+                            <Button.Foreground>
+                                <SolidColorBrush Color="White"/>
+                            </Button.Foreground>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="Transparent" CornerRadius="8">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                        <Button x:Name="btnLogin"
+                                Grid.Column="1"
+                                Content="Log In"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                FontWeight="SemiBold"
+                                Cursor="Hand"
+                                Command="{Binding DataContext.ShowLoginOverlayCommand, RelativeSource={RelativeSource AncestorType=Window}}">
+                            <Button.Foreground>
+                                <SolidColorBrush Color="#888888"/>
+                            </Button.Foreground>
+
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="Transparent" CornerRadius="8">
+                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+
+                            <Button.Triggers>
+                                <EventTrigger RoutedEvent="MouseEnter">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="SliderTransform" 
+                                                             Storyboard.TargetProperty="X" 
+                                                             To="181" Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+
+                                            <ColorAnimation Storyboard.TargetName="btnSignUp" 
+                                                            Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" 
+                                                            To="#888888" Duration="0:0:0.3"/>
+
+                                            <ColorAnimation Storyboard.TargetName="btnLogin" 
+                                                            Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" 
+                                                            To="White" Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+
+                                <EventTrigger RoutedEvent="MouseLeave">
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="SliderTransform" 
+                                                             Storyboard.TargetProperty="X" 
+                                                             To="0" Duration="0:0:0.3">
+                                                <DoubleAnimation.EasingFunction>
+                                                    <CubicEase EasingMode="EaseOut"/>
+                                                </DoubleAnimation.EasingFunction>
+                                            </DoubleAnimation>
+
+                                            <ColorAnimation Storyboard.TargetName="btnSignUp" 
+                                                            Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" 
+                                                            To="White" Duration="0:0:0.3"/>
+
+                                            <ColorAnimation Storyboard.TargetName="btnLogin" 
+                                                            Storyboard.TargetProperty="(Button.Foreground).(SolidColorBrush.Color)" 
+                                                            To="#888888" Duration="0:0:0.3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger>
+                            </Button.Triggers>
+                        </Button>
+                    </Grid>
+                </Border>
+
+                <StackPanel Grid.Row="2" VerticalAlignment="Top">
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="15"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource InputContainerStyle}">
+                            <custom:PlaceholderTextBox Placeholder="First Name"
+                                                       Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       TabIndex="0"/>
+                        </Border>
+
+                        <Border Grid.Column="2" Style="{StaticResource InputContainerStyle}">
+                            <custom:PlaceholderTextBox Placeholder="Last Name"
+                                                       Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       TabIndex="1"/>
+                        </Border>
+                    </Grid>
+
+                    <Border Style="{StaticResource InputContainerStyle}">
+                        <custom:PlaceholderTextBox Placeholder="Email Address"
+                                                   Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                   TabIndex="2"/>
+                    </Border>
+
+                    <Border Style="{StaticResource InputContainerStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <custom:PlaceholderTextBox Grid.Column="0"
+                                                       Placeholder="Password"
+                                                       Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       TabIndex="3"/>
+                            <fa:ImageAwesome Grid.Column="1" Icon="Eye" Foreground="{StaticResource Brush.Text.Secondary}" Width="14" Margin="0,0,15,0" VerticalAlignment="Center" Opacity="0.7"/>
+                        </Grid>
+                    </Border>
+
+                    <Border Style="{StaticResource InputContainerStyle}">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <custom:PlaceholderTextBox Grid.Column="0"
+                                                       Placeholder="Confirm password"
+                                                       Text="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                       TabIndex="4"/>
+                            <fa:ImageAwesome Grid.Column="1" Icon="Eye" Foreground="{StaticResource Brush.Text.Secondary}" Width="14" Margin="0,0,15,0" VerticalAlignment="Center" Opacity="0.7"/>
+                        </Grid>
+                    </Border>
+
+                    <Button Command="{Binding SignUpCommand}"
+                            Content="Create Account"
+                            Height="50"
+                            Margin="0,10,0,0"
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Cursor="Hand"
+                            TabIndex="5">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#B30404"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                        <Button.Effect>
+                            <DropShadowEffect Color="{StaticResource Color.Brand}" BlurRadius="20" ShadowDepth="0" Opacity="0.5"/>
+                        </Button.Effect>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Grid.Row="3" VerticalAlignment="Bottom">
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Rectangle Grid.Column="0" Height="1" Fill="{StaticResource Brush.Line}" Opacity="0.3" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="Or continue with" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="12" Margin="15,0"/>
+                        <Rectangle Grid.Column="2" Height="1" Fill="{StaticResource Brush.Line}" Opacity="0.3" VerticalAlignment="Center"/>
+                    </Grid>
+
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -70,289 +374,40 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
 
-                        <!-- First Name -->
-                        <StackPanel Grid.Column="0">
-                            <TextBlock Text="First Name*" Style="{StaticResource InputLabel}"/>
-                            <Border Style="{StaticResource InputContainer}">
-                                <custom:PlaceholderTextBox Placeholder="eg: John" 
-                                                           Text="{Binding FirstName, Mode=TwoWay}" 
-                                                           Background="Transparent" 
-                                                           VerticalContentAlignment="Center" 
-                                                           BorderThickness="0" 
-                                                           FontSize="13" 
-                                                           Padding="5,0"/>
-                            </Border>
-                        </StackPanel>
-
-                        <!-- Last Name -->
-                        <StackPanel Grid.Column="2">
-                            <TextBlock Text="Last Name" Style="{StaticResource InputLabel}"/>
-                            <Border Style="{StaticResource InputContainer}">
-                                <custom:PlaceholderTextBox Placeholder="eg: Doe" 
-                                                           Text="{Binding LastName, Mode=TwoWay}" 
-                                                           Background="Transparent" 
-                                                           VerticalContentAlignment="Center" 
-                                                           BorderThickness="0" 
-                                                           FontSize="13" 
-                                                           Padding="5,0"/>
-                            </Border>
-                        </StackPanel>
-                    </Grid>
-
-                    <!-- Row 2: Email -->
-                    <TextBlock Text="Email*" Style="{StaticResource InputLabel}"/>
-                    <Border Style="{StaticResource InputContainer}">
-                        <custom:PlaceholderTextBox Placeholder="Email Address" 
-                                                   Text="{Binding Email, Mode=TwoWay}" 
-                                                   Background="Transparent" 
-                                                   VerticalContentAlignment="Center" 
-                                                   BorderThickness="0" 
-                                                   FontSize="13" 
-                                                   Padding="5,0"/>
-                    </Border>
-
-                    <!-- Row 3: Password -->
-                    <TextBlock Text="Password*" Style="{StaticResource InputLabel}"/>
-                    <Border Style="{StaticResource InputContainer}">
-                        <custom:PlaceholderTextBox Placeholder="Your password" 
-                                                   Text="{Binding Password, Mode=TwoWay}" 
-                                                   Background="Transparent" 
-                                                   VerticalContentAlignment="Center" 
-                                                   BorderThickness="0" 
-                                                   FontSize="13" 
-                                                   Padding="5,0"/>
-                    </Border>
-
-                    <!-- Row 4: Confirm Password -->
-                    <TextBlock Text="Confirm Password*" Style="{StaticResource InputLabel}"/>
-                    <Border Style="{StaticResource InputContainer}">
-                        <custom:PlaceholderTextBox Placeholder="Enter your password again" 
-                                                   Text="{Binding ConfirmPassword, Mode=TwoWay}" 
-                                                   Background="Transparent" 
-                                                   VerticalContentAlignment="Center" 
-                                                   BorderThickness="0" 
-                                                   FontSize="13" 
-                                                   Padding="5,0"/>
-                    </Border>
-
-                    <!-- Terms Checkbox -->
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                        <CheckBox IsChecked="{Binding IsTermsAccepted}" 
-                                  VerticalAlignment="Center" 
-                                  Cursor="Hand"/>
-                        
-                        <TextBlock Text="I agree to " 
-                                   Foreground="#616161" 
-                                   Margin="5,0,0,0" 
-                                   VerticalAlignment="Center"/>
-                        
-                        <TextBlock Text="Terms of Service" 
-                                   Foreground="#F73637" 
-                                   FontWeight="SemiBold" 
-                                   Cursor="Hand" 
-                                   VerticalAlignment="Center"/>
-                    </StackPanel>
-
-                    <!-- Sign Up Button -->
-                    <Grid Height="45" Margin="0,0,0,20">
-                        <Button Content="Sign Up" 
-                                Command="{Binding SignUpCommand}" 
-                                TabIndex="4" 
-                                FontSize="16" 
-                                FontWeight="Bold" 
-                                Foreground="White" 
-                                Cursor="Hand" 
-                                Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Background" Value="#F73637"/>
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" CornerRadius="8">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#B71C1C"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                        
-                        <fa:ImageAwesome Icon="Refresh" 
-                                         Spin="True" 
-                                         Width="24" 
-                                         Height="24" 
-                                         Foreground="#F73637" 
-                                         Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    </Grid>
-
-                    <!-- Separator -->
-                    <Grid Margin="0,0,0,15">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Separator Grid.Column="0" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" Text="or Sign Up with" Foreground="#9E9E9E" Margin="10,0" FontSize="12"/>
-                        <Separator Grid.Column="2" VerticalAlignment="Center"/>
-                    </Grid>
-
-                    <!-- Google Button -->
-                    <Button Height="45" 
-                            Background="White" 
-                            BorderBrush="#E0E0E0" 
-                            BorderThickness="1" 
-                            Cursor="Hand" 
-                            Margin="0,0,0,20">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" 
-                                        BorderBrush="{TemplateBinding BorderBrush}" 
-                                        BorderThickness="{TemplateBinding BorderThickness}" 
-                                        CornerRadius="5">
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                        <Image Source="/Converto_IT008_WPF;component/Resources/Google.png" 
-                                               Stretch="UniformToFill" 
-                                               Width="16" 
-                                               Height="16" 
-                                               Margin="0,0,10,0" 
-                                               VerticalAlignment="Center"/>
-                                        
-                                        <TextBlock Text="Sign Up With Google" 
-                                                   FontWeight="SemiBold" 
-                                                   Foreground="#424242" 
-                                                   VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#FAFAFA"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-
-                    <!-- Login Link -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                        <TextBlock Text="Already have an account? " 
-                                   Foreground="#757575" 
-                                   FontSize="14"/>
-                        
-                        <Button Content="Sign In" 
-                                Foreground="#F73637" 
-                                Cursor="Hand" 
-                                FontSize="14" 
-                                Background="Transparent" 
-                                BorderThickness="0">
+                        <Button Grid.Column="0" Style="{StaticResource SocialButtonStyle}">
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
-                                    <ContentPresenter/>
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="8" RenderTransformOrigin="0.5,0.5">
+                                        <Border.RenderTransform>
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="RenderTransform"/>
+                                        </Border.RenderTransform>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <Image Source="/Converto_IT008_WPF;component/Resources/Google.png" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                            <TextBlock Text="Google" Foreground="{StaticResource Brush.Text.Secondary}" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
                                 </ControlTemplate>
                             </Button.Template>
-                            <Button.Command>
-                                <Binding Path="DataContext.ShowLoginOverlayCommand" 
-                                         RelativeSource="{RelativeSource AncestorType=Window}"/>
-                            </Button.Command>
                         </Button>
-                    </StackPanel>
 
-                </StackPanel>
-            </Grid>
-
-            <!-- RIGHT SIDE -->
-            <Border Grid.Column="1" CornerRadius="0,10,10,0" ClipToBounds="True">
-                <Border.Background>
-                    <ImageBrush ImageSource="/Converto_IT008_WPF;component/Resources/SignUpBackground.png"
-                                Stretch="UniformToFill"/>
-                </Border.Background>
-
-                <!-- Overlay content -->
-                <StackPanel VerticalAlignment="Center" Margin="40,0">
-                    <TextBlock Text="Ready to streamline &#x0a;your workflow?" 
-                               Style="{StaticResource RightTextWhite}"
-                               FontFamily="/Converto_IT008_WPF;component/Resources/#Montserrat" 
-                               FontSize="30" 
-                               FontWeight="Medium" 
-                               Margin="0,0,0,20"/>
-
-                    <TextBlock Text="Join thousands of users who are already boosting their productiviy with CONVERTO" 
-                               Style="{StaticResource RightTextWhite}"
-                               FontSize="14" 
-                               Opacity="0.9" 
-                               TextWrapping="Wrap" 
-                               Margin="0,0,0,40"/>
-
-                    <!-- Stats Grid 2x2 -->
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="30"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-
-                        <!-- Stat 1 -->
-                        <StackPanel Grid.Row="0" Grid.Column="0">
-                            <TextBlock Text="10K+" 
-                                       Style="{StaticResource RightTextWhite}" 
-                                       FontFamily="/Converto_IT008_WPF;component/Resources/#Montserrat" 
-                                       FontSize="32"/>
-                            
-                            <TextBlock Text="Active Users" 
-                                       Style="{StaticResource RightTextWhite}" 
-                                       FontSize="14"/>
-                        </StackPanel>
-
-                        <!-- Stat 2 -->
-                        <StackPanel Grid.Row="0" Grid.Column="1">
-                            <TextBlock Text="500K+" 
-                                       Style="{StaticResource RightTextWhite}" 
-                                       FontFamily="/Converto_IT008_WPF;component/Resources/#Montserrat" 
-                                       FontSize="32"/>
-                            
-                            <TextBlock Text="Conversion Completed" 
-                                       Style="{StaticResource RightTextWhite}" 
-                                       FontSize="14"/>
-                        </StackPanel>
-
-                        <!-- Stat 3 -->
-                        <StackPanel Grid.Row="2" Grid.Column="0">
-                            <TextBlock Text="98%" 
-                                       Style="{StaticResource RightTextWhite}" 
-                                       FontFamily="/Converto_IT008_WPF;component/Resources/#Montserrat" 
-                                       FontSize="32"/>
-                            
-                            <TextBlock Text="Satisfaction" 
-                                       Style="{StaticResource RightTextWhite}" 
-                                       FontSize="14"/>
-                        </StackPanel>
-
-                        <!-- Stat 4 -->
-                        <StackPanel Grid.Row="2" Grid.Column="1">
-                            <TextBlock Text="4.9/5" 
-                                       Style="{StaticResource RightTextWhite}" 
-                                       FontFamily="/Converto_IT008_WPF;component/Resources/#Montserrat" 
-                                       FontSize="32"/>
-                            
-                            <TextBlock Text="User Rating" 
-                                       Style="{StaticResource RightTextWhite}" 
-                                       FontSize="14"/>
-                        </StackPanel>
+                        <Button Grid.Column="2" Style="{StaticResource SocialButtonStyle}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="8" RenderTransformOrigin="0.5,0.5">
+                                        <Border.RenderTransform>
+                                            <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="RenderTransform"/>
+                                        </Border.RenderTransform>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <fa:ImageAwesome Icon="Github" Foreground="White" Width="14" Height="14" Margin="0,0,10,0"/>
+                                            <TextBlock Text="Github" Foreground="{StaticResource Brush.Text.Secondary}" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
                     </Grid>
                 </StackPanel>
-            </Border>
-
-        </Grid>
-    </Border>
+            </Grid>
+        </Border>
+    </Grid>
 </UserControl>

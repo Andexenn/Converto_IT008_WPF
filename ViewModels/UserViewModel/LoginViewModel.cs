@@ -5,7 +5,6 @@ using Converto_IT008_WPF.Dto;
 using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.Dto.SignUpDto;
 using Converto_IT008_WPF.ServicesFE;
-using Converto_IT008_WPF.ServicesFE.UserServices;
 using Converto_IT008_WPF.Stores;
 using System;
 using System.Collections.Generic;

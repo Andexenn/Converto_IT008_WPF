@@ -1,9 +1,7 @@
-﻿using Converto_IT008_WPF.Api.UserApi;
-using Converto_IT008_WPF.Interfaces.IUserApi;
+﻿using Converto_IT008_WPF.Api;
+using Converto_IT008_WPF.Interfaces;
 using Converto_IT008_WPF.ServicesFE;
-using Converto_IT008_WPF.ServicesFE.UserServices;
 using Converto_IT008_WPF.ServicesFEImpl;
-using Converto_IT008_WPF.ServicesFEImpl.UserServiceImpls;
 using Converto_IT008_WPF.Stores;
 using Converto_IT008_WPF.ViewModels;
 using Converto_IT008_WPF.Views;

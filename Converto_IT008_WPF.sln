@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36511.14 d17.14
+VisualStudioVersion = 17.14.36511.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Converto_IT008_WPF", "Converto_IT008_WPF.csproj", "{51620185-2CCC-4D17-9C5B-96AB553CB61A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileConverter", "..\..\..\Downloads\tmp\FileConverter\FileConverter.csproj", "{BB760053-FCE2-2050-AB56-AD5952594360}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{51620185-2CCC-4D17-9C5B-96AB553CB61A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51620185-2CCC-4D17-9C5B-96AB553CB61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51620185-2CCC-4D17-9C5B-96AB553CB61A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB760053-FCE2-2050-AB56-AD5952594360}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB760053-FCE2-2050-AB56-AD5952594360}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB760053-FCE2-2050-AB56-AD5952594360}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB760053-FCE2-2050-AB56-AD5952594360}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

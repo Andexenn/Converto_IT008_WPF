@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converto_IT008_WPF.Interfaces.IUserApi;
+namespace Converto_IT008_WPF.Interfaces;
 
 public interface IAuthApi
 {

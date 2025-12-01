@@ -165,7 +165,7 @@ class AuthRepository(IAuthService):
             if not email:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail=f"Email not provided by Google"
+                    detail="Email not provided by Google"
                 )
 
             user = self.db.query(User).filter(User.Email == email).first()

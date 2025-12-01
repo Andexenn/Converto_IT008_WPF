@@ -1,7 +1,7 @@
 ﻿using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.Dto.SignUpDto;
-using Converto_IT008_WPF.Interfaces.IUserApi;
-using Converto_IT008_WPF.ServicesFE.UserServices;
+using Converto_IT008_WPF.Interfaces;
+using Converto_IT008_WPF.ServicesFE;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Auth.OAuth2.Flows;
 using Google.Apis.Auth.OAuth2.Responses;
@@ -15,7 +15,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converto_IT008_WPF.ServicesFEImpl.UserServiceImpls;
+namespace Converto_IT008_WPF.ServicesFEImpl;
 
 public class AuthServiceImpl : IAuthService
 {

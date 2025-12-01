@@ -1,14 +1,14 @@
 ﻿using Converto_IT008_WPF.Dto.SignUpDto;
 using Converto_IT008_WPF.Dto.LoginDto;
-using Converto_IT008_WPF.Interfaces.IUserApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Converto_IT008_WPF.Interfaces;
 
-namespace Converto_IT008_WPF.Api.UserApi;
+namespace Converto_IT008_WPF.Api;
 
 public class AuthApi : IAuthApi
 {

@@ -10,8 +10,6 @@ from sqlalchemy.orm import relationship, mapped_column, Mapped
 from Database.connection import Base 
 
 if TYPE_CHECKING:
-    from conversion_history import ConversionHistory
-    from wallet import Wallet
 
 class User(Base):
     __tablename__ = "USER"

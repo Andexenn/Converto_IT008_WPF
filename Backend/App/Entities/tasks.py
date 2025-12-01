@@ -2,7 +2,9 @@
 Tasks entity
 """
 
-from sqlalchemy import BigInteger, String 
+from datetime import datetime
+
+from sqlalchemy import BigInteger, String, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column 
 
 from Database.connection import Base 
@@ -29,3 +31,5 @@ class Tasks(Base):
     OutputFormat: Mapped[str] = mapped_column(String(50))
 
     CompressionLevel: Mapped[str] = mapped_column(String(100))
+
+    CreatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now()) #pylint: disable=not-callable

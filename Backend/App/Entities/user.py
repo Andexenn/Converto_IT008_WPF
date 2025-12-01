@@ -5,7 +5,7 @@ user entity
 from datetime import datetime
 from typing import List, TYPE_CHECKING, Optional
 
-from sqlalchemy import BigInteger, String, DateTime, LargeBinary 
+from sqlalchemy import BigInteger, String, DateTime, func
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 from Database.connection import Base 
 
@@ -23,10 +23,10 @@ class User(Base):
     PhoneNumber: Mapped[Optional[str]] = mapped_column(String(20))
     DateOfBirth: Mapped[Optional[datetime]] = mapped_column(DateTime)
     City: Mapped[Optional[str]] = mapped_column(String(100))
-    Image: Mapped[Optional[bytes]] = mapped_column(LargeBinary)
+    ProfilePictureURL: Mapped[Optional[str]] = mapped_column(String(100))
+    MemberSince: Mapped[datetime] = mapped_column(DateTime, server_default=func.now()) #pylint: disable=not-callable
     Email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
     HashedPassword: Mapped[str] = mapped_column(String(255))
-    
+    LastLogin: Mapped[datetime] = mapped_column(DateTime)
+
     #Relationship
-    wallet: Mapped["Wallet"] = relationship(back_populates="user", cascade="all, delete-orphan")
-    conversion_histories: Mapped[List["ConversionHistory"]] = relationship(back_populates="user", cascade="all, delete-orphan")

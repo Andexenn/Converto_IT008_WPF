@@ -1,13 +1,17 @@
 from Entities.conversion_history import ConversionHistory
-from Entities.service import Service
+from Entities.file_types import FileTypes
+from Entities.service_types import ServiceTypes
+from Entities.task_history import TaskHistory
+from Entities.tasks import Tasks
+from Entities.user_preferences import UserPreferences
 from Entities.user import User
-from Entities.wallet_transaction import WalletTransaction
-from Entities.wallet import Wallet
 
 __all__ = [
     "ConversionHistory",
-    "Service",
-    "User",
-    "WalletTransaction",
-    "Wallet"
+    "FileTypes",
+    "ServiceTypes",
+    "TaskHistory",
+    "Tasks",
+    "UserPreferences",
+    "User"
 ]

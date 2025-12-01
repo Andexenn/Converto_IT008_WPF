@@ -9,7 +9,6 @@ from fastapi import HTTPException, status
 from Services.auth_service import IAuthService
 from Schemas.user import GoogleUserData, UserCreate, UserResponse, UserLogin, UserLoginResponse
 from Entities.user import User
-from Entities.wallet import Wallet
 from Core.security import hash_password, verify_password, create_access_token
 from config import settings
 
@@ -40,13 +39,6 @@ class AuthRepository(IAuthService):
             self.db.add(new_user)
             self.db.flush()
 
-            new_wallet = Wallet(
-                UserID = new_user.UserID,
-                Balance = 0.00,
-                CurrencyCode = "USD"
-            )
-
-            self.db.add(new_wallet)
             self.db.commit()
             self.db.refresh(new_user)
 
@@ -193,13 +185,6 @@ class AuthRepository(IAuthService):
                 self.db.add(user)
                 self.db.flush()
 
-                new_wallet = Wallet(
-                    UserID=user.UserID,
-                    Balance=0.0,
-                    CurrencyCode="USD"
-                )
-
-                self.db.add(new_wallet)
                 self.db.commit()
                 self.db.refresh(user)
 

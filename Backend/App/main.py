@@ -8,7 +8,7 @@ from Handlers import auth_handler, conversion_handler, conversion_history_handle
 
 from config import settings
 
-#init_db()
+init_db()
 
 app = FastAPI(
     title=settings.APP_NAME,

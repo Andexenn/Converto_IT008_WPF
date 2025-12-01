@@ -10,17 +10,16 @@ from Database.connection import Base
 
 if TYPE_CHECKING:
     from user import User
-    from service import Service
+    from service_types import ServiceTypes
 
 class ConversionHistory(Base):
     __tablename__ = "CONVERSION_HISTORY"
 
     ConversionHistoryID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID", ondelete="CASCADE"))
-    ServiceID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICE.ServiceID", ondelete="CASCADE"))
+    ServiceID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICETYPES.ServiceTypeID", ondelete="CASCADE"))
     # pylint: disable=not-callable
     CreatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now())
 
     #relationship
     user: Mapped["User"] = relationship(back_populates="conversion_histories")
-    service: Mapped["Service"] = relationship(back_populates="conversion_histories")

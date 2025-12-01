@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="/Themes/ButtonTheme.xaml"/>
                 <ResourceDictionary Source="/Themes/TextTheme.xaml"/>
                 <ResourceDictionary Source="/Themes/TextBoxTheme.xaml"/>
+                <ResourceDictionary Source="/Resources/Colors.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- ############# General ############# -->

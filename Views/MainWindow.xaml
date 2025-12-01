@@ -98,7 +98,7 @@
                         <Image Grid.Column="1" Source="/Resources/DefaultUser.png" Height="36" Width="36" VerticalAlignment="Center"
                                Visibility="{Binding _sessionState.IsUserLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                        <Button Grid.Column="2" 
+                        <Button Grid.Column="2"
                                 Style="{StaticResource Signup}" 
                                 Command="{Binding ShowSignUpOverlayCommand}" 
                                 Visibility="{Binding _sessionState.IsUserLoggedOut, Converter={StaticResource BoolToVisibilityConverter}}"/>

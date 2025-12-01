@@ -11,7 +11,7 @@ from fastapi import HTTPException, status
 from Services.conversion_history_service import IConversionHistoryService
 from Schemas.conversion import ConversionResponse
 from Entities.conversion_history import ConversionHistory
-from Entities.service import Service
+from Entities.service_types import ServiceTypes
 
 class ConversionHistoryRepository(IConversionHistoryService):
     """
@@ -20,11 +20,11 @@ class ConversionHistoryRepository(IConversionHistoryService):
     def __init__(self, db: Session):
         self.db = db
 
-    async def get_or_create_service(self, input_format: str, output_format: str) -> Service:
+    async def get_or_create_service(self, input_format: str, output_format: str) -> ServiceTypes:
         try:
-            service = self.db.query(Service).filter(
-                Service.InputFormat == input_format.upper(),
-                Service.OutputFormat == output_format.upper()
+            service = self.db.query(ServiceTypes).filter(
+                ServiceTypes.InputFormat == input_format.upper(),
+                ServiceTypes.OutputFormat == output_format.upper()
             ).first()
 
             if service:
@@ -32,7 +32,7 @@ class ConversionHistoryRepository(IConversionHistoryService):
 
             service_name = f"{input_format.upper()} to {output_format.upper()} Conversion"
 
-            new_service = Service(
+            new_service = ServiceTypes(
                 InputFormat = input_format,
                 OutputFormat = output_format,
                 ServiceName = service_name,
@@ -61,7 +61,7 @@ class ConversionHistoryRepository(IConversionHistoryService):
         converted_filename: str,
         file_size_bytes: bytes | int,
         converted_file_bytes: bytes | int
-    ) -> Tuple[ConversionResponse, bytes]:
+    ) -> Tuple[ConversionResponse, bytes | int]:
         try:
             # Get or create service
             service = await self.get_or_create_service(input_format, output_format)

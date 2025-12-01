@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from typing import List, Tuple
 from Schemas.conversion import ConversionResponse
 from Entities.conversion_history import ConversionHistory
-from Entities.service import Service
+from Entities.service_types import ServiceTypes
 
 class IConversionHistoryService(ABC):
     """Interface for conversion history management (shared across all converters)"""
@@ -16,7 +16,7 @@ class IConversionHistoryService(ABC):
         self,
         input_format: str,
         output_format: str
-    ) -> Service:
+    ) -> ServiceTypes:
         """
         Target to create if not exist and get if exist
 
@@ -36,7 +36,7 @@ class IConversionHistoryService(ABC):
         converted_filename: str,
         file_size_bytes: bytes,
         converted_file_bytes: bytes
-    ) -> Tuple[ConversionResponse, bytes]:
+    ) -> Tuple[ConversionResponse, bytes | int]:
         """Record conversion and return response with file bytes"""
 
     @abstractmethod

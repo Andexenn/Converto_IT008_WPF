@@ -10,22 +10,31 @@ from pathlib import Path
 from typing import Tuple, List
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import multiprocessing
+import time 
+
+from sqlalchemy.orm import Session
 
 from Services.compression_service import ICompressionSerivce
+from Schemas.task import TaskCompression, TaskConversion, TaskRemoveBackground
+from Entities.tasks import Tasks
 
 MAGICK_EXECUTABLE_NAME = 'magick.exe'
 FFMPEG_EXECUTABLE_NAME = 'ffmpeg.exe'
+SERVICETYPEID = 2
 
 class CompressionRepository(ICompressionSerivce):
     """
     Compression class with temporary file handling
     """
 
-    def __init__(self):
+    def __init__(self, db: Session, UserID: int):
         """Initialize with path to magickpath"""
         self.magick_path = self._get_magick_path
         self.max_workers = max(1, multiprocessing.cpu_count()  - 1)
         self.ffmpeg_path = self._get_ffmpeg_path
+
+        self.db = db
+        self.user_id = UserID
 
     @property
     def _get_magick_path(self) -> str:
@@ -57,7 +66,7 @@ class CompressionRepository(ICompressionSerivce):
             raise FileNotFoundError(f"{input_path} not found")
 
     @staticmethod
-    def create_temp_output_file(suffix: str) -> str:
+    def _create_temp_output_file(suffix: str) -> str:
         """
         Create a temporary file
 
@@ -78,6 +87,16 @@ class CompressionRepository(ICompressionSerivce):
         """Helper to run sync function for single file processing"""
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(None, func, *args)
+    
+    def _record_task(self, task: TaskRemoveBackground | TaskCompression | TaskConversion):
+        """Record the task"""
+        task_dict = task.model_dump(exclude_unset=True)
+        cur_task = Tasks(**task_dict)
+        self.db.add(cur_task)
+
+        self.db.commit()
+
+        return True
 
     #================ IMAGE ================
 
@@ -100,13 +119,33 @@ class CompressionRepository(ICompressionSerivce):
         -------
             ValueError: if compression failed
         """
-        return await self._run_in_executor(
+
+        data = await self._run_in_executor(
             self._compress_with_imagemagick_sync,
             input_path,
             self.magick_path,
             quality,
             timeout
         )
+
+        task = TaskCompression(
+            UserID=self.user_id, 
+            ServiceTypeID=SERVICETYPEID,
+            OriginalFileName=data["OriginalFileName"],
+            OriginalFileSize=data["OriginalFileSize"],
+            OriginalFilePath=data["OriginalFilePath"],
+            OutputFileName=data["OutputFileName"],
+            OutputFileSize=data["OutputFileSize"],
+            OutputFilePath=data["OutputFilePath"],
+            CompressionLevel=data["CompressionLevel"],
+            TaskStatus=True,
+            TaskTime=data["TaskTime"]
+        )
+
+        self._record_task(task)
+
+        return (str(task.OutputFilePath), int(task.OutputFileSize))
+        
 
     async def compress_images_batch(
         self,
@@ -129,16 +168,15 @@ class CompressionRepository(ICompressionSerivce):
         """
         if not input_paths:
             return []
-
+        
         with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
-            # ✅ Fixed: Correct parameter order
             future_to_path = {
                 executor.submit(
                     self._compress_with_imagemagick_sync,
-                    input_path,          # First parameter
-                    self.magick_path,    # Second parameter
-                    quality,             # Third parameter
-                    timeout              # Fourth parameter
+                    input_path,
+                    self.magick_path,
+                    quality,
+                    timeout
                 ): input_path for input_path in input_paths
             }
 
@@ -147,21 +185,50 @@ class CompressionRepository(ICompressionSerivce):
             for future in as_completed(future_to_path):
                 input_path = future_to_path[future]
                 try:
-                    output_path, file_converted_size = future.result(timeout=timeout + 10)
-                    results.append((input_path, output_path, file_converted_size, True))
+                    data = future.result(timeout=timeout + 10)
+                    
+                    task = TaskCompression(
+                        UserID=self.user_id, 
+                        ServiceTypeID=SERVICETYPEID,
+                        OriginalFileName=data["OriginalFileName"],
+                        OriginalFileSize=data["OriginalFileSize"],
+                        OriginalFilePath=data["OriginalFilePath"],
+                        OutputFileName=data["OutputFileName"],
+                        OutputFileSize=data["OutputFileSize"],
+                        OutputFilePath=data["OutputFilePath"],
+                        CompressionLevel=data["CompressionLevel"],
+                        TaskStatus=True,
+                        TaskTime=data["TaskTime"]
+                    )
+
+                    self._record_task(task)
+
+                    results.append((task.OriginalFilePath, task.OutputFilePath, task.OutputFileSize, True))
                 except Exception as e:
                     print(f"Failed to compress {input_path}: {str(e)}")
+                    task = TaskCompression(
+                        UserID=self.user_id, 
+                        ServiceTypeID=SERVICETYPEID, 
+                        OriginalFileName=Path(input_path).stem,
+                        OriginalFileSize=os.path.getsize(input_path),
+                        OriginalFilePath=input_path,
+                        TaskStatus=False,
+                        TaskTime=0
+                    )
+
+                    self._record_task(task)
                     results.append((input_path, "", 0, False))
 
-            return results
 
+        return results
+    
     @staticmethod
     def _compress_with_imagemagick_sync(
         input_path: str,
         magick_path: str,
         quality: int,
         timeout: int = 300
-    ) -> Tuple[str, int]:
+    ) -> dict:
         """
         Compress image using ImageMagick (Universal - ALL formats)
 
@@ -231,7 +298,7 @@ class CompressionRepository(ICompressionSerivce):
                 '-strip',
                 '-quality', str(quality),
                 '-define', 'webp:method=6',  # Best compression method
-                '-define', f'webp:lossless=false'
+                '-define', 'webp:lossless=false'
             ])
 
         elif input_format in ['tiff', 'tif']:
@@ -273,8 +340,17 @@ class CompressionRepository(ICompressionSerivce):
             ])
 
         # Create output path
-        output_path = CompressionRepository.create_temp_output_file(f'.{input_format}')
+        output_path = CompressionRepository._create_temp_output_file(f'.{input_format}')
         cmd.append(output_path)
+
+        if quality > 75:
+            compression_level = "low"
+        elif quality > 50:
+            compression_level = "medium"
+        else:
+            compression_level = "high"
+
+        start_time = time.perf_counter()
 
         try:
             result = subprocess.run(
@@ -301,8 +377,6 @@ class CompressionRepository(ICompressionSerivce):
                 os.unlink(output_path)
                 raise ValueError("The created file was empty")
 
-            return output_path, file_size
-
         except subprocess.TimeoutExpired as e:
             if Path(output_path).exists():
                 os.unlink(output_path)
@@ -312,6 +386,21 @@ class CompressionRepository(ICompressionSerivce):
             if Path(output_path).exists():
                 os.unlink(output_path)
             raise ValueError(f"Compression failed: {str(e)}") from e
+        
+        
+        end_time = time.perf_counter()
+
+        return {
+            "OriginalFileName": Path(input_path).stem,
+            "OriginalFileSize": os.path.getsize(input_path),
+            "OriginalFilePath": input_path,
+            "OutputFileName": Path(output_path).stem,
+            "OutputFileSize": os.path.getsize(output_path),
+            "OutputFilePath": output_path,
+            "TaskStatus": (True if file_size != 0 else False),
+            "CompressionLevel": compression_level,
+            "TaskTime": end_time - start_time
+        }
 
     #================ Video ================
     async def compress_video(
@@ -349,11 +438,11 @@ class CompressionRepository(ICompressionSerivce):
             quality,
             timeout
         )
-    
+
     async def compress_audio(
         self,
         input_path: str,
-        bitrate: str = "64k",  
+        bitrate: str = "64k",
         timeout: int = 300
     ) -> Tuple[str, int]:
         """
@@ -380,7 +469,7 @@ class CompressionRepository(ICompressionSerivce):
             bitrate,
             timeout
         )
-    
+
     async def compress_videos_batch(
         self,
         input_paths: List[str],
@@ -402,7 +491,7 @@ class CompressionRepository(ICompressionSerivce):
         """
         if not input_paths:
             return []
-        
+
         with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
             future_to_path = {
                 executor.submit(
@@ -426,7 +515,7 @@ class CompressionRepository(ICompressionSerivce):
                     results.append((input_path, "", 0, False))
 
             return results
-        
+
     async def compress_audios_batch(
         self,
         input_paths: List[str],
@@ -448,7 +537,7 @@ class CompressionRepository(ICompressionSerivce):
         """
         if not input_paths:
             return []
-        
+
         with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
             future_to_path = {
                 executor.submit(
@@ -482,7 +571,7 @@ class CompressionRepository(ICompressionSerivce):
     ) -> Tuple[str, int]:
         """
         Compress video using LGPL-compatible codecs only
-        
+
         Available LGPL codecs in your FFmpeg:
         - VP9 (libvpx-vp9) for WebM
         - MPEG4 (mpeg4) for MP4/AVI/MKV/MOV
@@ -509,7 +598,7 @@ class CompressionRepository(ICompressionSerivce):
             raise FileNotFoundError(f"Input file not found: {input_path}")
 
         input_format = Path(input_path).suffix.lstrip('.').lower()
-        
+
         # Quality settings
         quality_settings = {
             "low": {
@@ -531,11 +620,11 @@ class CompressionRepository(ICompressionSerivce):
 
         if quality not in quality_settings:
             quality = "medium"
-        
+
         settings = quality_settings[quality]
 
         # Create temp output file
-        output_path = CompressionRepository.create_temp_output_file(f'.{input_format}')
+        output_path = CompressionRepository._create_temp_output_file(f'.{input_format}')
 
         # Build FFmpeg command
         cmd = [
@@ -571,13 +660,13 @@ class CompressionRepository(ICompressionSerivce):
                 '-c:a', 'aac',
                 '-b:a', settings['audio_bitrate'],
             ])
-        
+
         # Common settings
         cmd.extend([
             '-ar', '44100',               # Sample rate
             '-pix_fmt', 'yuv420p',        # Pixel format
         ])
-        
+
         # MP4/MOV specific optimization
         if input_format in ['mp4', 'mov']:
             cmd.extend(['-movflags', '+faststart'])
@@ -629,7 +718,7 @@ class CompressionRepository(ICompressionSerivce):
     ) -> Tuple[str, int]:
         """
         Compress audio using LGPL-compatible codecs only
-        
+
         Available LGPL audio codecs:
         - AAC (aac) - Most formats
         - Vorbis (libvorbis) - OGG
@@ -660,7 +749,7 @@ class CompressionRepository(ICompressionSerivce):
         input_format = Path(input_path).suffix.lstrip('.').lower()
 
         # Create temp output file
-        output_path = CompressionRepository.create_temp_output_file(f'.{input_format}')
+        output_path = CompressionRepository._create_temp_output_file(f'.{input_format}')
 
         # Build FFmpeg command
         cmd = [
@@ -757,4 +846,3 @@ class CompressionRepository(ICompressionSerivce):
             if Path(output_path).exists():
                 os.unlink(output_path)
             raise ValueError(f"Audio compression failed: {str(e)}") from e
-        

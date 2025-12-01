@@ -11,13 +11,13 @@ from typing import List, Tuple
 import tempfile
 import asyncio
 
+from sqlalchemy.orm import Session
 import win32com.client
 import pythoncom
 from PIL import Image
 
 from Services.conversion_service import IConversionService
 
-#TODO: multiprocessing for converting image and office, pdf
 
 FFMPEG_EXECUTABLE_NAME = 'ffmpeg.exe'
 SOFFICE_EXECUTABLE_NAME = 'soffice.exe'
@@ -25,13 +25,16 @@ class ConversionRepository(IConversionService):
     """
     Conversion repository class
     """
-    def __init__(self):
+    def __init__(self, db: Session, UserID: int):
         """
         Initialize with ffmpeg path
         """
         self.ffmpeg_path = self._get_ffmpeg_path
         self.max_workers = max(1, multiprocessing.cpu_count() - 1)
         self.soffice_path = self._get_soffice_path
+        
+        self.db = db
+        self.UserID = UserID
 
     @property
     def _get_ffmpeg_path(self) -> str:

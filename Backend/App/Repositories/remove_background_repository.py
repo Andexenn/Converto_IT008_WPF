@@ -2,7 +2,6 @@
 Remove background repository
 """
 
-import io
 import os 
 import multiprocessing
 from concurrent.futures import ProcessPoolExecutor, as_completed
@@ -11,6 +10,7 @@ from typing import List, Tuple
 import asyncio
 import tempfile
 
+from sqlalchemy.orm import Session
 import rembg
 from PIL import Image
 
@@ -21,8 +21,11 @@ class RemoveBackgroundRepository(IRemoveBackgroundSerivce):
     Remove background of the image 
     """
 
-    def __init__(self):
+    def __init__(self, db:Session, UserID: int):
         self.max_workers = max(1, multiprocessing.cpu_count() - 1)
+        
+        self.db = db
+        self.UserID = UserID
 
     @staticmethod
     async def _run_in_executor(func, *args):

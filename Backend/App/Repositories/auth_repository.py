@@ -37,7 +37,6 @@ class AuthRepository(IAuthService):
                 HashedPassword = hashed_password)
 
             self.db.add(new_user)
-            self.db.flush()
 
             self.db.commit()
             self.db.refresh(new_user)

@@ -55,7 +55,7 @@ async def remove_background_handler(
     input_format = Path(input_paths[0]).suffix.lstrip('.').upper()
     
     try:
-        remove_background_repo = RemoveBackgroundRepository()
+        remove_background_repo = RemoveBackgroundRepository(db)
 
         if is_single_file:
             output_path, converted_file_size = await remove_background_repo.remove_background(input_paths[0])

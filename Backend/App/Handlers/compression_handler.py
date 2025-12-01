@@ -29,8 +29,11 @@ def cleanup_temp_file(filepath: str):
         print(f"Failed to delete temp file {filepath}: {str(e)}")
 
 def cleanup_temp_files(filepaths: List[str]):
+    """Create teamp file"""
     for filepath in filepaths:
         cleanup_temp_file(filepath)
+
+
 
 @router.post("/compress/image")
 async def compress_image(
@@ -62,7 +65,7 @@ async def compress_image(
     input_format = Path(input_paths[0]).suffix.lstrip('.').upper()
     is_single_file = len(input_paths) == 1
 
-    compression_repo = CompressionRepository()
+    compression_repo = CompressionRepository(db, current_user.UserID)
 
     try:
         if is_single_file:
@@ -193,7 +196,7 @@ async def compress_video(
     input_format = Path(input_paths[0]).suffix.lstrip('.').lower()
     is_single_file = len(input_paths) == 1
 
-    compression_repo = CompressionRepository()
+    compression_repo = CompressionRepository(db, current_user.UserID)
 
     try:
         if is_single_file:
@@ -335,7 +338,7 @@ async def compress_audio(
     input_format = Path(input_paths[0]).suffix.lstrip('.').lower()
     is_single_file = len(input_paths) == 1
 
-    compression_repo = CompressionRepository()
+    compression_repo = CompressionRepository(db, current_user.UserID)
 
     try:
         if is_single_file:

@@ -92,7 +92,7 @@ async def convert_image_handler(
     output_format_upper = output_format.lstrip('.').upper()
 
     try:
-        conversion_repo = ConversionRepository(db)
+        conversion_repo = ConversionRepository(db, current_user.UserID)
 
         if is_single_file:
             output_path, converted_file_size = await conversion_repo.convert_image(input_paths[0], output_format)
@@ -230,7 +230,7 @@ async def convert_video_audio(
     output_format_upper = output_format.lstrip('.').upper()
 
     try:
-        conversion_repo = ConversionRepository(db)
+        conversion_repo = ConversionRepository(db, current_user.UserID)
 
         if is_single_file:
             # Single file - use direct method
@@ -362,7 +362,7 @@ async def convert_gifs(
     output_format_upper = output_format.lstrip('.').upper()
 
     try:
-        conversion_repo = ConversionRepository(db)
+        conversion_repo = ConversionRepository(db, current_user.UserID)
 
         if is_single_file:
             # Single file - use direct method
@@ -493,7 +493,7 @@ async def convert_pdf(
     is_single_file = len(input_paths) == 1
 
 
-    conversion_repo = ConversionRepository(db)
+    conversion_repo = ConversionRepository(db, current_user.UserID)
 
     try:
         if is_single_file:

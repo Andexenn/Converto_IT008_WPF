@@ -120,29 +120,44 @@ class CompressionRepository(ICompressionSerivce):
             ValueError: if compression failed
         """
 
-        data = await self._run_in_executor(
-            self._compress_with_imagemagick_sync,
-            input_path,
-            self.magick_path,
-            quality,
-            timeout
-        )
+        try:
+            data = await self._run_in_executor(
+                self._compress_with_imagemagick_sync,
+                input_path,
+                self.magick_path,
+                quality,
+                timeout
+            )
 
-        task = TaskCompression(
-            UserID=self.user_id, 
-            ServiceTypeID=SERVICETYPEID,
-            OriginalFileName=data["OriginalFileName"],
-            OriginalFileSize=data["OriginalFileSize"],
-            OriginalFilePath=data["OriginalFilePath"],
-            OutputFileName=data["OutputFileName"],
-            OutputFileSize=data["OutputFileSize"],
-            OutputFilePath=data["OutputFilePath"],
-            CompressionLevel=data["CompressionLevel"],
-            TaskStatus=True,
-            TaskTime=data["TaskTime"]
-        )
+            task = TaskCompression(
+                UserID=self.user_id, 
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=data["OriginalFileName"],
+                OriginalFileSize=data["OriginalFileSize"],
+                OriginalFilePath=data["OriginalFilePath"],
+                OutputFileName=data["OutputFileName"],
+                OutputFileSize=data["OutputFileSize"],
+                OutputFilePath=data["OutputFilePath"],
+                CompressionLevel=data["CompressionLevel"],
+                TaskStatus=True,
+                TaskTime=data["TaskTime"]
+            )
 
-        self._record_task(task)
+            self._record_task(task)
+
+        except Exception as e:
+            print(f"Fail to compress {input_path}: {str(e)}")
+            task = TaskCompression(
+                UserID=self.user_id, 
+                ServiceTypeID=SERVICETYPEID, 
+                OriginalFileName=Path(input_path).stem,
+                OriginalFileSize=os.path.getsize(input_path),
+                OriginalFilePath=input_path,
+                TaskStatus=False,
+                TaskTime=0
+            )
+
+            self._record_task(task)
 
         return (str(task.OutputFilePath), int(task.OutputFileSize))
         
@@ -431,29 +446,44 @@ class CompressionRepository(ICompressionSerivce):
         -------
             ValueError: if compression failed
         """
-        data = await self._run_in_executor(
-            self._compress_video_sync,
-            input_path,
-            self.ffmpeg_path,
-            quality,
-            timeout
-        )
 
-        task = TaskCompression(
-            UserID=self.user_id, 
-            ServiceTypeID=SERVICETYPEID,
-            OriginalFileName=data["OriginalFileName"],
-            OriginalFileSize=data["OriginalFileSize"],
-            OriginalFilePath=data["OriginalFilePath"],
-            OutputFileName=data["OutputFileName"],
-            OutputFileSize=data["OutputFileSize"],
-            OutputFilePath=data["OutputFilePath"],
-            CompressionLevel=data["CompressionLevel"],
-            TaskStatus=True,
-            TaskTime=data["TaskTime"]
-        )
+        try:
+            data = await self._run_in_executor(
+                self._compress_video_sync,
+                input_path,
+                self.ffmpeg_path,
+                quality,
+                timeout
+            )
 
-        self._record_task(task)
+            task = TaskCompression(
+                UserID=self.user_id, 
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=data["OriginalFileName"],
+                OriginalFileSize=data["OriginalFileSize"],
+                OriginalFilePath=data["OriginalFilePath"],
+                OutputFileName=data["OutputFileName"],
+                OutputFileSize=data["OutputFileSize"],
+                OutputFilePath=data["OutputFilePath"],
+                CompressionLevel=data["CompressionLevel"],
+                TaskStatus=True,
+                TaskTime=data["TaskTime"]
+            )
+
+            self._record_task(task)
+        except Exception as e:
+            print(f"Fail to compress {input_path}: {str(e)}")
+            task = TaskCompression(
+                UserID=self.user_id, 
+                ServiceTypeID=SERVICETYPEID, 
+                OriginalFileName=Path(input_path).stem,
+                OriginalFileSize=os.path.getsize(input_path),
+                OriginalFilePath=input_path,
+                TaskStatus=False,
+                TaskTime=0
+            )
+
+            self._record_task(task)            
 
         return (str(task.OutputFilePath), int(task.OutputFileSize))
 
@@ -480,33 +510,47 @@ class CompressionRepository(ICompressionSerivce):
         -------
             ValueError: if compression failed
         """
-        data = await self._run_in_executor(
-            self._compress_audio_sync,
-            input_path,
-            self.ffmpeg_path,
-            bitrate,
-            timeout
-        )
 
-        task = TaskCompression(
-            UserID=self.user_id, 
-            ServiceTypeID=SERVICETYPEID,
-            OriginalFileName=data["OriginalFileName"],
-            OriginalFileSize=data["OriginalFileSize"],
-            OriginalFilePath=data["OriginalFilePath"],
-            OutputFileName=data["OutputFileName"],
-            OutputFileSize=data["OutputFileSize"],
-            OutputFilePath=data["OutputFilePath"],
-            CompressionLevel=data["CompressionLevel"],
-            TaskStatus=True,
-            TaskTime=data["TaskTime"]
-        )
+        try:
+            data = await self._run_in_executor(
+                self._compress_audio_sync,
+                input_path,
+                self.ffmpeg_path,
+                bitrate,
+                timeout
+            )
 
-        self._record_task(task)
+            task = TaskCompression(
+                UserID=self.user_id, 
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=data["OriginalFileName"],
+                OriginalFileSize=data["OriginalFileSize"],
+                OriginalFilePath=data["OriginalFilePath"],
+                OutputFileName=data["OutputFileName"],
+                OutputFileSize=data["OutputFileSize"],
+                OutputFilePath=data["OutputFilePath"],
+                CompressionLevel=data["CompressionLevel"],
+                TaskStatus=True,
+                TaskTime=data["TaskTime"]
+            )
+
+            self._record_task(task)
+        
+        except Exception as e:
+            print(f"Fail to compress {input_path}: {str(e)}")
+            task = TaskCompression(
+                UserID=self.user_id, 
+                ServiceTypeID=SERVICETYPEID, 
+                OriginalFileName=Path(input_path).stem,
+                OriginalFileSize=os.path.getsize(input_path),
+                OriginalFilePath=input_path,
+                TaskStatus=False,
+                TaskTime=0
+            )
+
+            self._record_task(task)
 
         return (str(task.OutputFilePath), int(task.OutputFileSize))
-
-
 
     async def compress_videos_batch(
         self,

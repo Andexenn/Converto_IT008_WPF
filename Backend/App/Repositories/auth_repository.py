@@ -1,3 +1,4 @@
+"""Auth repository"""
 from typing import Optional
 from datetime import timedelta
 import httpx
@@ -9,10 +10,12 @@ from fastapi import HTTPException, status
 from Services.auth_service import IAuthService
 from Schemas.user import GoogleUserData, UserCreate, UserResponse, UserLogin, UserLoginResponse
 from Entities.user import User
+from Entities.user_preferences import UserPreferences
 from Core.security import hash_password, verify_password, create_access_token
 from config import settings
 
 class AuthRepository(IAuthService):
+    """Auth repository class"""
     def __init__(self, db: Session):
         self.db = db
 
@@ -37,8 +40,15 @@ class AuthRepository(IAuthService):
                 HashedPassword = hashed_password)
 
             self.db.add(new_user)
+            self.db.flush()
 
+            new_user_preference = UserPreferences(
+                UserID=new_user.UserID
+            )
+
+            self.db.add(new_user_preference)
             self.db.commit()
+
             self.db.refresh(new_user)
 
             return UserResponse.model_validate(new_user)
@@ -183,6 +193,12 @@ class AuthRepository(IAuthService):
 
                 self.db.add(user)
                 self.db.flush()
+
+                new_user_preferences = UserPreferences(
+                    UserID=user.UserID
+                )
+
+                self.db.add(new_user_preferences)
 
                 self.db.commit()
                 self.db.refresh(user)

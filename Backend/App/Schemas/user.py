@@ -50,7 +50,7 @@ class UserLoginResponse(BaseModel):
 class GoogleUserData(BaseModel):
     email: EmailStr
     given_name: Optional[str] = None
-    family_name: Optional[str] = None 
+    family_name: Optional[str] = None
     picture: Optional[str] = None
     id_token: Optional[str] = None
 
@@ -64,3 +64,22 @@ class GoogleAuthResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class UserData(BaseModel):
+    UserID: int 
+    Email: Optional[EmailStr] = None 
+    FirstName: Optional[str] = None 
+    LastName: Optional[str] = None 
+    Address: Optional[str] = None
+    PhoneNumber: Optional[str] = None
+    City: Optional[str] = None
+    DateOfBirth: Optional[datetime] = None
+    ProfilePictureUrl: Optional[str] = None
+    MemberSince: Optional[datetime] = None 
+    LastLogin: Optional[datetime] = None 
+
+class UserPref(BaseModel):
+    UserID: int
+    DefaultOutputFolder: Optional[str] = None 
+    Language: Optional[str] = None 
+    Theme: Optional[str] = None

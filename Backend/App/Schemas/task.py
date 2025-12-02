@@ -1,5 +1,6 @@
-from pydantic import BaseModel, EmailStr
+"""Task schema"""
 from typing import Optional
+from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
 class TaskBase(BaseModel):
@@ -23,3 +24,15 @@ class TaskCompression(TaskBase):
 
 class TaskRemoveBackground(TaskBase):
     pass
+
+class TaskByUserID(BaseModel):
+    ServiceTypeID: int 
+    OriginalFileSize: int 
+    OriginalFilePath: str 
+    OutputFileSize: Optional[int] = None 
+    OutputFilePath: Optional[str] = None 
+    TaskStatus: bool 
+    TaskTime: float 
+
+
+

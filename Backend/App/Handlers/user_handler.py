@@ -1,0 +1,55 @@
+"""User handler"""
+
+from typing import List
+
+from fastapi import APIRouter, Depends, Body
+from sqlalchemy.orm import Session
+
+from Database.connection import get_db
+from Core.dependencies import get_current_user
+from Repositories.user_repository import UserRepository
+from Services.user_service import IUserService
+from Schemas.user import UserData, UserPref
+from Entities.user import User
+
+router = APIRouter()
+
+@router.get('/user/get_user_data', response_model=UserData)
+async def get_user(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> UserData:
+    """..."""
+
+    user_serivce: IUserService = UserRepository(db)
+    return await user_serivce.get_user(current_user.UserID)
+
+@router.get('/user/get_user_preference', response_model=UserPref)
+async def get_user_preference(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> UserPref:
+    """..."""
+
+    user_serivce: IUserService = UserRepository(db)
+    return await user_serivce.get_user_preference(current_user.UserID)
+
+@router.post('/user/update_user_data', response_model=UserData)
+async def update_user_data(
+    updated_user: UserData = Body(),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_user)
+) -> UserData:
+    
+    user_serivce: IUserService = UserRepository(db)
+    return await user_serivce.update_user_data(updated_user)
+
+@router.post('/user/update_user_pref', response_model=UserPref)
+async def update_user_pref(
+    updated_user_pref: UserPref = Body(),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_user)
+) -> UserPref:
+    
+    user_service: IUserService = UserRepository(db)
+    return await user_service.update_user_preferences(updated_user_pref)

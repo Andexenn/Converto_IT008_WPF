@@ -23,7 +23,7 @@ from Entities.tasks import Tasks
 
 FFMPEG_EXECUTABLE_NAME = 'ffmpeg.exe'
 SOFFICE_EXECUTABLE_NAME = 'soffice.exe'
-SERVICETYPEID = 3
+SERVICETYPEID = 1
 
 class ConversionRepository(IConversionService):
     """
@@ -156,28 +156,45 @@ class ConversionRepository(IConversionService):
 
         self._verify_path(input_path)
 
-        data = await self._run_in_executor(
-            self._convert_image_sync,
-            input_path,
-            output_format
-        )
+        try:
+            data = await self._run_in_executor(
+                self._convert_image_sync,
+                input_path,
+                output_format
+            )
 
-        task = TaskConversion(
-            UserID=self.user_id,
-            ServiceTypeID=SERVICETYPEID,
-            OriginalFileName=data["OriginalFileName"],
-            OriginalFileSize=data["OriginalFileSize"],
-            OriginalFilePath=data["OriginalFilePath"],
-            OutputFileName=data["OutputFileName"],
-            OutputFileSize=data["OutputFileSize"],
-            OutputFilePath=data["OutputFilePath"],
-            InputFormat=data["InputFormat"],
-            OutputFormat=data["OutputFormat"],
-            TaskStatus=True,
-            TaskTime=data["TaskTime"]
-        )
+            task = TaskConversion(
+                UserID=self.user_id,
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=data["OriginalFileName"],
+                OriginalFileSize=data["OriginalFileSize"],
+                OriginalFilePath=data["OriginalFilePath"],
+                OutputFileName=data["OutputFileName"],
+                OutputFileSize=data["OutputFileSize"],
+                OutputFilePath=data["OutputFilePath"],
+                InputFormat=data["InputFormat"],
+                OutputFormat=data["OutputFormat"],
+                TaskStatus=True,
+                TaskTime=data["TaskTime"]
+            )
 
-        self._record_task(task)
+            self._record_task(task)
+        
+        except Exception as e:
+            print(f"Failed to convert {input_path}: {str(e)}")
+            task = TaskConversion(
+                UserID=self.user_id,
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=Path(input_path).stem,
+                OriginalFileSize=os.path.getsize(input_path),
+                OriginalFilePath=input_path,
+                InputFormat=Path(input_path).suffix.lstrip('.').upper(),
+                OutputFormat=output_format.upper(),
+                TaskStatus=False,
+                TaskTime=0
+            )
+
+            self._record_task(task)
 
         return (str(task.OutputFilePath), int(task.OutputFileSize))
 
@@ -250,7 +267,7 @@ class ConversionRepository(IConversionService):
 
                     results.append((task.OriginalFilePath, task.OutputFilePath, task.OutputFileSize, True))
                 except Exception as e:
-                    print(f"Failed to compress {input_path}: {str(e)}")
+                    print(f"Failed to convert {input_path}: {str(e)}")
                     task = TaskConversion(
                         UserID=self.user_id,
                         ServiceTypeID=SERVICETYPEID,
@@ -258,7 +275,7 @@ class ConversionRepository(IConversionService):
                         OriginalFileSize=os.path.getsize(input_path),
                         OriginalFilePath=input_path,
                         InputFormat=Path(input_path).suffix.lstrip('.').upper(),
-                        OutputFormat=output_format,
+                        OutputFormat=output_format.upper(),
                         TaskStatus=False,
                         TaskTime=0
                     )
@@ -358,31 +375,48 @@ class ConversionRepository(IConversionService):
             ValueError: If conversion failed
             FileNotFoundError: If input file doesn't exist
         """
-        # Just use the sync method directly for single file
-        data = await self._run_in_executor(
-            self._convert_video_audio_sync,
-            input_path,
-            output_format,
-            self.ffmpeg_path,
-            timeout
-        )
 
-        task = TaskConversion(
-            UserID=self.user_id,
-            ServiceTypeID=SERVICETYPEID,
-            OriginalFileName=data["OriginalFileName"],
-            OriginalFileSize=data["OriginalFileSize"],
-            OriginalFilePath=data["OriginalFilePath"],
-            OutputFileName=data["OutputFileName"],
-            OutputFileSize=data["OutputFileSize"],
-            OutputFilePath=data["OutputFilePath"],
-            InputFormat=data["InputFormat"],
-            OutputFormat=data["OutputFormat"],
-            TaskStatus=True,
-            TaskTime=data["TaskTime"]
-        )
+        try:
+            data = await self._run_in_executor(
+                self._convert_video_audio_sync,
+                input_path,
+                output_format,
+                self.ffmpeg_path,
+                timeout
+            )
 
-        self._record_task(task)
+            task = TaskConversion(
+                UserID=self.user_id,
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=data["OriginalFileName"],
+                OriginalFileSize=data["OriginalFileSize"],
+                OriginalFilePath=data["OriginalFilePath"],
+                OutputFileName=data["OutputFileName"],
+                OutputFileSize=data["OutputFileSize"],
+                OutputFilePath=data["OutputFilePath"],
+                InputFormat=data["InputFormat"],
+                OutputFormat=data["OutputFormat"],
+                TaskStatus=True,
+                TaskTime=data["TaskTime"]
+            )
+
+            self._record_task(task)
+
+        except Exception as e:
+            print(f"Failed to convert {input_path}: {str(e)}")
+            task = TaskConversion(
+                UserID=self.user_id,
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=Path(input_path).stem,
+                OriginalFileSize=os.path.getsize(input_path),
+                OriginalFilePath=input_path,
+                InputFormat=Path(input_path).suffix.lstrip('.').upper(),
+                OutputFormat=output_format.upper(),
+                TaskStatus=False,
+                TaskTime=0
+            )
+
+            self._record_task(task)
 
         return (str(task.OutputFilePath), int(task.OutputFileSize))
 
@@ -448,7 +482,7 @@ class ConversionRepository(IConversionService):
                         OriginalFileSize=os.path.getsize(input_path),
                         OriginalFilePath=input_path,
                         InputFormat=Path(input_path).suffix.lstrip('.').upper(),
-                        OutputFormat=output_format,
+                        OutputFormat=output_format.upper(),
                         TaskStatus=False,
                         TaskTime=0
                     )
@@ -550,30 +584,48 @@ class ConversionRepository(IConversionService):
         -------
             Tuple[str, int]: (output_file_path, file_size_bytes)
         """
-        data = await self._run_in_executor(
-            self._convert_gif_sync,
-            input_path,
-            output_format,
-            self.ffmpeg_path,
-            timeout
-        )
 
-        task = TaskConversion(
-            UserID=self.user_id,
-            ServiceTypeID=SERVICETYPEID,
-            OriginalFileName=data["OriginalFileName"],
-            OriginalFileSize=data["OriginalFileSize"],
-            OriginalFilePath=data["OriginalFilePath"],
-            OutputFileName=data["OutputFileName"],
-            OutputFileSize=data["OutputFileSize"],
-            OutputFilePath=data["OutputFilePath"],
-            InputFormat=data["InputFormat"],
-            OutputFormat=data["OutputFormat"],
-            TaskStatus=True,
-            TaskTime=data["TaskTime"]
-        )
+        try:
+            data = await self._run_in_executor(
+                self._convert_gif_sync,
+                input_path,
+                output_format,
+                self.ffmpeg_path,
+                timeout
+            )
 
-        self._record_task(task)
+            task = TaskConversion(
+                UserID=self.user_id,
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=data["OriginalFileName"],
+                OriginalFileSize=data["OriginalFileSize"],
+                OriginalFilePath=data["OriginalFilePath"],
+                OutputFileName=data["OutputFileName"],
+                OutputFileSize=data["OutputFileSize"],
+                OutputFilePath=data["OutputFilePath"],
+                InputFormat=data["InputFormat"],
+                OutputFormat=data["OutputFormat"],
+                TaskStatus=True,
+                TaskTime=data["TaskTime"]
+            )
+
+            self._record_task(task)
+
+        except Exception as e:
+            print(f"Failed to convert {input_path}: {str(e)}")
+            task = TaskConversion(
+                UserID=self.user_id,
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=Path(input_path).stem,
+                OriginalFileSize=os.path.getsize(input_path),
+                OriginalFilePath=input_path,
+                InputFormat=Path(input_path).suffix.lstrip('.').upper(),
+                OutputFormat=output_format.upper(),
+                TaskStatus=False,
+                TaskTime=0
+            )
+
+            self._record_task(task)
 
         return (str(task.OutputFilePath), int(task.OutputFileSize))
 
@@ -638,7 +690,7 @@ class ConversionRepository(IConversionService):
                         OriginalFileSize=os.path.getsize(input_path),
                         OriginalFilePath=input_path,
                         InputFormat=Path(input_path).suffix.lstrip('.').upper(),
-                        OutputFormat=output_format,
+                        OutputFormat=output_format.upper(),
                         TaskStatus=False,
                         TaskTime=0
                     )
@@ -781,6 +833,7 @@ class ConversionRepository(IConversionService):
         output_format = output_format.lstrip('.').lower()
 
         try:
+            data = {}
             if input_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt'] and output_format == 'pdf':
                 data = await self._run_in_executor(
                     self._convert_office_to_pdf_sync,
@@ -813,10 +866,23 @@ class ConversionRepository(IConversionService):
 
             self._record_task(task)
 
-            return (str(task.OutputFilePath), int(task.OutputFileSize))
 
         except Exception as e:
-            raise ValueError(f"Conversion failed: {str(e)}") from e
+            print(f"Failed to convert {input_path}: {str(e)}")
+            task = TaskConversion(
+                UserID=self.user_id,
+                ServiceTypeID=SERVICETYPEID,
+                OriginalFileName=Path(input_path).stem,
+                OriginalFileSize=os.path.getsize(input_path),
+                OriginalFilePath=input_path,
+                InputFormat=Path(input_path).suffix.lstrip('.').upper(),
+                OutputFormat=output_format.upper(),
+                TaskStatus=False,
+                TaskTime=0
+            )
+
+            self._record_task(task)
+        return (str(task.OutputFilePath), int(task.OutputFileSize))
 
     async def convert_pdf_office_batch(
         self,
@@ -825,7 +891,10 @@ class ConversionRepository(IConversionService):
         timeout: int = 300
     ) -> List[Tuple[str, str, int, bool]]:
         """
-        Batch convert multiple files
+        Batch convert multiple files SYNCHRONOUSLY (one at a time)
+        
+        No multiprocessing - processes each file sequentially
+        More reliable for Office conversions
 
         Parameters:
         -----------
@@ -842,24 +911,18 @@ class ConversionRepository(IConversionService):
 
         results = []
 
-        # Determine conversion type based on first file
-        first_format = Path(input_paths[0]).suffix.lstrip('.').lower()
-        is_office_to_pdf = first_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt']
-
-        with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
-            # Submit all conversion tasks
-            future_to_path = {}
-
-            for input_path in input_paths:
-                if is_office_to_pdf:
-                    # Office to PDF
-                    future = executor.submit(
+        for input_path in input_paths:
+            try:
+                input_format = Path(input_path).suffix.lstrip('.').lower()
+                data = {}
+                if input_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt'] and output_format == 'pdf':
+                    data = await self._run_in_executor(
                         self._convert_office_to_pdf_sync,
                         input_path
                     )
-                else:
-                    # PDF to Office
-                    future = executor.submit(
+
+                elif input_format == 'pdf' and output_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt']:
+                    data = await self._run_in_executor(
                         self._convert_pdf_to_office_sync,
                         input_path,
                         output_format,
@@ -867,49 +930,41 @@ class ConversionRepository(IConversionService):
                         timeout
                     )
 
-                future_to_path[future] = input_path
+                task = TaskConversion(
+                    UserID=self.user_id,
+                    ServiceTypeID=SERVICETYPEID,
+                    OriginalFileName=data["OriginalFileName"],
+                    OriginalFileSize=data["OriginalFileSize"],
+                    OriginalFilePath=data["OriginalFilePath"],
+                    OutputFileName=data["OutputFileName"],
+                    OutputFileSize=data["OutputFileSize"],
+                    OutputFilePath=data["OutputFilePath"],
+                    InputFormat=data["InputFormat"],
+                    OutputFormat=data["OutputFormat"],
+                    TaskStatus=True,
+                    TaskTime=data["TaskTime"]
+                )
 
-            # Collect results as they complete
-            for future in as_completed(future_to_path):
-                input_path = future_to_path[future]
-                try:
-                    data = future.result()
+                self._record_task(task)
+                results.append([task.OriginalFilePath, task.OutputFilePath, task.OutputFileSize, True])
 
-                    task = TaskConversion(
-                        UserID=self.user_id,
-                        ServiceTypeID=SERVICETYPEID,
-                        OriginalFileName=data["OriginalFileName"],
-                        OriginalFileSize=data["OriginalFileSize"],
-                        OriginalFilePath=data["OriginalFilePath"],
-                        OutputFileName=data["OutputFileName"],
-                        OutputFileSize=data["OutputFileSize"],
-                        OutputFilePath=data["OutputFilePath"],
-                        InputFormat=data["InputFormat"],
-                        OutputFormat=data["OutputFormat"],
-                        TaskStatus=True,
-                        TaskTime=data["TaskTime"]
-                    )
 
-                    self._record_task(task)
-
-                    results.append((task.OriginalFilePath, task.OutputFilePath, task.OutputFileSize, True))
-                except Exception as e:
-                    print(f"Failed to compress {input_path}: {str(e)}")
-                    task = TaskConversion(
-                        UserID=self.user_id,
-                        ServiceTypeID=SERVICETYPEID,
-                        OriginalFileName=Path(input_path).stem,
-                        OriginalFileSize=os.path.getsize(input_path),
-                        OriginalFilePath=input_path,
-                        InputFormat=Path(input_path).suffix.lstrip('.').upper(),
-                        OutputFormat=output_format,
-                        TaskStatus=False,
-                        TaskTime=0
-                    )
-
-                    self._record_task(task)
-                    results.append((input_path, "", 0, False))
-
+            except Exception as e:
+                print(f"Failed to convert {input_path}: {str(e)}")
+                task = TaskConversion(
+                    UserID=self.user_id,
+                    ServiceTypeID=SERVICETYPEID,
+                    OriginalFileName=Path(input_path).stem,
+                    OriginalFileSize=os.path.getsize(input_path),
+                    OriginalFilePath=input_path,
+                    InputFormat=Path(input_path).suffix.lstrip('.').upper(),
+                    OutputFormat=output_format.upper(),
+                    TaskStatus=False,
+                    TaskTime=0
+                )
+                self._record_task(task)
+                results.append([task.OriginalFilePath, None, 0, False])
+        
         return results
 
     @staticmethod
@@ -930,6 +985,9 @@ class ConversionRepository(IConversionService):
         if not Path(input_path).exists():
             raise FileNotFoundError(f"File {input_path} not found!")
 
+        if not os.access(input_path, os.R_OK):
+            raise PermissionError(f"Cannot read file: {input_path}")
+
         input_format = Path(input_path).suffix.lstrip('.').lower()
 
         output_format = 'pdf'
@@ -948,9 +1006,9 @@ class ConversionRepository(IConversionService):
                 word = None
                 doc = None
                 try:
-                    word = win32com.client.Dispatch("Word.Application")
-                    word.Visible = False  # Don't show Word window
-                    word.DisplayAlerts = False  # Disable alerts
+                    word = win32com.client.DispatchEx("Word.Application")
+                    word.Visible = False 
+                    word.DisplayAlerts = False  
 
                     doc = word.Documents.Open(input_path)
 
@@ -965,17 +1023,15 @@ class ConversionRepository(IConversionService):
                         word.Quit()
 
             elif input_format in ['xlsx', 'xls']:
-                # Convert Excel to PDF
                 excel = None
                 wb = None
                 try:
-                    excel = win32com.client.Dispatch("Excel.Application")
-                    excel.Visible = False  # Don't show Excel window
-                    excel.DisplayAlerts = False  # Disable alerts
+                    excel = win32com.client.DispatchEx("Excel.Application")
+                    excel.Visible = False 
+                    excel.DisplayAlerts = False 
 
                     wb = excel.Workbooks.Open(input_path)
 
-                    # Export as PDF (Type 0 = xlTypePDF)
                     wb.ExportAsFixedFormat(0, output_path)
 
                 finally:
@@ -986,16 +1042,14 @@ class ConversionRepository(IConversionService):
                         excel.Quit()
 
             elif input_format in ['pptx', 'ppt']:
-                # Convert PowerPoint to PDF
                 ppt = None
                 presentation = None
                 try:
-                    ppt = win32com.client.Dispatch("Powerpoint.Application")
-                    ppt.Visible = 1  # PowerPoint needs to be visible
+                    ppt = win32com.client.DispatchEx("Powerpoint.Application")
+                    ppt.Visible = 1  
 
                     presentation = ppt.Presentations.Open(input_path, WithWindow=False)
 
-                    # Save as PDF (format 32 = ppSaveAsPDF)
                     presentation.SaveAs(output_path, 32)
 
                 finally:

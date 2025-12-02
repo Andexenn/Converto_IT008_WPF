@@ -9,7 +9,8 @@
         xmlns:vm="clr-namespace:Converto_IT008_WPF.ViewModels" 
         xmlns:animate="clr-namespace:Converto_IT008_WPF.Views.Animations"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
-        mc:Ignorable="d">
+        mc:Ignorable="d"
+        Closing="MainWindow_Closing">
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
@@ -124,6 +125,7 @@
                         Margin="20" 
                         Content="✕" 
                         FontSize="20" 
+                        Foreground="White"
                         Background="Transparent" 
                         BorderThickness="0"
                         Command="{Binding HideLoginOverlayCommand}"/>

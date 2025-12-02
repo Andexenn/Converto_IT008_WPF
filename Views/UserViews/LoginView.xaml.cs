@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Converto_IT008_WPF.ViewModels.UserViewModel;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using Converto_IT008_WPF.ViewModels.UserViewModel;
-using Microsoft.Extensions.DependencyInjection;
+using System.Windows.Media.Animation;
 
 namespace Converto_IT008_WPF.Views.UserViews;
 

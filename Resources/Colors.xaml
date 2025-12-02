@@ -6,6 +6,7 @@
     <Color x:Key="Color.MainBG">#131212</Color>
     <Color x:Key="Color.BG.Gradient">#211111</Color>
     <Color x:Key="Color.BG.Shape">#1E1E1E</Color>
+    <Color x:Key="Color.BG.Card">#0D0D0D</Color>
     
     <Color x:Key="Color.Text.Secondary">#A1A8B5</Color>
     
@@ -13,7 +14,19 @@
     <Color x:Key="Color.Line">#5E6572</Color>
     <Color x:Key="Color.Delete">#4A1919</Color>
 
+
     <SolidColorBrush x:Key="Brush.Button.Primay.Fore" Color="{StaticResource Color.Brand}" />
+
+    <!-- Global Brushes -->
+    <SolidColorBrush x:Key="Brush.Brand" Color="{StaticResource Color.Brand}"/>
+    <SolidColorBrush x:Key="Brush.MainBG" Color="{StaticResource Color.MainBG}"/>
+    <SolidColorBrush x:Key="Brush.BG.Gradient" Color="{StaticResource Color.BG.Gradient}"/>
+    <SolidColorBrush x:Key="Brush.BG.Shape" Color="{StaticResource Color.BG.Shape}"/>
+    <SolidColorBrush x:Key="Brush.BG.Card" Color="{StaticResource Color.BG.Card}"/>
+    <SolidColorBrush x:Key="Brush.Text.Secondary" Color="{StaticResource Color.Text.Secondary}"/>
+    <SolidColorBrush x:Key="Brush.Stroke" Color="{StaticResource Color.Stroke}"/>
+    <SolidColorBrush x:Key="Brush.Line" Color="{StaticResource Color.Line}"/>
+    <SolidColorBrush x:Key="Brush.Delete" Color="{StaticResource Color.Delete}"/>
 
 
 </ResourceDictionary>

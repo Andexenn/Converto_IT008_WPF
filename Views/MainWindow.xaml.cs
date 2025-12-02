@@ -2,6 +2,7 @@
 using Converto_IT008_WPF.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,6 +45,24 @@ public partial class MainWindow : Window
         if (result == true)
         {
             Application.Current.Shutdown();
+        }
+    }
+
+    private void MainWindow_Closing(object sender, CancelEventArgs e)
+    {
+        ExitConfirmationDialog dialog = new ExitConfirmationDialog();
+
+        dialog.Owner = this;
+
+        bool? result = dialog.ShowDialog();
+
+        if (result == true)
+        {
+            Application.Current.Shutdown();
+        }
+        else
+        {
+            e.Cancel = true;
         }
     }
 }

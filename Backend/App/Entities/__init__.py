@@ -4,10 +4,12 @@ from Entities.service_types import ServiceTypes
 from Entities.tasks import Tasks
 from Entities.user_preferences import UserPreferences
 from Entities.user import User
+from Entities.user_otp import UserOTP
 
 __all__ = [
     "ServiceTypes",
     "Tasks",
     "UserPreferences",
-    "User"
+    "User",
+    "UserOTP"
 ]

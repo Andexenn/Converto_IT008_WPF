@@ -53,3 +53,41 @@ async def update_user_pref(
     
     user_service: IUserService = UserRepository(db)
     return await user_service.update_user_preferences(updated_user_pref)
+
+@router.get('/user/verify_email', response_model=dict)
+async def verify_email(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> dict:
+    
+    user_service: IUserService = UserRepository(db)
+    if await user_service.verify_email_user(current_user.Email):
+        return {
+            "success": True,
+            "message": "Email exists"
+        }
+    else:
+        return {
+            "success": False,
+            "message": "Email didn't exist"
+        }
+
+@router.get('/user/send_email/{email_type}', response_model=dict)
+async def send_email(
+    email_type: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> dict:
+
+    user_service: IUserService = UserRepository(db)
+    return await user_service.send_email(current_user.Email, email_type)
+
+@router.get('/user/verify_otp/{otp_code}', response_model=dict)
+async def verify_otp(
+    otp_code: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> dict:
+    
+    user_service: IUserService = UserRepository(db)
+    return await user_service.verify_otp(current_user.Email, otp_code)

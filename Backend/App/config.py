@@ -3,6 +3,7 @@ config module
 """
 from pathlib import Path
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import SecretStr
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 ENV_FILE = BASE_DIR / ".env"
@@ -27,5 +28,11 @@ class Settings(BaseSettings):
 
     GOOGLE_CLIENT_ID: str
     GOOGLE_CLINET_SECRET: str
+
+    MAIL_USERNAME: str
+    MAIL_PASSWORD: SecretStr
+    MAIL_FROM: str
+    MAIL_PORT: str
+    MAIL_SERVER: str
 
 settings = Settings() # type: ignore

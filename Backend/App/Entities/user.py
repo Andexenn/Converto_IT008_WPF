@@ -12,6 +12,7 @@ from Database.connection import Base
 if TYPE_CHECKING:
     from Entities.tasks import Tasks
     from Entities.user_preferences import UserPreferences
+    from Entities.user_otp import UserOTP
 class User(Base):
     __tablename__ = "USER"
 
@@ -31,3 +32,4 @@ class User(Base):
     #Relationship
     UserTasks: Mapped[List["Tasks"]] = relationship(back_populates="User")
     Preferences: Mapped["UserPreferences"] = relationship(back_populates="User")
+    UserOTP: Mapped["UserOTP"] = relationship(back_populates="User")

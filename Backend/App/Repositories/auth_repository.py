@@ -10,6 +10,7 @@ from fastapi import HTTPException, status
 from Services.auth_service import IAuthService
 from Schemas.user import GoogleUserData, UserCreate, UserResponse, UserLogin, UserLoginResponse
 from Entities.user import User
+from Entities.user_otp import UserOTP
 from Entities.user_preferences import UserPreferences
 from Core.security import hash_password, verify_password, create_access_token
 from config import settings
@@ -47,6 +48,12 @@ class AuthRepository(IAuthService):
             )
 
             self.db.add(new_user_preference)
+
+            new_user_otp = UserOTP(
+                UserID=new_user.UserID
+            )
+
+            self.db.add(new_user_otp)
             self.db.commit()
 
             self.db.refresh(new_user)

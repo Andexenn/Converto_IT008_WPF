@@ -26,5 +26,5 @@ def get_db():
 def init_db():
     # pylint: disable=import-outside-toplevel
     # pylint: disable=unused-import
-    from Entities import User, ServiceTypes, Tasks, UserPreferences
+    from Entities import User, ServiceTypes, Tasks, UserPreferences, UserOTP
     Base.metadata.create_all(bind=engine)

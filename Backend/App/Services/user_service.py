@@ -46,3 +46,11 @@ class IUserService(ABC):
         """
         Update preferences of the user
         """
+
+    @abstractmethod
+    async def send_email(self, email: str, email_type: str) -> dict:
+        """Send email to user"""
+
+    @abstractmethod
+    async def verify_email_user(self, email: str ) -> bool:
+        """Verify if the email exists"""

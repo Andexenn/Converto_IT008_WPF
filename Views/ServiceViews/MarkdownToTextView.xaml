@@ -3,45 +3,292 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             
-             xmlns:md="clr-namespace:MdXaml;assembly=MdXaml" 
-             
+             xmlns:md="clr-namespace:MdXaml;assembly=MdXaml"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+             xmlns:custom="clr-namespace:PlaceholderTextBoxControl" 
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
-    <Grid Background="#FFFBFBFB">
-        <StackPanel Margin="20">
-            <TextBlock Text="Markdown to RichText" 
-                       Foreground="#F24822" FontWeight="SemiBold" FontSize="40"/>
-            <TextBlock Text="Render markdown syntax to beautiful rich text." 
-                       FontSize="16" FontStyle="Italic" Foreground="Gray" Margin="0,5,0,20"/>
+             d:DesignHeight="700" d:DesignWidth="950">
 
-            <Grid Height="450">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="20"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Converto_IT008_WPF;component/Resources/Colors.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
-                <GroupBox Header="Input (Markdown)" Grid.Column="0" FontSize="14" FontWeight="Bold">
-                    <TextBox x:Name="txtInput" 
-                             AcceptsReturn="True" TextWrapping="Wrap" 
-                             VerticalScrollBarVisibility="Auto"
-                             Padding="10" FontWeight="Normal" FontSize="14"
-                             BorderThickness="0" 
-                             TextChanged="TxtInput_TextChanged"
-                             FontFamily="Consolas"/>
-                </GroupBox>
+            <Style x:Key="RedRadioButtonStyle" TargetType="RadioButton">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Margin" Value="0,0,20,0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="RadioButton">
+                            <StackPanel Orientation="Horizontal" Background="Transparent">
+                                <Grid Width="20" Height="20" Margin="0,0,8,0">
+                                    <Ellipse x:Name="OuterRing" 
+                                             Stroke="{StaticResource Brush.Text.Secondary}" 
+                                             StrokeThickness="1.5" 
+                                             Fill="Transparent"/>
 
-                <GroupBox Header="Rich Text Output" Grid.Column="2" FontSize="14" FontWeight="Bold">
+                                    <Ellipse x:Name="InnerDot" 
+                                             Fill="{StaticResource Brush.Brand}" 
+                                             Width="10" Height="10" 
+                                             Visibility="Collapsed"/>
+                                </Grid>
 
-                    <md:MarkdownScrollViewer x:Name="mdViewer"
-                             BorderThickness="0"
-                             Padding="10"
-                             VerticalScrollBarVisibility="Auto"
-                             FontWeight="Normal" 
-                             MarkdownStyleName="GithubLike"/>
-                </GroupBox>
-            </Grid>
+                                <ContentPresenter VerticalAlignment="Center" 
+                                                  TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                            </StackPanel>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="OuterRing" Property="Stroke" Value="{StaticResource Brush.Brand}"/>
+                                    <Setter TargetName="InnerDot" Property="Visibility" Value="Visible"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter Property="Foreground" Value="{StaticResource Brush.Text.Secondary}"/>
+                                </Trigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="OuterRing" Property="Stroke" Value="White"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="EditorBoxStyle" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource Brush.BG.Card}"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="Padding" Value="15"/>
+                <Setter Property="BorderThickness" Value="0"/>
+            </Style>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid Background="{StaticResource Brush.MainBG}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="30,30,30,15">
+            <TextBlock Text="Markdown to Text Converter" 
+                       Foreground="White" 
+                       FontWeight="Bold" 
+                       FontSize="32"/>
+            <TextBlock Text="Paste your Markdown content below to convert it to plain text." 
+                       FontSize="14" 
+                       Foreground="{StaticResource Brush.Text.Secondary}" 
+                       Margin="0,5,0,0"/>
         </StackPanel>
+
+        <Border Grid.Row="1" Margin="30,0,30,20" 
+                Background="{StaticResource Brush.BG.Shape}" 
+                CornerRadius="10" 
+                Height="60"
+                Padding="20,0">
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+
+                <TextBlock Text="Options" 
+                           Foreground="White" 
+                           FontWeight="Bold" 
+                           FontSize="14"
+                           VerticalAlignment="Center" 
+                           Margin="0,0,40,0"/>
+
+                <RadioButton x:Name="radPlainText" 
+                             Content="Plain Text"
+                             GroupName="RenderMode"
+                             Style="{StaticResource RedRadioButtonStyle}"
+                             Checked="Mode_Checked"/>
+
+                <RadioButton x:Name="radRichText" 
+                             Content="Rich Text"
+                             GroupName="RenderMode"
+                             IsChecked="True"
+                             Style="{StaticResource RedRadioButtonStyle}"
+                             Checked="Mode_Checked"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Row="2" Margin="30,0,30,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Grid.Column="0" Background="{StaticResource Brush.BG.Shape}" CornerRadius="12" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,15">
+                        <TextBlock Text="Markdown Input" 
+                                   Foreground="White" 
+                                   FontSize="16" 
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"/>
+
+                        <Button HorizontalAlignment="Right"
+                                Background="#33FFFFFF" 
+                                Width="30" Height="30"
+                                BorderThickness="0"
+                                Click="BtnClear_Click"
+                                Cursor="Hand">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="6"/>
+                                </Style>
+                            </Button.Resources>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                        <fa:FontAwesome Icon="Trash" Foreground="White" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.Delete}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+
+                    <Border Grid.Row="1" Style="{StaticResource EditorBoxStyle}">
+                        <custom:PlaceholderTextBox x:Name="txtInput"
+                                                   Placeholder="Write your markdown here"
+                                                   Background="Transparent"
+                                                   Foreground="White"
+                                                   CaretBrush="{StaticResource Brush.Brand}"
+                                                   BorderThickness="0"
+                                                   FontSize="14"
+                                                   FontFamily="Consolas"
+                                                   
+                                                   AcceptsReturn="True"
+                                                   TextWrapping="Wrap"
+                                                   VerticalScrollBarVisibility="Auto"
+                                                   VerticalContentAlignment="Top"
+                                                   Padding="0"
+                                                   
+                                                   TextChanged="TxtInput_TextChanged"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="2" Background="{StaticResource Brush.BG.Shape}" CornerRadius="12" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0" Margin="0,0,0,15">
+                        <TextBlock Text="Text Output" 
+                                   Foreground="White" 
+                                   FontSize="16" 
+                                   FontWeight="SemiBold"
+                                   VerticalAlignment="Center"/>
+
+                        <Button HorizontalAlignment="Right"
+        Background="#33FFFFFF"
+        Width="30" Height="30"
+        BorderThickness="0"
+        Click="BtnCopy_Click"
+        Cursor="Hand"
+        ToolTip="Copy to Clipboard">
+
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                        <fa:FontAwesome Icon="Copy" 
+                                Foreground="White" 
+                                FontSize="14" 
+                                VerticalAlignment="Center" 
+                                HorizontalAlignment="Center"/>
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
+                                        </Trigger>
+
+                                        <Trigger Property="IsPressed" Value="True">
+                                            <Setter Property="Opacity" Value="0.8"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+
+                    <Border Grid.Row="1" Style="{StaticResource EditorBoxStyle}">
+                        <Grid>
+                            <md:MarkdownScrollViewer x:Name="mdViewer"
+                                                     Visibility="Visible"
+                                                     Foreground="{StaticResource Brush.Text.Secondary}"
+                                                     VerticalScrollBarVisibility="Auto"
+                                                     MarkdownStyleName="GithubLike"/>
+
+                            <TextBox x:Name="txtOutputPlain"
+                                     Visibility="Collapsed"
+                                     Background="Transparent"
+                                     Foreground="{StaticResource Brush.Text.Secondary}"
+                                     BorderThickness="0"
+                                     IsReadOnly="True"
+                                     TextWrapping="Wrap"
+                                     FontSize="14"
+                                     FontFamily="Consolas"
+                                     VerticalScrollBarVisibility="Auto"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+        </Grid>
+
+        <Border x:Name="ToastNotification"
+                Grid.RowSpan="3"
+                VerticalAlignment="Bottom" 
+                HorizontalAlignment="Center"
+                Margin="0,0,0,50"
+                Background="#252525"
+                BorderBrush="{StaticResource Brush.Stroke}"
+                BorderThickness="1"
+                CornerRadius="8"
+                Padding="20,10"
+                Opacity="0" 
+                Visibility="Collapsed"
+                Panel.ZIndex="999"
+                IsHitTestVisible="False">
+
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="20" ShadowDepth="5" Opacity="0.4" Direction="270"/>
+            </Border.Effect>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <fa:FontAwesome Icon="CheckCircle" 
+                                Foreground="#4CD964" 
+                                FontSize="18" 
+                                VerticalAlignment="Center" 
+                                Margin="0,0,10,0"/>
+
+                <TextBlock Text="Copied to clipboard!" 
+                           Foreground="White" 
+                           FontWeight="SemiBold" 
+                           FontSize="14" 
+                           VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

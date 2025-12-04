@@ -29,7 +29,7 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand GoLoginCommand { get; }
         public ICommand GoSignUpCommand { get; }
         public ICommand GoMyAccountCommand { get; }
-        public ICommand GoMarkdownToTextCommand { get; }
+        public ICommand GoMarkdownToTextCommand { get; set; }
         public ICommand GoRemoveBackground { get; }
 
         public ICommand ShowLoginOverlayCommand { get; set; }

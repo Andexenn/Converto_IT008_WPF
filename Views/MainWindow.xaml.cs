@@ -1,68 +1,68 @@
 ﻿using Converto;
 using Converto_IT008_WPF.ViewModels;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Interop;
 
-namespace Converto_IT008_WPF.Views;
-
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window
+namespace Converto_IT008_WPF.Views
 {
-    public MainWindow(MainWindowViewModel vm)
+    public partial class MainWindow : Window
     {
-        InitializeComponent();
-        DataContext = vm;
-    }
-
-    private void Skeleton_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-        if(e.ChangedButton == MouseButton.Left)
-            this.DragMove();
-    }
-
-    private void ExitButton_Click(object sender, RoutedEventArgs e)
-    {
-        ExitConfirmationDialog dialog = new ExitConfirmationDialog();
-
-        dialog.Owner = this;
-
-        bool? result = dialog.ShowDialog();
-
-        if (result == true)
+        public MainWindow(MainWindowViewModel vm)
         {
-            Application.Current.Shutdown();
+            InitializeComponent();
+            DataContext = vm;
+
+            Loaded += MainWindow_Loaded;
         }
-    }
 
-    private void MainWindow_Closing(object sender, CancelEventArgs e)
-    {
-        ExitConfirmationDialog dialog = new ExitConfirmationDialog();
-
-        dialog.Owner = this;
-
-        bool? result = dialog.ShowDialog();
-
-        if (result == true)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            Application.Current.Shutdown();
+            UpdateTitleBarColor();
         }
-        else
+
+
+        [DllImport("dwmapi.dll")]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, ref int attrValue, int attrSize);
+
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+        private const int DWMWA_CAPTION_COLOR = 35;
+        private const int DWMWA_TEXT_COLOR = 36;
+
+        private void UpdateTitleBarColor()
         {
-            e.Cancel = true;
+            var helper = new WindowInteropHelper(this);
+            IntPtr hwnd = helper.Handle;
+
+            int useDarkMode = 1;
+            DwmSetWindowAttribute(hwnd, DWMWA_USE_IMMERSIVE_DARK_MODE, ref useDarkMode, sizeof(int));
+
+            int darkBackgroundColor = 0x001F1F1F;
+
+            int whiteTextColor = 0x00FFFFFF;
+
+            DwmSetWindowAttribute(hwnd, DWMWA_CAPTION_COLOR, ref darkBackgroundColor, sizeof(int));
+
+            DwmSetWindowAttribute(hwnd, DWMWA_TEXT_COLOR, ref whiteTextColor, sizeof(int));
+        }
+
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            ExitConfirmationDialog dialog = new ExitConfirmationDialog();
+            dialog.Owner = this;
+
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                Application.Current.Shutdown();
+            }
+            else
+            {
+                e.Cancel = true;
+            }
         }
     }
 }

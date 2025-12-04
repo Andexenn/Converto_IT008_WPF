@@ -5,6 +5,7 @@ using Converto_IT008_WPF.ServicesFEImpl;
 using Converto_IT008_WPF.Stores;
 using Converto_IT008_WPF.ViewModels;
 using Converto_IT008_WPF.Views;
+using Converto_IT008_WPF.Views.UserViews;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Http;
 using System;
@@ -61,6 +62,9 @@ public static class AppModule
         //------------------ Views ------------------
         services.AddSingleton<Views.MainWindow>();
         services.AddSingleton<Views.Popups.Terms_ConditionsPopup>();
+        services.AddTransient<Views.UserViews.LoginView>();
+        services.AddTransient<Views.UserViews.SignUpView>();
+
 
         return services;
     }

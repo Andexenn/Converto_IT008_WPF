@@ -4,150 +4,137 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Converto_IT008_WPF.Views"
-        xmlns:userviews="clr-namespace:Converto_IT008_WPF.Views.UserViews"
         xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
-        xmlns:vm="clr-namespace:Converto_IT008_WPF.ViewModels" 
-        xmlns:animate="clr-namespace:Converto_IT008_WPF.Views.Animations"
+        xmlns:vm="clr-namespace:Converto_IT008_WPF.ViewModels"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         mc:Ignorable="d"
-        Closing="MainWindow_Closing">
-
+        Title="Converto" Height="700" Width="1100"
+        ResizeMode="CanResize"
+        Closing="MainWindow_Closing"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Converto_IT008_WPF;component/Resources/Colors.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="DarkSidebarButton" TargetType="{x:Type RadioButton}">
+                <Setter Property="Foreground" Value="{StaticResource Brush.Text.Secondary}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Margin" Value="0,5,0,5"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RadioButton}">
+                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="15,10,15,10">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:FontAwesome Icon="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" Width="25" VerticalAlignment="Center" FontSize="16" Foreground="{TemplateBinding Foreground}"/>
+                                    <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="{StaticResource Brush.Stroke}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="{StaticResource Brush.Brand}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
 
-    <Border x:Name="Skeleton" Background="#FFFBFBFB"
-            CornerRadius="15"
-            Padding="10" MouseDown="Skeleton_MouseDown">
-
+    <Border x:Name="Skeleton" Background="{StaticResource Brush.MainBG}">
         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="250" />
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <Grid x:Name="MainAppLayer">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="92*" />
-                    <ColumnDefinition Width="393*"/>
-                </Grid.ColumnDefinitions>
+            <Border Grid.Column="0" Background="{StaticResource Brush.BG.Shape}" Padding="20">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="39*"/>
-                    <RowDefinition Height="271*"/>
-                </Grid.RowDefinitions>
+                    <StackPanel Grid.Row="0" Margin="0,10,0,30" Orientation="Horizontal">
+                        <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Resources/Logo.png" Width="150" Margin="6,20,0,0"/>
+                    </StackPanel>
 
-                <Border BorderThickness="0.5" Grid.RowSpan="2" Background="White" CornerRadius="10,10,10,10" BorderBrush="#7F4F4E4E">
-                    <Border.Effect>
-                        <DropShadowEffect Color="#FF4F4E4E" BlurRadius="10" Direction="209" Opacity="0.3" ShadowDepth="0" RenderingBias="Quality"/>
-                    </Border.Effect>
+                    <StackPanel Grid.Row="1">
+                        <TextBlock Text="MENU" Foreground="{StaticResource Brush.Line}" FontSize="11" FontWeight="Bold" Margin="5,0,0,10"/>
 
-                    <Grid>
-                        <StackPanel VerticalAlignment="Top" >
-                            <Image HorizontalAlignment="Center" VerticalAlignment="Center" Source="/Resources/Logo.png" Width="150" Margin="6,20,0,0"/>
-                            <Border BorderBrush="#CECECE"  BorderThickness="0.5" Margin="0, 12, 0, 0"/>
+                        <RadioButton Content="Dashboard" 
+                                     GroupName="NavGroup" 
+                                     IsChecked="True" 
+                                     Tag="{x:Static fa:FontAwesomeIcon.Dashboard}" 
+                                     Style="{StaticResource DarkSidebarButton}" 
+                                     Command="{Binding GoHomepageCommand}"/>
 
-                            <StackPanel  Margin="0,24,0,0" >
-                                <RadioButton x:Name="Convert" Content="Convert" Command="{Binding GoHomepageCommand}" Tag="{x:Static fa:FontAwesomeIcon.Exchange}" Style="{StaticResource MenuButtonTheme}">
-                                    <RadioButton.ToolTip>
-                                        <ToolTip Background="White">
-                                            <TextBlock Text="Convert files format"/>
-                                        </ToolTip>
-                                    </RadioButton.ToolTip>
-                                </RadioButton>
+                        <RadioButton Content="Convert" 
+                                     GroupName="NavGroup" 
+                                     Tag="{x:Static fa:FontAwesomeIcon.Exchange}" 
+                                     Style="{StaticResource DarkSidebarButton}" 
+                                     Command="{Binding GoHomepageCommand}"/>
 
-                                <RadioButton x:Name="Compress" Content="Compress" Tag="{x:Static fa:FontAwesomeIcon.Compress}" Command="{Binding GoCompressCommand}" Style="{StaticResource MenuButtonTheme}" BorderBrush="{x:Null}"/>
-                                <RadioButton x:Name="Markdown_To_Text" 
-                                             Content="Markdown to Text" 
-                                             Tag="{x:Static fa:FontAwesomeIcon.FileText}" 
-                                             Command="{Binding GoMarkdownToTextCommand}" 
-                                             Style="{StaticResource MenuButtonTheme}"/>
-                                <RadioButton x:Name="Remove_Background" Content="Remove Background" Tag="{x:Static fa:FontAwesomeIcon.Image}" Command="{Binding GoRemoveBackground}" Style="{StaticResource MenuButtonTheme}"/>
+                        <RadioButton Content="Compress" 
+                                     GroupName="NavGroup" 
+                                     Tag="{x:Static fa:FontAwesomeIcon.Compress}" 
+                                     Style="{StaticResource DarkSidebarButton}" 
+                                     Command="{Binding GoCompressCommand}"/>
 
-                                <Border HorizontalAlignment="Left" Height="1" Background="#CECECE" Width="120" Margin="24,20,0,20"/>
+                        <RadioButton Content="Remove Background" 
+                                     GroupName="NavGroup" 
+                                     Tag="{x:Static fa:FontAwesomeIcon.Image}" 
+                                     Style="{StaticResource DarkSidebarButton}" 
+                                     Command="{Binding GoRemoveBackground}"/>
 
-                                <RadioButton x:Name="My_Account" Content="My Account" Tag="{x:Static fa:FontAwesomeIcon.User}" Style="{StaticResource MenuButtonTheme}" Command="{Binding GoMyAccountCommand}"/>
-                                <RadioButton x:Name="About_Us" Content="About Us" Tag="{x:Static fa:FontAwesomeIcon.Group}" Style="{StaticResource MenuButtonTheme}" Command="{Binding GoAboutUsCommand}"/>
-                                <RadioButton x:Name="History" Content="History" Tag="{x:Static fa:FontAwesomeIcon.History}" Command="{Binding GoHistoryCommand}" Style="{StaticResource MenuButtonTheme}"/>
+                        <RadioButton Content="Markdown to text" 
+                                     GroupName="NavGroup" 
+                                     Tag="{x:Static fa:FontAwesomeIcon.FileText}" 
+                                     Style="{StaticResource DarkSidebarButton}" 
+                                     Command="{Binding GoMarkdownToTextCommand}"/>
+                    </StackPanel>
 
-                                <RadioButton x:Name="Exit" 
-                                             Grid.Row="1" 
-                                             Tag="{x:Static fa:FontAwesomeIcon.SignOut}" 
-                                             Content="Exit" 
-                                             Style="{StaticResource MenuButtonTheme}" 
-                                             Height="35"
-                                             Click="ExitButton_Click"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Grid>
-                </Border>
+                    <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
+                        <Separator Background="{StaticResource Brush.Line}" Margin="0,10,0,10"/>
 
-                <Border BorderThickness="0.5" Grid.Column="1" Background="White" CornerRadius="10,10,10,10" Margin="13,0,0,20" BorderBrush="#7F4F4E4E">
-                    <Border.Effect>
-                        <DropShadowEffect Color="#FF4F4E4E" Opacity="0.3" ShadowDepth="0" RenderingBias="Quality" Direction="209" BlurRadius="10" />
-                    </Border.Effect>
-                    <Grid VerticalAlignment="Center">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
+                        <RadioButton Content="Settings" 
+                                     GroupName="NavGroup" 
+                                     Tag="{x:Static fa:FontAwesomeIcon.Cog}" 
+                                     Style="{StaticResource DarkSidebarButton}" 
+                                     Command="{Binding GoSettingsCommand}"/>
 
-                        <Button Grid.Column="1"
-                                Content="Login"
-                                Style="{StaticResource Login}"
-                                Command="{Binding DataContext.ShowLoginOverlayCommand, 
-                                          RelativeSource={RelativeSource AncestorType=Window}}"
-                                Visibility="{Binding _sessionState.IsUserLoggedOut, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                        <RadioButton Content="Profile" 
+                                     GroupName="NavGroup" 
+                                     Tag="{x:Static fa:FontAwesomeIcon.User}" 
+                                     Style="{StaticResource DarkSidebarButton}" 
+                                     Command="{Binding GoMyAccountCommand}"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
 
-                        <Image Grid.Column="1" Source="/Resources/DefaultUser.png" Height="36" Width="36" VerticalAlignment="Center"
-                               Visibility="{Binding _sessionState.IsUserLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
+            <Border Grid.Column="1" Background="{StaticResource Brush.MainBG}" Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
 
-                        <Button Grid.Column="2"
-                                Style="{StaticResource Signup}" 
-                                Command="{Binding ShowSignUpOverlayCommand}" 
-                                Visibility="{Binding _sessionState.IsUserLoggedOut, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                        
-                        <Button Grid.Column="2" Content="{Binding _sessionState.LoginResponse.FirstName}" Foreground="Black" FontSize="18" VerticalAlignment="Center" Margin="15,0,15,0" Cursor="Hand" Background="Transparent" BorderBrush="Transparent" Style="{StaticResource CancelButton}" Command="{Binding GoMyAccountCommand}" Visibility="{Binding _sessionState.IsUserLoggedIn, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                    </Grid>
-                </Border>
-
-                <ContentControl Grid.Column="1" Grid.Row="1"
-                                x:Name="MainContentControl"
-                                Margin="13,0,10,10"
-                                Content="{Binding CurrentViewModel}"/>
-            </Grid>
-
-            <Grid x:Name="LoginOverlay" 
-                  Visibility="{Binding IsLoginVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" 
-                  Background="Transparent">
-                
-                <userviews:LoginView x:Name="MyLoginView"/>
-
-                <Button HorizontalAlignment="Right" 
-                        VerticalAlignment="Top" 
-                        Margin="20" 
-                        Content="✕" 
-                        FontSize="20" 
-                        Foreground="White"
-                        Background="Transparent" 
-                        BorderThickness="0"
-                        Command="{Binding HideLoginOverlayCommand}"/>
-            </Grid>
-
-            <Grid x:Name="SignUpOverlay" 
-                  Visibility="{Binding IsSignUpVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}" 
-                  Background="Transparent">
-                
-                <userviews:SignUpView x:Name="MySignUpView"/>
-
-                <Button HorizontalAlignment="Right" 
-                        VerticalAlignment="Top" 
-                        Margin="20" 
-                        Content="✕" 
-                        FontSize="20"
-                        Foreground="White"
-                        Background="Transparent" 
-                        BorderThickness="0" 
-                        Cursor="Hand"
-                        Command="{Binding HideSignUpOverlayCommand}"/>
-            </Grid>
+                    <ContentControl Grid.Row="0"
+                                    x:Name="MainContentControl"
+                                    Margin="20"
+                                    Content="{Binding CurrentViewModel}"/>
+                </Grid>
+            </Border>
         </Grid>
     </Border>
 </Window>

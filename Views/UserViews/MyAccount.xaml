@@ -5,140 +5,409 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views.UserViews"
              xmlns:custom="clr-namespace:PlaceholderTextBoxControl"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <StackPanel Background="#FFFBFBFB" Margin="0,0,0,-73">
+             d:DesignHeight="1200" d:DesignWidth="1000">
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Converto_IT008_WPF;component/Resources/Colors.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="30" />
+                    </Grid.ColumnDefinitions>
+                    <Border x:Name="Border" 
+                            Grid.ColumnSpan="2"
+                            CornerRadius="6"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0" />
+
+                    <Path x:Name="Arrow"
+                          Grid.Column="1" 
+                          Fill="White"
+                          HorizontalAlignment="Center" 
+                          VerticalAlignment="Center"
+                          Data="M0,0 L5,5 L10,0"
+                          Stroke="White"
+                          StrokeThickness="1"/>
+                </Grid>
+            </ControlTemplate>
+
+            <Style x:Key="FlatComboBoxStyle" TargetType="{x:Type ComboBox}">
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ComboBox}">
+                            <Grid>
+                                <ToggleButton Name="ToggleButton" 
+                                              Template="{StaticResource ComboBoxToggleButton}" 
+                                              Grid.Column="2" 
+                                              Focusable="false"
+                                              IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                                              ClickMode="Press"/>
+
+                                <ContentPresenter Name="ContentSite" 
+                                                  IsHitTestVisible="False" 
+                                                  Content="{TemplateBinding SelectionBoxItem}"
+                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                                  Margin="10,0,30,0"
+                                                  VerticalAlignment="Center"
+                                                  HorizontalAlignment="Left" />
+
+                                <Popup Name="Popup"
+                                       Placement="Bottom"
+                                       IsOpen="{TemplateBinding IsDropDownOpen}"
+                                       AllowsTransparency="True" 
+                                       Focusable="False"
+                                       PopupAnimation="Slide">
+                                    <Grid Name="DropDown"
+                                          SnapsToDevicePixels="True"
+                                          MinWidth="{TemplateBinding ActualWidth}"
+                                          MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                        <Border x:Name="DropDownBorder"
+                                                Background="{StaticResource Brush.BG.Card}"
+                                                BorderThickness="1"
+                                                BorderBrush="#33FFFFFF"
+                                                CornerRadius="6"/>
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Grid>
+                                </Popup>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="ItemContainerStyle">
+                    <Setter.Value>
+                        <Style TargetType="ComboBoxItem">
+                            <Setter Property="Foreground" Value="White"/>
+                            <Setter Property="Padding" Value="10,8"/>
+                            <Setter Property="Cursor" Value="Hand"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ComboBoxItem">
+                                        <Border x:Name="bd" Background="Transparent" Padding="{TemplateBinding Padding}">
+                                            <ContentPresenter />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="bd" Property="Background" Value="#33FFFFFF"/>
+                                            </Trigger>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="bd" Property="Background" Value="{StaticResource Brush.Brand}"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="SectionCardStyle" TargetType="Border">
+                <Setter Property="Background" Value="{StaticResource Brush.BG.Shape}"/>
+                <Setter Property="CornerRadius" Value="8"/>
+                <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Padding" Value="25"/>
+                <Setter Property="Margin" Value="0,0,0,20"/>
+            </Style>
+
+            <Style x:Key="InputLabelStyle" TargetType="TextBlock">
+                <Setter Property="Foreground" Value="{StaticResource Brush.Text.Secondary}"/>
+                <Setter Property="FontSize" Value="13"/>
+                <Setter Property="Margin" Value="0,0,0,6"/>
+            </Style>
+
+            <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+                <Setter Property="FontSize" Value="20"/>
+                <Setter Property="FontWeight" Value="Bold"/>
+                <Setter Property="Foreground" Value="White"/>
+                <Setter Property="Margin" Value="0,0,0,20"/>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" PanningMode="VerticalOnly">
+        <Border Background="{StaticResource Brush.MainBG}" Padding="40">
             <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <Ellipse Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" Width="60" Height="60" Margin="10">
-                    <Ellipse.Fill>
-                        <ImageBrush ImageSource="/Resources/DefaultUser.png"/>
-                    </Ellipse.Fill>
-                </Ellipse>
-
-                <TextBlock Text="Ryan" Grid.Column="1" VerticalAlignment="Bottom" FontWeight="SemiBold" FontSize="18" Margin="0,12,0,0"/>
-                <Button Content="Edit display image" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Style="{StaticResource DisplayImageBtn}" Margin="0,0,0,8"/>
-
-                <StackPanel Orientation="Horizontal" Grid.Column="3" Margin="10" VerticalAlignment="Center" Grid.Row="1">
-                    <Image Source="/Resources/coin.png" Width="15" Height="15" Margin="0,0,10,0"/>
-                    <TextBlock Text="Balanace:"  FontSize="18"/>
-                    
+                <StackPanel Grid.Row="0" Margin="0,0,0,30">
+                    <TextBlock Text="UserProfile" FontSize="32" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="Manage your personal information, account details, and preferences." 
+                               FontSize="14" Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,5,0,0"/>
                 </StackPanel>
+
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="300"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <Border Background="{StaticResource Brush.BG.Shape}" 
+                                CornerRadius="8" 
+                                BorderBrush="#33FFFFFF" 
+                                BorderThickness="1"
+                                Padding="20"
+                                Height="380">
+                            <Grid>
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Grid Width="120" Height="120" Margin="0,0,0,20">
+                                        <Ellipse Stroke="{StaticResource Brush.Brand}" StrokeThickness="2">
+                                            <Ellipse.Fill>
+                                                <ImageBrush ImageSource="/Resources/DefaultUser.png" Stretch="UniformToFill"/>
+                                            </Ellipse.Fill>
+                                        </Ellipse>
+                                        <Border Background="{StaticResource Brush.Brand}" 
+                                                Width="30" Height="30" 
+                                                CornerRadius="15" 
+                                                HorizontalAlignment="Right" 
+                                                VerticalAlignment="Bottom" 
+                                                Cursor="Hand">
+                                            <fa:FontAwesome Icon="Pencil" Foreground="White" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </Grid>
+
+                                    <TextBlock Text="John Doe" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                                    <TextBlock Text="JohnDoe@gmail.com" FontSize="14" Foreground="{StaticResource Brush.Text.Secondary}" HorizontalAlignment="Center"/>
+                                </StackPanel>
+
+                                <TextBlock Text="Member since 01/01/2025" FontSize="12" Foreground="{StaticResource Brush.Text.Secondary}" VerticalAlignment="Bottom" HorizontalAlignment="Center" Opacity="0.5"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+
+                        <Border Style="{StaticResource SectionCardStyle}">
+                            <StackPanel>
+                                <Grid>
+                                    <TextBlock Text="Personal Information" Style="{StaticResource SectionHeaderStyle}"/>
+                                    <Button Content=" Edit" Foreground="{StaticResource Brush.Text.Secondary}" Background="Transparent" BorderThickness="0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <fa:FontAwesome Icon="Pencil" FontSize="12"/>
+                                                    <ContentPresenter Margin="5,0,0,0"/>
+                                                </StackPanel>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </Grid>
+
+                                <Grid Margin="0,0,0,20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="First Name" Style="{StaticResource InputLabelStyle}"/>
+                                        <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
+                                            <custom:PlaceholderTextBox Text="John" Placeholder="First Name" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10,0" VerticalContentAlignment="Center" FontSize="14"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Last Name" Style="{StaticResource InputLabelStyle}"/>
+                                        <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
+                                            <custom:PlaceholderTextBox Text="Doe" Placeholder="Last Name" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10,0" VerticalContentAlignment="Center" FontSize="14"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid Margin="0,0,0,20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Email Address" Style="{StaticResource InputLabelStyle}"/>
+                                        <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
+                                            <custom:PlaceholderTextBox Text="JohnDoe@gmail.com" Placeholder="Email" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10,0" VerticalContentAlignment="Center" FontSize="14"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Phone Number" Style="{StaticResource InputLabelStyle}"/>
+                                        <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
+                                            <custom:PlaceholderTextBox Text="+1 (555) 123456" Placeholder="Phone" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10,0" VerticalContentAlignment="Center" FontSize="14"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="City" Style="{StaticResource InputLabelStyle}"/>
+                                        <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
+                                            <custom:PlaceholderTextBox Text="Paris" Placeholder="City" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10,0" VerticalContentAlignment="Center" FontSize="14"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Text="Birthday" Style="{StaticResource InputLabelStyle}"/>
+                                        <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
+                                            <custom:PlaceholderTextBox Text="01/01/2025" Placeholder="dd/mm/yyyy" Background="Transparent" Foreground="White" BorderThickness="0" Padding="10,0" VerticalContentAlignment="Center" FontSize="14"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SectionCardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Password" Style="{StaticResource SectionHeaderStyle}"/>
+
+                                <TextBlock Text="New Password" Style="{StaticResource InputLabelStyle}"/>
+                                <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="0,0,0,15">
+                                    <PasswordBox Background="Transparent" Foreground="White" BorderThickness="0" Padding="10,0" VerticalContentAlignment="Center" FontSize="14"/>
+                                </Border>
+
+                                <TextBlock Text="Confirm New Password" Style="{StaticResource InputLabelStyle}"/>
+                                <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1" Margin="0,0,0,25">
+                                    <PasswordBox Background="Transparent" Foreground="White" BorderThickness="0" Padding="10,0" VerticalContentAlignment="Center" FontSize="14"/>
+                                </Border>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <Button Content="Cancel" 
+                                            Background="Transparent" 
+                                            Foreground="White" 
+                                            FontSize="14" FontWeight="SemiBold"
+                                            BorderThickness="0" Cursor="Hand" Margin="0,0,20,0"/>
+
+                                    <Button Content="Change Password" 
+                                            Background="{StaticResource Brush.Brand}" 
+                                            Foreground="White"
+                                            FontSize="14" FontWeight="SemiBold"
+                                            Padding="20,10"
+                                            BorderThickness="0" Cursor="Hand" Height="33" Width="145">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Style="{StaticResource SectionCardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="Preferences" Style="{StaticResource SectionHeaderStyle}"/>
+
+                                <Grid Margin="0,0,0,20">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel Grid.Column="0">
+                                        <TextBlock Text="Default Output Folder" Style="{StaticResource InputLabelStyle}" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
+                                        <TextBlock Text="C:/Downloads" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="14" Margin="0,5,0,0"/>
+                                    </StackPanel>
+
+                                    <Button Grid.Column="1" Content="Change" 
+                                            VerticalAlignment="Center"
+                                            Background="Transparent"
+                                            Foreground="White"
+                                            FontWeight="Bold"
+                                            FontSize="14"
+                                            BorderThickness="0"
+                                            Cursor="Hand"/>
+                                </Grid>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Text="Languages" VerticalAlignment="Center" Style="{StaticResource InputLabelStyle}" FontSize="15" FontWeight="SemiBold" Foreground="White"/>
+
+                                    <Border Grid.Column="1" 
+                                            Background="{StaticResource Brush.BG.Card}" 
+                                            CornerRadius="6" 
+                                            BorderBrush="#33FFFFFF" 
+                                            BorderThickness="1" 
+                                            Width="180" 
+                                            Height="40">
+
+                                        <ComboBox Style="{StaticResource FlatComboBoxStyle}"
+                                                  SelectedIndex="0">
+                                            <ComboBoxItem Content="English"/>
+                                            <ComboBoxItem Content="Vietnamese"/>
+                                        </ComboBox>
+
+                                    </Border>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="#2A1010" 
+                                CornerRadius="8" 
+                                BorderBrush="#4A1919" 
+                                BorderThickness="1"
+                                Padding="25">
+                            <StackPanel>
+                                <TextBlock Text="Delete Account" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
+
+                                <TextBlock Text="Permanently delete your account and all associated data." Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,0,0,5"/>
+                                <TextBlock Text="This action can not be undone" Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,0,0,20"/>
+
+                                <Button Content="Delete My Account" 
+                                        HorizontalAlignment="Left"
+                                        Background="#991B1B" 
+                                        Foreground="White"
+                                        FontSize="14"
+                                        FontWeight="SemiBold"
+                                        Padding="20,10"
+                                        BorderThickness="0"
+                                        Cursor="Hand" Height="29" Width="159">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                        </Border>
+
+                    </StackPanel>
+                </Grid>
             </Grid>
-
-            <Border Height="0.5" Margin="15" Background="#FF4F4E4E"/>
-
-            <Grid Margin="10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <StackPanel>
-                    <TextBlock Text="First name" FontSize="18"/>
-                    <custom:PlaceholderTextBox 
-                        Style="{StaticResource Input}" 
-                        Placeholder="e.g: Anh"
-                        Margin="0,8,0,0" 
-                        Height="35" Width="350" 
-                        BorderBrush="#FF4F4E4E"/>
-                </StackPanel>
-
-                <StackPanel Grid.Column="2">
-                    <TextBlock Text="Last name" FontSize="18"/>
-                    <custom:PlaceholderTextBox 
-                        Style="{StaticResource Input}" 
-                        Placeholder="e.g: Nguyễn Văn"
-                        Margin="0,8,0,0" 
-                        Height="35" Width="350" 
-                        BorderBrush="#FF4F4E4E"/>
-                </StackPanel>
-
-                <StackPanel Grid.Row="1" Grid.Column="0" Margin="0,15,0,0">
-                    <TextBlock Text="Address" FontSize="18"/>
-                    <custom:PlaceholderTextBox 
-                        Style="{StaticResource Input}" 
-                        Placeholder="e.g: Phường Tân Định, Quận 1"
-                        Margin="0,8,0,0" 
-                        Height="35" Width="350" 
-                        BorderBrush="#FF4F4E4E"/>
-                </StackPanel>
-
-                <StackPanel Grid.Row="1" Grid.Column="2" Margin="0,15,0,0">
-                    <TextBlock Text="City" FontSize="18"/>
-                    <custom:PlaceholderTextBox 
-                        Style="{StaticResource Input}" 
-                        Placeholder="e.g: Thành phố Hồ Chí Minh"
-                        Margin="0,8,0,0" 
-                        Height="35" Width="350" 
-                        BorderBrush="#FF4F4E4E"/>
-                </StackPanel>
-
-                <StackPanel Grid.Row="2" Grid.Column="0" Margin="0,15,0,0">
-                    <TextBlock Text="Date of Birth" FontSize="18"/>
-                    <custom:PlaceholderTextBox 
-                        Style="{StaticResource Input}" 
-                        Placeholder="e.g: dd/mm/yyyy"
-                        Margin="0,8,0,0" 
-                        Height="35" Width="350" 
-                        BorderBrush="#FF4F4E4E"/>
-                </StackPanel>
-
-                <StackPanel Grid.Row="2" Grid.Column="2" Margin="0,15,0,0">
-                    <TextBlock Text="Phone number" FontSize="18"/>
-                    <custom:PlaceholderTextBox 
-                        Style="{StaticResource Input}" 
-                        Placeholder="e.g: xxxx-xxx-xxx"
-                        Margin="0,8,0,0" 
-                        Height="35" Width="350" 
-                        BorderBrush="#FF4F4E4E"/>
-                </StackPanel>
-
-                <StackPanel Grid.Row="3" Grid.Column="0" Margin="0,15,0,0">
-                    <TextBlock Text="New Password" FontSize="18"/>
-                    <PasswordBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource PasswordBoxv2}"/>
-                </StackPanel>
-
-                <StackPanel Grid.Row="3" Grid.Column="2" Margin="0,15,0,0">
-                    <TextBlock Text="Confirm Password" FontSize="18"/>
-                    <PasswordBox Margin="0,8,0,0" Height="35" Width="350" BorderBrush="#FF4F4E4E" Style="{StaticResource PasswordBoxv2}"/>
-                </StackPanel>
-            </Grid>
-
-            <Grid Margin="0,20,0,0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-
-                <StackPanel Grid.Column="1" Orientation="Horizontal" >
-                    <Button Content="Cancel" Margin="0,0,25,0" Style="{StaticResource CancelButton}" />
-                    <Button Style="{StaticResource CTA}" Height="40" Content="Save Changes" Foreground="White" Background="#F24822" Width="170" BorderThickness="0"/>
-                </StackPanel>
-
-                <Button Grid.Column="2" Style="{StaticResource LogOut}" Command="{Binding LogoutCommand}" Background="Transparent" Content="Log Out" Width="130" HorizontalAlignment="Right" Margin="0,0,10,0"/>
-            </Grid>
-        </StackPanel>
-    </Grid>
+        </Border>
+    </ScrollViewer>
 </UserControl>

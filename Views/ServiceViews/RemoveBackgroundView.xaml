@@ -3,19 +3,97 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Converto_IT008_WPF.Views.ServiceViews"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="#FFFBFBFB">
-        <StackPanel>
-            <TextBlock  Text="Remove Background" 
-                    Foreground="#F24822"
-                    FontWeight="SemiBold"
-                    HorizontalAlignment="Left"
-                    FontSize="40"/>
-            
-            
+             d:DesignHeight="600" d:DesignWidth="900">
 
+    <Grid Background="{StaticResource Brush.MainBG}">
+
+        <StackPanel Margin="50,40,50,0" HorizontalAlignment="Left">
+
+            <TextBlock Text="Remove background" 
+                       Foreground="White" 
+                       FontWeight="Bold" 
+                       FontSize="32"
+                       Margin="0,0,0,5"/>
+
+            <TextBlock Text="Remove your image background with high quality" 
+                       FontSize="14" 
+                       Foreground="{StaticResource Brush.Text.Secondary}" 
+                       Margin="0,0,0,30"/>
+
+            <Grid Width="400" Height="300" HorizontalAlignment="Left">
+
+                <Border Background="{StaticResource Brush.Brand}" 
+                        CornerRadius="12" 
+                        Opacity="0.15"/>
+
+                <Rectangle Stroke="{StaticResource Brush.Brand}" 
+                           StrokeThickness="2" 
+                           StrokeDashArray="8 4" 
+                           RadiusX="12" RadiusY="12"
+                           Fill="Transparent"
+                           IsHitTestVisible="False"/>
+
+                <Grid AllowDrop="True" 
+                      Drop="Image_Drop"
+                      DragOver="Image_DragOver"
+                      Background="Transparent"
+                      Cursor="Hand"
+                      MouseLeftButtonDown="BtnUpload_Click">
+
+                    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <fa:FontAwesome Icon="File" 
+                                        FontSize="60" 
+                                        Foreground="White"
+                                        Opacity="0.9"/>
+
+                        <fa:FontAwesome Icon="ArrowUp" 
+                                        FontSize="24" 
+                                        Foreground="White" 
+                                        VerticalAlignment="Bottom" 
+                                        HorizontalAlignment="Center"
+                                        Margin="0,0,0,15"/>
+                    </Grid>
+
+                    <Grid.ToolTip>
+                        <ToolTip Content="Click or Drop image to upload"/>
+                    </Grid.ToolTip>
+                </Grid>
+
+                <Border x:Name="ImagePreviewContainer" 
+                        Visibility="Collapsed" 
+                        Background="{StaticResource Brush.MainBG}" 
+                        CornerRadius="10"
+                        BorderBrush="{StaticResource Brush.Brand}"
+                        BorderThickness="1"
+                        Margin="10">
+                    <Grid>
+                        <Image x:Name="ImgPreview" Stretch="Uniform" Margin="10"/>
+
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Top" 
+                                Margin="10" Width="30" Height="30"
+                                Background="#99000000" 
+                                Click="BtnClearImage_Click" 
+                                Cursor="Hand"
+                                BorderThickness="0">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="15">
+                                        <fa:FontAwesome Icon="Times" Foreground="White" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+                </Border>
+
+            </Grid>
         </StackPanel>
     </Grid>
 </UserControl>

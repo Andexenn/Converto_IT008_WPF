@@ -29,9 +29,12 @@ namespace Converto_IT008_WPF.Views.ServiceViews
 
         private void Image_Drop(object sender, DragEventArgs e)
         {
+            ResetUploadZoneVisual();
+
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
                 if (files != null && files.Length > 0)
                 {
                     LoadImage(files[0]);
@@ -39,14 +42,20 @@ namespace Converto_IT008_WPF.Views.ServiceViews
             }
         }
 
-        private void BtnUpload_Click(object sender, MouseButtonEventArgs e)
+        private void BtnUpload_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg)|*.png;*.jpeg;*.jpg";
+            openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg;*.webp)|*.png;*.jpeg;*.jpg;*.webp";
+
             if (openFileDialog.ShowDialog() == true)
             {
                 LoadImage(openFileDialog.FileName);
             }
+        }
+
+        private void BtnUpload_Click(object sender, MouseButtonEventArgs e)
+        {
+            BtnUpload_Click(sender, new RoutedEventArgs());
         }
 
         private void LoadImage(string filePath)
@@ -60,7 +69,9 @@ namespace Converto_IT008_WPF.Views.ServiceViews
                 bitmap.EndInit();
 
                 ImgPreview.Source = bitmap;
-                ImagePreviewContainer.Visibility = Visibility.Visible;
+
+                ImgPreview.Visibility = Visibility.Visible;
+                TxtPlaceholder.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
             {
@@ -71,7 +82,35 @@ namespace Converto_IT008_WPF.Views.ServiceViews
         private void BtnClearImage_Click(object sender, RoutedEventArgs e)
         {
             ImgPreview.Source = null;
-            ImagePreviewContainer.Visibility = Visibility.Collapsed;
+
+            ImgPreview.Visibility = Visibility.Collapsed;
+            TxtPlaceholder.Visibility = Visibility.Visible;
+        }
+
+        private void Image_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                UploadZoneBackground.Opacity = 1.0;
+                UploadZoneBackground.Background = (System.Windows.Media.Brush)FindResource("Brush.BG.Card");
+
+                UploadZoneBorder.Stroke = System.Windows.Media.Brushes.White;
+                UploadZoneBorder.Opacity = 1.0;
+            }
+        }
+
+        private void Image_DragLeave(object sender, DragEventArgs e)
+        {
+            ResetUploadZoneVisual();
+        }
+
+        private void ResetUploadZoneVisual()
+        {
+            UploadZoneBackground.Opacity = 0.5;
+            UploadZoneBackground.Background = (System.Windows.Media.Brush)FindResource("Brush.BG.Shape");
+
+            UploadZoneBorder.Stroke = (System.Windows.Media.Brush)FindResource("Brush.Text.Secondary");
+            UploadZoneBorder.Opacity = 0.5;
         }
     }
 }

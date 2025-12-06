@@ -99,7 +99,7 @@
                     <Trigger Property="IsMouseOver" Value="True">
                         <Setter Property="RenderTransform">
                             <Setter.Value>
-                                <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
                             </Setter.Value>
                         </Setter>
                         <Setter Property="Background" Value="#252525"/>
@@ -290,14 +290,14 @@
                     </Border>
 
                     <Button Command="{Binding LoginTmpCommand}"
-                            Content="Log In"
-                            Height="50"
-                            Margin="0,20,0,0" 
-                            FontSize="16"
-                            FontWeight="Bold"
-                            Foreground="White"
-                            Cursor="Hand"
-                            TabIndex="2">
+        Content="Log In"
+        Height="50"
+        Margin="0,20,0,0" 
+        FontSize="16"
+        FontWeight="Bold"
+        Foreground="White"
+        Cursor="Hand"
+        TabIndex="2">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
@@ -317,8 +317,13 @@
                                 </Style.Triggers>
                             </Style>
                         </Button.Style>
+
                         <Button.Effect>
-                            <DropShadowEffect Color="{StaticResource Color.Brand}" BlurRadius="20" ShadowDepth="0" Opacity="0.5"/>
+                            <DropShadowEffect Color="#F90606" 
+                          BlurRadius="15" 
+                          ShadowDepth="2" 
+                          Direction="270" 
+                          Opacity="1"/>
                         </Button.Effect>
                     </Button>
                 </StackPanel>

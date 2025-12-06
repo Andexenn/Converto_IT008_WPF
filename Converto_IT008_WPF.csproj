@@ -22,6 +22,8 @@
 
   <ItemGroup>
     <None Remove="Resources\coin.png" />
+    <None Remove="Resources\dashboardv1.png" />
+    <None Remove="Resources\dashboardv2.png" />
     <None Remove="Resources\DefaultUser.jpg" />
     <None Remove="Resources\DefaultUser.png" />
     <None Remove="Resources\Google.png" />
@@ -52,6 +54,8 @@
 
   <ItemGroup>
     <Resource Include="Resources\coin.png" />
+    <Resource Include="Resources\dashboardv1.png" />
+    <Resource Include="Resources\dashboardv2.png" />
     <Resource Include="Resources\DefaultUser.png" />
     <Resource Include="Resources\Google.png" />
     <Resource Include="Resources\HH.jpg" />

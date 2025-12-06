@@ -32,17 +32,22 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type RadioButton}">
                             <Border x:Name="border" 
-                                Background="{TemplateBinding Background}" 
-                                CornerRadius="8" 
-                                Padding="15,10,15,10"
-                                RenderTransformOrigin="0.5, 0.5">
+                                    Background="{TemplateBinding Background}" 
+                                    CornerRadius="8" 
+                                    Padding="15,10,15,10"
+                                    RenderTransformOrigin="0.5, 0.5">
 
                                 <Border.RenderTransform>
                                     <ScaleTransform ScaleX="1" ScaleY="1"/>
                                 </Border.RenderTransform>
 
                                 <StackPanel Orientation="Horizontal">
-                                    <fa:FontAwesome Icon="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" Width="25" VerticalAlignment="Center" FontSize="16" Foreground="{TemplateBinding Foreground}"/>
+                                    <fa:FontAwesome Icon="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                    Width="25" 
+                                                    VerticalAlignment="Center" 
+                                                    FontSize="16" 
+                                                    Foreground="{TemplateBinding Foreground}"/>
+                                    
                                     <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0"/>
                                 </StackPanel>
                             </Border>
@@ -80,10 +85,10 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type RadioButton}">
                             <Border x:Name="border" 
-                                Background="{TemplateBinding Background}" 
-                                CornerRadius="8" 
-                                Padding="15,10,15,10"
-                                RenderTransformOrigin="0.5, 0.5">
+                                    Background="{TemplateBinding Background}" 
+                                    CornerRadius="8" 
+                                    Padding="15,10,15,10"
+                                    RenderTransformOrigin="0.5, 0.5">
 
                                 <Border.RenderTransform>
                                     <ScaleTransform ScaleX="1" ScaleY="1"/>
@@ -91,9 +96,10 @@
 
                                 <StackPanel Orientation="Horizontal">
                                     <Image x:Name="IconImage" 
-                                       Source="/Resources/dashboardv1.png" 
-                                       Width="25" 
-                                       VerticalAlignment="Center"/>
+                                           Source="/Resources/dashboardv1.png" 
+                                           Width="25" 
+                                           VerticalAlignment="Center"/>
+                                    
                                     <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0"/>
                                 </StackPanel>
                             </Border>
@@ -148,13 +154,13 @@
                     <StackPanel Grid.Row="1">
                         <TextBlock Text="MENU" Foreground="{StaticResource Brush.Line}" FontSize="11" FontWeight="Bold" Margin="5,0,0,10"/>
 
-                            <RadioButton Content="Dashboard" 
-                                         GroupName="NavGroup" 
-                                         IsChecked="True" 
-                                         Style="{StaticResource DashboardSidebarButtonStyle}" 
-                                         Command="{Binding GoHomepageCommand}"/>
+                        <RadioButton Content="Dashboard" 
+                                     GroupName="NavGroup" 
+                                     IsChecked="True" 
+                                     Style="{StaticResource DashboardSidebarButtonStyle}" 
+                                     Command="{Binding GoHomepageCommand}"/>
 
-                            <RadioButton Content="Convert" 
+                        <RadioButton Content="Convert" 
                                      GroupName="NavGroup" 
                                      Tag="{x:Static fa:FontAwesomeIcon.Exchange}" 
                                      Style="{StaticResource DarkSidebarButton}" 
@@ -222,6 +228,7 @@
             <Grid x:Name="LoginOverlay"
                   Visibility="{Binding IsLoginVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"
                   Background="Transparent">
+                
                 <userviews:LoginView x:Name="MyLoginView"/>
             </Grid>
               

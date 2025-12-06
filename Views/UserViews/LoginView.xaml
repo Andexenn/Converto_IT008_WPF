@@ -62,6 +62,7 @@
                         <ControlTemplate TargetType="{x:Type custom:PlaceholderTextBox}">
                             <Grid>
                                 <ScrollViewer x:Name="PART_ContentHost" Background="Transparent" VerticalAlignment="Center"/>
+                                
                                 <TextBlock x:Name="placeholder" 
                                            Text="{TemplateBinding Placeholder}"
                                            Foreground="{StaticResource Brush.Text.Secondary}"
@@ -143,6 +144,7 @@
                                FontWeight="Bold" 
                                HorizontalAlignment="Center"
                                Margin="0,0,0,5"/>
+                    
                     <TextBlock Text="Increase your productivity" 
                                Foreground="{StaticResource Brush.Text.Secondary}" 
                                FontSize="14" 
@@ -166,6 +168,7 @@
                                 HorizontalAlignment="Left"
                                 Background="{StaticResource Brush.Brand}" 
                                 CornerRadius="8">
+                            
                             <Border.Effect>
                                 <DropShadowEffect Color="{StaticResource Color.Brand}" BlurRadius="15" ShadowDepth="0" Opacity="0.4"/>
                             </Border.Effect>
@@ -290,14 +293,15 @@
                     </Border>
 
                     <Button Command="{Binding LoginTmpCommand}"
-        Content="Log In"
-        Height="50"
-        Margin="0,20,0,0" 
-        FontSize="16"
-        FontWeight="Bold"
-        Foreground="White"
-        Cursor="Hand"
-        TabIndex="2">
+                            Content="Log In"
+                            Height="50"
+                            Margin="0,20,0,0" 
+                            FontSize="16"
+                            FontWeight="Bold"
+                            Foreground="White"
+                            Cursor="Hand"
+                            TabIndex="2">   
+                        
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
@@ -320,10 +324,10 @@
 
                         <Button.Effect>
                             <DropShadowEffect Color="#F90606" 
-                          BlurRadius="15" 
-                          ShadowDepth="2" 
-                          Direction="270" 
-                          Opacity="1"/>
+                                              BlurRadius="15" 
+                                              ShadowDepth="2" 
+                                              Direction="270" 
+                                              Opacity="1"/>
                         </Button.Effect>
                     </Button>
                 </StackPanel>
@@ -355,7 +359,12 @@
                                             <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="RenderTransform"/>
                                         </Border.RenderTransform>
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                            <Image Source="/Converto_IT008_WPF;component/Resources/Google.png" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                            <Image Source="/Converto_IT008_WPF;component/Resources/Google.png" 
+                                                   Width="16" 
+                                                   Height="16" 
+                                                   Margin="0,0,10,0" 
+                                                   VerticalAlignment="Center"/>
+                                            
                                             <TextBlock Text="Google" Foreground="{StaticResource Brush.Text.Secondary}" FontWeight="SemiBold"/>
                                         </StackPanel>
                                     </Border>

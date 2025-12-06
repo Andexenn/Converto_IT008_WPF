@@ -34,6 +34,7 @@ namespace Converto_IT008_WPF.Views.ServiceViews
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+
                 if (files != null && files.Length > 0)
                 {
                     LoadImage(files[0]);
@@ -45,6 +46,7 @@ namespace Converto_IT008_WPF.Views.ServiceViews
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image files (*.png;*.jpeg;*.jpg;*.webp)|*.png;*.jpeg;*.jpg;*.webp";
+
             if (openFileDialog.ShowDialog() == true)
             {
                 LoadImage(openFileDialog.FileName);

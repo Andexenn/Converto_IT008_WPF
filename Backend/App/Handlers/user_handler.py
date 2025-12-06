@@ -2,7 +2,7 @@
 
 from typing import List
 
-from fastapi import APIRouter, Depends, Body
+from fastapi import APIRouter, Depends, Body, BackgroundTasks
 from sqlalchemy.orm import Session
 
 from Database.connection import get_db
@@ -75,12 +75,13 @@ async def verify_email(
 @router.get('/user/send_email/{email_type}', response_model=dict)
 async def send_email(
     email_type: str,
+    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ) -> dict:
 
     user_service: IUserService = UserRepository(db)
-    return await user_service.send_email(current_user.Email, email_type)
+    return await user_service.send_email(current_user.Email, email_type, background_tasks)
 
 @router.get('/user/verify_otp/{otp_code}', response_model=dict)
 async def verify_otp(

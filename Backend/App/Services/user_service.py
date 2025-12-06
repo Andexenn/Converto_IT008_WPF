@@ -1,7 +1,7 @@
 """User service"""
 
 from abc import ABC, abstractmethod
-
+from fastapi import BackgroundTasks
 from Schemas.user import UserData, UserPref
 
 class IUserService(ABC):
@@ -48,7 +48,7 @@ class IUserService(ABC):
         """
 
     @abstractmethod
-    async def send_email(self, email: str, email_type: str) -> dict:
+    async def send_email(self, email: str, email_type: str, background_tasks: BackgroundTasks) -> dict:
         """Send email to user"""
 
     @abstractmethod

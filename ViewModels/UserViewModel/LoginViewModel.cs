@@ -89,7 +89,6 @@ public partial class LoginViewModel : BaseViewModel
                 WeakReferenceMessenger.Default.Send(
                     new CloseOverlayMessage { CloseLogin = true });
                 _nav.Navigate<HomepageViewModel>();
-                _nav.Navigate<HomepageViewModel>();
             }
             else
             {
@@ -104,6 +103,14 @@ public partial class LoginViewModel : BaseViewModel
         {
             IsBusy = false;
         }
+    }
+
+    [RelayCommand]
+    async Task LoginTmp()
+    {
+        WeakReferenceMessenger.Default.Send(
+            new CloseOverlayMessage { CloseLogin = true, CloseSignUp = true });
+        _nav.Navigate<HomepageViewModel>();
     }
 
 }

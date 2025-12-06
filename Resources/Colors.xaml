@@ -15,9 +15,9 @@
     <Color x:Key="Color.Delete">#4A1919</Color>
 
 
-    <SolidColorBrush x:Key="Brush.Button.Primay.Fore" Color="{StaticResource Color.Brand}" />
 
     <!-- Global Brushes -->
+    <SolidColorBrush x:Key="Brush.Button.Primay.Fore" Color="{StaticResource Color.Brand}" />
     <SolidColorBrush x:Key="Brush.Brand" Color="{StaticResource Color.Brand}"/>
     <SolidColorBrush x:Key="Brush.MainBG" Color="{StaticResource Color.MainBG}"/>
     <SolidColorBrush x:Key="Brush.BG.Gradient" Color="{StaticResource Color.BG.Gradient}"/>

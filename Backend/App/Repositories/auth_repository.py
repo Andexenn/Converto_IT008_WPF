@@ -5,7 +5,7 @@ import httpx
 
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, BackgroundTasks
 
 from Services.auth_service import IAuthService
 from Schemas.user import GoogleUserData, UserCreate, UserResponse, UserLogin, UserLoginResponse
@@ -14,6 +14,7 @@ from Entities.user_otp import UserOTP
 from Entities.user_preferences import UserPreferences
 from Core.security import hash_password, verify_password, create_access_token
 from config import settings
+from Repositories.user_repository import UserRepository
 
 class AuthRepository(IAuthService):
     """Auth repository class"""
@@ -57,6 +58,9 @@ class AuthRepository(IAuthService):
             self.db.commit()
 
             self.db.refresh(new_user)
+
+
+            user_repo = UserRepository(self.db)
 
             return UserResponse.model_validate(new_user)
         except IntegrityError as e:

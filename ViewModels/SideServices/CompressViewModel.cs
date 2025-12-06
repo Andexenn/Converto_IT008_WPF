@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Converto_IT008_WPF.ViewModels;
+namespace Converto_IT008_WPF.ViewModels.SideServices;
 
 public partial class CompressViewModel : BaseViewModel
 {

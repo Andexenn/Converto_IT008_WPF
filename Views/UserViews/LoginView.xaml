@@ -14,10 +14,6 @@
 
     <UserControl.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Converto_IT008_WPF;component/Resources/Colors.xaml"/>
-            </ResourceDictionary.MergedDictionaries>
-
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
 
             <Style x:Key="InputContainerStyle" TargetType="Border">
@@ -293,7 +289,7 @@
                         </Grid>
                     </Border>
 
-                    <Button Command="{Binding LoginCommand}"
+                    <Button Command="{Binding LoginTmpCommand}"
                             Content="Log In"
                             Height="50"
                             Margin="0,20,0,0" 

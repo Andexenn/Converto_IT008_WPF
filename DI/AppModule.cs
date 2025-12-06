@@ -3,7 +3,7 @@ using Converto_IT008_WPF.Interfaces;
 using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.ServicesFEImpl;
 using Converto_IT008_WPF.Stores;
-using Converto_IT008_WPF.ViewModels;
+using Converto_IT008_WPF.ViewModels.SideServices;
 using Converto_IT008_WPF.Views;
 using Converto_IT008_WPF.Views.UserViews;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +20,7 @@ public static class AppModule
 {
     public static IServiceCollection RegisterDependency(this IServiceCollection services)
     {
-        //------------------ Services ------------------
+        //------------------ Stores ------------------
         services.AddSingleton<NavigationStore>();
         services.AddSingleton<SessionState>();
 
@@ -30,7 +30,7 @@ public static class AppModule
         services.AddScoped<INetworkMonitorService, NetworkMonitorServiceImpl>();
         services.AddScoped<IAuthService, AuthServiceImpl>();
 
-        //------------------ Services ------------------
+        //------------------ APIs ------------------
 
         services.AddHttpClient<IAuthApi, AuthApi>();
 
@@ -46,10 +46,9 @@ public static class AppModule
 
 
         //CompressViewModel
-        services.AddTransient<ViewModels.CompressViewModel>();
+        services.AddTransient<CompressViewModel>();
 
         //ConvertViewModel
-        services.AddTransient<ViewModels.ConvertServiceViewModel.WEBPtoPNGViewModel>();
 
         //UserViewModel
         services.AddTransient<ViewModels.UserViewModel.LoginViewModel>();

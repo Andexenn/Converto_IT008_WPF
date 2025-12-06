@@ -16,6 +16,5 @@ public partial class HomepageViewModel : BaseViewModel
     public HomepageViewModel(INavigationService nav)
     {
         _nav = nav;
-        GoToWEBPtoPNGCommand = new RelayCommand(() => _nav.Navigate<ConvertServiceViewModel.WEBPtoPNGViewModel>());
     }
 }

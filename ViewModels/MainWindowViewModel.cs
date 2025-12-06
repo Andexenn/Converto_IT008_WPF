@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Converto_IT008_WPF.Dto;
 using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.Stores;
+using Converto_IT008_WPF.ViewModels.SideServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,6 +43,7 @@ namespace Converto_IT008_WPF.ViewModels
             _navigationStore = navigationStore;
             _networkMonitorService = networkMonitorService;
             _sessionState = sessionState;
+            IsLoginVisible = true;
             _navigationStore.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
@@ -54,6 +56,10 @@ namespace Converto_IT008_WPF.ViewModels
             {
                 if(m.CloseLogin)
                     IsLoginVisible = false;
+                if (!m.CloseLogin)
+                    IsLoginVisible = true;
+                if (!m.CloseSignUp)
+                    IsSignUpVisible = true;
                 if(m.CloseSignUp)
                     IsSignUpVisible = false;
             });

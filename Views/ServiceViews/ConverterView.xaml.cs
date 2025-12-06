@@ -26,6 +26,5 @@ public partial class ConverterView : UserControl
     public ConverterView()
     {
         InitializeComponent();
-        DataContext = App.ServiceProvider?.GetRequiredService<WEBPtoPNGViewModel>();
     }
 }

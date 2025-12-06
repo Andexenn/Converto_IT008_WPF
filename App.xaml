@@ -45,7 +45,7 @@
             </DataTemplate>
 
             <!-- ############# Compress ############# -->
-            <DataTemplate DataType="{x:Type vm:CompressViewModel}">
+            <DataTemplate DataType="{x:Type ssv:CompressViewModel}">
                 <vi:CompressView/>
             </DataTemplate>
 

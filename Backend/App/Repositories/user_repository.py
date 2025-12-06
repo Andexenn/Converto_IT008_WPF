@@ -6,7 +6,7 @@ import string
 
 from sqlalchemy import desc, update
 from sqlalchemy.orm import Session, joinedload
-from fastapi import HTTPException, status
+from fastapi import HTTPException, status, BackgroundTasks
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 
 from Schemas.user import UserData, UserPref
@@ -209,7 +209,7 @@ class UserRepository(IUserService):
                 detail=f"Failed to verify email: {str(e)}"
             ) from e 
         
-    async def send_email(self, email: str, email_type: str) -> dict:
+    async def send_email(self, email: str, email_type: str, background_tasks: BackgroundTasks) -> dict:
         if self.verify_email_user(email):
             user = self.db.query(User).filter(User.Email == email).first()
             otp_code = self.generate_otp()
@@ -233,7 +233,8 @@ class UserRepository(IUserService):
 
                 await self.store_otp(user.UserID, otp_code)
 
-                await self.fast_email.send_message(message)
+                background_tasks.add_task(self.fast_email.send_message, message)
+                # await self.fast_email.send_message(message)
 
                 return {
                     "success": True,

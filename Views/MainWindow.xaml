@@ -20,6 +20,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
             <Style x:Key="DarkSidebarButton" TargetType="{x:Type RadioButton}">
                 <Setter Property="Foreground" Value="{StaticResource Brush.Text.Secondary}"/>
                 <Setter Property="Background" Value="Transparent"/>
@@ -30,17 +31,39 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type RadioButton}">
-                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="15,10,15,10">
+                            <Border x:Name="border" 
+                                    Background="{TemplateBinding Background}" 
+                                    CornerRadius="8" 
+                                    Padding="15,10,15,10"
+                                    RenderTransformOrigin="0.5, 0.5">
+
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
+
                                 <StackPanel Orientation="Horizontal">
-                                    <fa:FontAwesome Icon="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" Width="25" VerticalAlignment="Center" FontSize="16" Foreground="{TemplateBinding Foreground}"/>
+                                    <fa:FontAwesome Icon="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                    Width="25" 
+                                                    VerticalAlignment="Center" 
+                                                    FontSize="16" 
+                                                    Foreground="{TemplateBinding Foreground}"/>
+                                    
                                     <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0"/>
                                 </StackPanel>
                             </Border>
+
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsMouseOver" Value="True">
                                     <Setter TargetName="border" Property="Background" Value="{StaticResource Brush.Stroke}"/>
                                     <Setter Property="Foreground" Value="White"/>
+
+                                    <Setter TargetName="border" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Trigger>
+
                                 <Trigger Property="IsChecked" Value="True">
                                     <Setter TargetName="border" Property="Background" Value="{StaticResource Brush.Brand}"/>
                                     <Setter Property="Foreground" Value="White"/>
@@ -50,6 +73,61 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+
+            <Style x:Key="DashboardSidebarButtonStyle" TargetType="{x:Type RadioButton}">
+                <Setter Property="Foreground" Value="{StaticResource Brush.Text.Secondary}"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Medium"/>
+                <Setter Property="Margin" Value="0,5,0,5"/>
+                <Setter Property="Cursor" Value="Hand"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type RadioButton}">
+                            <Border x:Name="border" 
+                                    Background="{TemplateBinding Background}" 
+                                    CornerRadius="8" 
+                                    Padding="15,10,15,10"
+                                    RenderTransformOrigin="0.5, 0.5">
+
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <Image x:Name="IconImage" 
+                                           Source="/Resources/dashboardv1.png" 
+                                           Width="25" 
+                                           VerticalAlignment="Center"/>
+                                    
+                                    <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0"/>
+                                </StackPanel>
+                            </Border>
+
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="{StaticResource Brush.Stroke}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter TargetName="IconImage" Property="Source" Value="/Resources/dashboardv2.png"/>
+
+                                    <Setter TargetName="border" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter TargetName="border" Property="Background" Value="{StaticResource Brush.Brand}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter TargetName="IconImage" Property="Source" Value="/Resources/dashboardv2.png"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
     </Window.Resources>
 
@@ -79,8 +157,7 @@
                         <RadioButton Content="Dashboard" 
                                      GroupName="NavGroup" 
                                      IsChecked="True" 
-                                     Tag="{x:Static fa:FontAwesomeIcon.Dashboard}" 
-                                     Style="{StaticResource DarkSidebarButton}" 
+                                     Style="{StaticResource DashboardSidebarButtonStyle}" 
                                      Command="{Binding GoHomepageCommand}"/>
 
                         <RadioButton Content="Convert" 
@@ -151,6 +228,7 @@
             <Grid x:Name="LoginOverlay"
                   Visibility="{Binding IsLoginVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"
                   Background="Transparent">
+                
                 <userviews:LoginView x:Name="MyLoginView"/>
             </Grid>
               

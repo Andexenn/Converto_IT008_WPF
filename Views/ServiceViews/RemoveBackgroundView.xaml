@@ -5,95 +5,362 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="900">
+             d:DesignHeight="700" d:DesignWidth="1000">
 
     <Grid Background="{StaticResource Brush.MainBG}">
+        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+            <StackPanel Margin="50,40,50,40">
+                <TextBlock Text="Remove background" 
+                           Foreground="White" 
+                           FontWeight="Bold" 
+                           FontSize="32"
+                           Margin="0,0,0,5"/>
 
-        <StackPanel Margin="50,40,50,0" HorizontalAlignment="Left">
+                <TextBlock Text="Remove your image background with high quality" 
+                           FontSize="14" 
+                           Foreground="{StaticResource Brush.Text.Secondary}" 
+                           Margin="0,0,0,30"/>
 
-            <TextBlock Text="Remove background" 
-                       Foreground="White" 
-                       FontWeight="Bold" 
-                       FontSize="32"
-                       Margin="0,0,0,5"/>
+                <Grid Margin="0,0,0,40">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="30"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-            <TextBlock Text="Remove your image background with high quality" 
-                       FontSize="14" 
-                       Foreground="{StaticResource Brush.Text.Secondary}" 
-                       Margin="0,0,0,30"/>
+                    <StackPanel Grid.Column="0">
+                        <Grid Height="300">
+                            <Border x:Name="UploadZoneBackground" 
+                                            Background="{StaticResource Brush.BG.Shape}" 
+                                            CornerRadius="12" 
+                                            Opacity="0.5"/>
+                            
+                            <Rectangle x:Name="UploadZoneBorder"
+                                       Stroke="{StaticResource Brush.Text.Secondary}" 
+                                       StrokeThickness="1" 
+                                       StrokeDashArray="4 4" 
+                                       RadiusX="12" RadiusY="12"
+                                       Fill="Transparent"
+                                       IsHitTestVisible="False"
+                                       Opacity="0.5"/>
 
-            <Grid Width="400" Height="300" HorizontalAlignment="Left">
+                            <Grid AllowDrop="True" 
+                                  Drop="Image_Drop"
+                                  DragOver="Image_DragOver"
+                                  DragEnter="Image_DragEnter"
+                                  DragLeave="Image_DragLeave"
+                                  Background="Transparent"
+                                  Cursor="Hand"
+                                  MouseLeftButtonDown="BtnUpload_Click">
 
-                <Border Background="{StaticResource Brush.Brand}" 
-                        CornerRadius="12" 
-                        Opacity="0.15"/>
+                                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False">
+                                    <Grid Margin="0,0,0,15">
+                                        <fa:FontAwesome Icon="File" FontSize="50" Foreground="{StaticResource Brush.Brand}"/>
+                                        
+                                        <fa:FontAwesome Icon="ArrowUp" 
+                                                        FontSize="20" 
+                                                        Foreground="#1e1e1e" 
+                                                        VerticalAlignment="Center" 
+                                                        HorizontalAlignment="Center" 
+                                                        Margin="0,5,0,0"/>
+                                    </Grid>
 
-                <Rectangle Stroke="{StaticResource Brush.Brand}" 
-                           StrokeThickness="2" 
-                           StrokeDashArray="8 4" 
-                           RadiusX="12" RadiusY="12"
-                           Fill="Transparent"
-                           IsHitTestVisible="False"/>
+                                    <TextBlock Text="Click to upload or drag and drop" 
+                                               Foreground="White" 
+                                               FontWeight="SemiBold" 
+                                               FontSize="14" 
+                                               HorizontalAlignment="Center" 
+                                               Margin="0,0,0,5"/>
+                                    
+                                    <TextBlock Text="PNG, JPG, or WEBP (max. 10MB)" 
+                                               Foreground="{StaticResource Brush.Text.Secondary}" 
+                                               FontSize="12" 
+                                               HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
 
-                <Grid AllowDrop="True" 
-                      Drop="Image_Drop"
-                      DragOver="Image_DragOver"
-                      Background="Transparent"
-                      Cursor="Hand"
-                      MouseLeftButtonDown="BtnUpload_Click">
+                        <Grid Margin="0,20,0,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="15"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <fa:FontAwesome Icon="File" 
-                                        FontSize="60" 
-                                        Foreground="White"
-                                        Opacity="0.9"/>
+                            <Button Grid.Column="0" 
+                                    Click="BtnUpload_Click" 
+                                    Cursor="Hand" 
+                                    Height="50" 
+                                    BorderThickness="0"
+                                    Foreground="White"
+                                    FontSize="15"
+                                    FontWeight="Bold">
+                                
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                            <fa:FontAwesome Icon="CloudUpload" FontSize="16" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                                                            <ContentPresenter/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#D90404"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
 
-                        <fa:FontAwesome Icon="ArrowUp" 
-                                        FontSize="24" 
-                                        Foreground="White" 
-                                        VerticalAlignment="Bottom" 
-                                        HorizontalAlignment="Center"
-                                        Margin="0,0,0,15"/>
-                    </Grid>
+                                <Button.Effect>
+                                    <DropShadowEffect Color="{StaticResource Color.Brand}" BlurRadius="20" ShadowDepth="0" Opacity="0.5"/>
+                                </Button.Effect>
 
-                    <Grid.ToolTip>
-                        <ToolTip Content="Click or Drop image to upload"/>
-                    </Grid.ToolTip>
+                                <Button.Content>Upload Image</Button.Content>
+                            </Button>
+
+                            <Button Grid.Column="2" 
+                                    Click="BtnClearImage_Click" 
+                                    Cursor="Hand" 
+                                    Height="50" 
+                                    BorderThickness="0"
+                                    Foreground="White"
+                                    FontSize="15"
+                                    FontWeight="Bold">
+                                
+                                <Button.Style>
+                                    <Style TargetType="Button">
+                                        <Setter Property="Background" Value="#1A1A1A"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border Background="{TemplateBinding Background}" CornerRadius="8" BorderBrush="#33FFFFFF" BorderThickness="1">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Background" Value="#252525"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                                
+                                <Button.Content>Clear</Button.Content>
+                            </Button>
+                        </Grid>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2">
+                        <Grid Height="300">
+                            <Border Background="White" 
+                                    BorderBrush="{StaticResource Brush.Brand}" 
+                                    BorderThickness="2"
+                                    CornerRadius="12" 
+                                    ClipToBounds="True">
+                                
+                                <Grid>
+                                    <TextBlock x:Name="TxtPlaceholder" 
+                                               Text="Preview will appear here." 
+                                               Foreground="Black" 
+                                               HorizontalAlignment="Center" 
+                                               VerticalAlignment="Center"
+                                               FontSize="14"/>
+
+                                    <Image x:Name="ImgPreview" Stretch="Uniform" Visibility="Collapsed"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <Button Margin="0,20,0,0" 
+                                Cursor="Hand" 
+                                Height="50" 
+                                BorderThickness="0"
+                                Foreground="White"
+                                FontSize="15"
+                                FontWeight="Bold">
+                            
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                        <Grid Margin="0,0,10,0" VerticalAlignment="Center">
+                                                            <fa:FontAwesome Icon="File" 
+                                                                            FontSize="30" 
+                                                                            VerticalAlignment="Center" 
+                                                                            HorizontalAlignment="Center"
+                                                                            Foreground="White"/>
+
+                                                            <fa:FontAwesome Icon="ArrowDown" 
+                                                                            FontSize="15" 
+                                                                            VerticalAlignment="Center" 
+                                                                            HorizontalAlignment="Center"
+                                                                            Foreground="Black"
+                                                                            Margin="0,4,0,0"/>
+                                                        </Grid>
+                                                        
+                                                        <ContentPresenter VerticalAlignment="Center"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Background" Value="#D90404"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+
+                            <Button.Effect>
+                                <DropShadowEffect Color="{StaticResource Color.Brand}" 
+                                                  BlurRadius="15" 
+                                                  ShadowDepth="2" 
+                                                  Direction="270" 
+                                                  Opacity="1"/> 
+                            </Button.Effect>
+
+                            <Button.Content>Download Image</Button.Content>
+                        </Button>
+                    </StackPanel>
                 </Grid>
 
-                <Border x:Name="ImagePreviewContainer" 
-                        Visibility="Collapsed" 
-                        Background="{StaticResource Brush.MainBG}" 
-                        CornerRadius="10"
-                        BorderBrush="{StaticResource Brush.Brand}"
-                        BorderThickness="1"
-                        Margin="10">
-                    <Grid>
-                        <Image x:Name="ImgPreview" Stretch="Uniform" Margin="10"/>
+                <TextBlock Text="Recently Processed" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,15"/>
 
-                        <Button HorizontalAlignment="Right" VerticalAlignment="Top" 
-                                Margin="10" Width="30" Height="30"
-                                Background="#99000000" 
-                                Click="BtnClearImage_Click" 
-                                Cursor="Hand"
-                                BorderThickness="0">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="15">
-                                        <fa:FontAwesome Icon="Times" Foreground="White" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <Border Background="{StaticResource Brush.BG.Shape}" CornerRadius="12" Padding="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="40"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Margin="20,0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" 
+                                       Text="FILENAME" 
+                                       Foreground="{StaticResource Brush.Text.Secondary}" 
+                                       FontSize="11" 
+                                       FontWeight="Bold" 
+                                       VerticalAlignment="Center"/>
+
+                            <TextBlock Grid.Column="1" 
+                                       Text="DATE" 
+                                       Foreground="{StaticResource Brush.Text.Secondary}" 
+                                       FontSize="11" 
+                                       FontWeight="Bold" 
+                                       VerticalAlignment="Center"/>
+
+                            <TextBlock Grid.Column="2" 
+                                       Text="STATUS" 
+                                       Foreground="{StaticResource Brush.Text.Secondary}" 
+                                       FontSize="11" 
+                                       FontWeight="Bold" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Center"/>
+
+                            <TextBlock Grid.Column="3" 
+                                       Text="FILESIZE" 
+                                       Foreground="{StaticResource Brush.Text.Secondary}" 
+                                       FontSize="11" 
+                                       FontWeight="Bold" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Right"/>
+                        </Grid>
+
+                        <StackPanel Grid.Row="1">
+                            <Border BorderBrush="#33FFFFFF" BorderThickness="0,1,0,0" Padding="20,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="profile-picture.png" Foreground="White" VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="1" Text="5 hours ago" Foreground="White" VerticalAlignment="Center"/>
+
+                                    <Border Grid.Column="2" Background="#332ECC71" CornerRadius="12" HorizontalAlignment="Center" Padding="15,4">
+                                        <Border.Effect>
+                                            <DropShadowEffect Color="#2ECC71" BlurRadius="5" ShadowDepth="0" Opacity="0.2"/>
+                                        </Border.Effect>
+
+                                        <TextBlock Text="Completed" Foreground="#2ECC71" FontWeight="SemiBold" FontSize="12"/>
                                     </Border>
-                                    <ControlTemplate.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
-                                        </Trigger>
-                                    </ControlTemplate.Triggers>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
+
+                                    <TextBlock Grid.Column="3" Text="1 MB" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </Border>
+
+                            <Border BorderBrush="#33FFFFFF" BorderThickness="0,1,0,0" Padding="20,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Dog-picture.jpg" Foreground="White" VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="1" Text="6 hours ago" Foreground="White" VerticalAlignment="Center"/>
+
+                                    <Border Grid.Column="2" Background="#332ECC71" CornerRadius="12" HorizontalAlignment="Center" Padding="15,4">
+                                        <TextBlock Text="Completed" Foreground="#2ECC71" FontWeight="SemiBold" FontSize="12"/>
+                                    </Border>
+
+                                    <TextBlock Grid.Column="3" Text="0.5 MB" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </Border>
+
+                            <Border BorderBrush="#33FFFFFF" BorderThickness="0,1,0,0" Padding="20,12">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="1.5*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0" Text="Error-file.jpg" Foreground="White" VerticalAlignment="Center"/>
+
+                                    <TextBlock Grid.Column="1" Text="6 hours ago" Foreground="White" VerticalAlignment="Center"/>
+
+                                    <Border Grid.Column="2" Background="#33E74C3C" CornerRadius="12" HorizontalAlignment="Center" Padding="15,4">
+                                        <TextBlock Text="Failed" Foreground="#E74C3C" FontWeight="SemiBold" FontSize="12"/>
+                                    </Border>
+
+                                    <TextBlock Grid.Column="3" Text="0.5 MB" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
                     </Grid>
                 </Border>
-
-            </Grid>
-        </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>

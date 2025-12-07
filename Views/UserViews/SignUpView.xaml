@@ -329,7 +329,8 @@
                             FontWeight="Bold"
                             Foreground="White"
                             Cursor="Hand"
-                            TabIndex="5">
+                            TabIndex="5"
+                            Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
@@ -353,6 +354,9 @@
                             <DropShadowEffect Color="{StaticResource Color.Brand}" BlurRadius="20" ShadowDepth="0" Opacity="0.5"/>
                         </Button.Effect>
                     </Button>
+
+                    <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                            Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" VerticalAlignment="Bottom">

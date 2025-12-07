@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Converto_IT008_WPF.Dto.SignUpDto;
+using Converto_IT008_WPF.Dto;
 using Converto_IT008_WPF.ViewModels.PopupViewModels;
 using Converto_IT008_WPF.Views.Popups;
 using System;
@@ -40,6 +42,12 @@ public partial class SignUpViewModel : BaseViewModel
         GoLoginCommand = new RelayCommand(() => _nav.Navigate<LoginViewModel>());
     }
 
+    void TurnOfOverlay()
+    {
+        WeakReferenceMessenger.Default.Send(
+            new CloseOverlayMessage { CloseLogin = true, CloseSignUp = true });
+    }
+
     [RelayCommand]
     void GoTermsAndConditions()
     {
@@ -70,11 +78,11 @@ public partial class SignUpViewModel : BaseViewModel
     [RelayCommand]
     async Task SignUp()
     {
-        if (!checkCondition())
-        {
-            MessageBox.Show("Please fill in all fields and accept the terms and conditions.", "Incomplete Information", MessageBoxButton.OK, MessageBoxImage.Warning);
-            return;
-        }
+        //if (!checkCondition())
+        //{
+        //    MessageBox.Show("Please fill in all fields and accept the terms and conditions.", "Incomplete Information", MessageBoxButton.OK, MessageBoxImage.Warning);
+        //    return;
+        //}
 
         if(Password.Length <= 8 || !Password.Any(c => char.IsUpper(c)) || !Password.Any(c => char.IsLower(c)) || !Password.Any(c => char.IsDigit(c)) || !Password.Any(c => char.IsLetterOrDigit(c)))
         {
@@ -102,7 +110,10 @@ public partial class SignUpViewModel : BaseViewModel
             SignUpResponse signUpReponse = await _authService.SignUp(signUpRequest);
             _sessionState.IsUserLoggedIn = true;
             MessageBox.Show("Sign up successful! Please log in with your new account.", "Sign Up Successful", MessageBoxButton.OK, MessageBoxImage.Information);
-            
+
+            WeakReferenceMessenger.Default.Send(
+                new CloseOverlayMessage { CloseLogin = false, CloseSignUp = true });
+
             _nav.Navigate<LoginViewModel>();
         }
         catch (Exception ex)

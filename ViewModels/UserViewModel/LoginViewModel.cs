@@ -36,6 +36,12 @@ public partial class LoginViewModel : BaseViewModel
         _sessionState = sessionState;
     }
 
+    private void TurnOfOverlay()
+    {
+        WeakReferenceMessenger.Default.Send(
+            new CloseOverlayMessage { CloseLogin = true, CloseSignUp = true });
+    }
+
     [RelayCommand]
     async Task Login()
     {
@@ -55,8 +61,7 @@ public partial class LoginViewModel : BaseViewModel
                 
                 _sessionState.IsUserLoggedIn = true;
 
-                WeakReferenceMessenger.Default.Send(
-                    new CloseOverlayMessage { CloseLogin = true });
+                TurnOfOverlay();
                 _nav.Navigate<HomepageViewModel>();
             }
             else
@@ -86,8 +91,7 @@ public partial class LoginViewModel : BaseViewModel
             {
                 // Navigate to the main application view upon successful login
                 _sessionState.IsUserLoggedIn = true;
-                WeakReferenceMessenger.Default.Send(
-                    new CloseOverlayMessage { CloseLogin = true });
+                TurnOfOverlay();
                 _nav.Navigate<HomepageViewModel>();
             }
             else

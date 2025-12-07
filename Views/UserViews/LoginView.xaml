@@ -8,7 +8,7 @@
              xmlns:userviewmodel="clr-namespace:Converto_IT008_WPF.ViewModels.UserViewModel" 
              d:DataContext="{d:DesignInstance Type=userviewmodel:LoginViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="850" d:DesignWidth="1200"
+             d:DesignHeight="900" d:DesignWidth="1400"
              FontFamily="/Converto_IT008_WPF;component/Resources/#Inter"
              FontSize="14">
 
@@ -288,8 +288,8 @@
                             </Button>
                         </Grid>
                     </Border>
-
-                    <Button Command="{Binding LoginTmpCommand}"
+                    
+                    <Button Command="{Binding LoginCommand}"
                             Content="Log In"
                             Height="50"
                             Margin="0,20,0,0" 
@@ -297,7 +297,8 @@
                             FontWeight="Bold"
                             Foreground="White"
                             Cursor="Hand"
-                            TabIndex="2">
+                            TabIndex="2"
+                            Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisConverter}}">
                         <Button.Style>
                             <Style TargetType="Button">
                                 <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
@@ -321,6 +322,9 @@
                             <DropShadowEffect Color="{StaticResource Color.Brand}" BlurRadius="20" ShadowDepth="0" Opacity="0.5"/>
                         </Button.Effect>
                     </Button>
+
+                    <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                                     Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
                 </StackPanel>
 
                 <StackPanel Grid.Row="3" VerticalAlignment="Bottom">

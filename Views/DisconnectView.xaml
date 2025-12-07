@@ -45,7 +45,7 @@
                                  Fill="{DynamicResource Brush.Brand}" 
                                  Opacity="0.15"/>
 
-                        <Image Source="/Converto_IT008_WPF;component/Resources/NoConnection.png" Height="80" VerticalAlignment="Center"/>
+                        <Image Source="/Resources/NoConnection.png" Height="80" VerticalAlignment="Center"/>
                     </Grid>
 
                     <TextBlock Text="Network Connection Lost" 

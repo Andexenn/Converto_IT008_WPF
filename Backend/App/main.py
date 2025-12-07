@@ -26,11 +26,11 @@ app.add_middleware(
 )
 
 app.include_router(auth_handler.router, prefix="/api/auth", tags=["Authentication"])
-app.include_router(conversion_handler.router, prefix="/api", tags=["Authentication"] )
-app.include_router(compression_handler.router, prefix="/api", tags=["Authentication"])
-app.include_router(remove_background_handler.router, prefix="/api", tags=["Authentication"])
-app.include_router(task_handler.router, prefix='/api', tags=["Authentication"])
-app.include_router(user_handler.router, prefix='/api', tags=["Authentication"])
+app.include_router(conversion_handler.router, prefix="/api", tags=["Service"] )
+app.include_router(compression_handler.router, prefix="/api", tags=["Service"])
+app.include_router(remove_background_handler.router, prefix="/api", tags=["Service"])
+app.include_router(task_handler.router, prefix='/api', tags=["Data"])
+app.include_router(user_handler.router, prefix='/api', tags=["Data"])
 
 @app.get("/")
 def root():

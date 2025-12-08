@@ -35,4 +35,7 @@ class Settings(BaseSettings):
     MAIL_PORT: str
     MAIL_SERVER: str
 
+    GITHUB_CLIENT_ID: str 
+    GITHUB_CLIENT_SECRET: str
+
 settings = Settings() # type: ignore

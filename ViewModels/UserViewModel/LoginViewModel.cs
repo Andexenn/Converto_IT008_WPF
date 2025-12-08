@@ -27,6 +27,8 @@ public partial class LoginViewModel : BaseViewModel
     string email = string.Empty;
     [ObservableProperty]
     string password = string.Empty;
+    [ObservableProperty]
+    string errorMessage = string.Empty;
 
     public LoginViewModel(INavigationService nav, IAuthService authService, SessionState sessionState)
     {
@@ -36,7 +38,7 @@ public partial class LoginViewModel : BaseViewModel
         _sessionState = sessionState;
     }
 
-    private void TurnOfOverlay()
+    private void CloseOverlay()
     {
         WeakReferenceMessenger.Default.Send(
             new CloseOverlayMessage { CloseLogin = true, CloseSignUp = true });
@@ -54,14 +56,18 @@ public partial class LoginViewModel : BaseViewModel
                 Password = Password
             };
 
+            if(!await CheckEmailExisting())
+            {
+                MessageBox.Show("Email does not exist. Please sign up first.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             _sessionState.LoginResponse = await _authService.Login(loginRequest);
             if(_sessionState.LoginResponse != null)
-            {
-                // Navigate to the main application view upon successful login
-                
-                _sessionState.IsUserLoggedIn = true;
+            {   
 
-                TurnOfOverlay();
+                CloseOverlay();
+                Email = Password = string.Empty;
                 _nav.Navigate<HomepageViewModel>();
             }
             else
@@ -80,7 +86,7 @@ public partial class LoginViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    async Task LoginWithGoogle()
+    async Task SignInWithGoogle()
     {
         try
         {
@@ -89,9 +95,8 @@ public partial class LoginViewModel : BaseViewModel
 
             if(_sessionState.LoginResponse != null)
             {
-                // Navigate to the main application view upon successful login
-                _sessionState.IsUserLoggedIn = true;
-                TurnOfOverlay();
+                CloseOverlay();
+                Email = Password = string.Empty;
                 _nav.Navigate<HomepageViewModel>();
             }
             else
@@ -112,9 +117,54 @@ public partial class LoginViewModel : BaseViewModel
     [RelayCommand]
     async Task LoginTmp()
     {
-        WeakReferenceMessenger.Default.Send(
-            new CloseOverlayMessage { CloseLogin = true, CloseSignUp = true });
+        CloseOverlay();
         _nav.Navigate<HomepageViewModel>();
+    }
+    
+    async Task<bool> CheckEmailExisting()
+    {
+        try
+        {
+            return await _authService.CheckMailExisting(Email);
+
+        }
+        catch(Exception ex)
+        {
+            MessageBox.Show($"Error checking email existence: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return false;
+        }
+
+    }
+
+    [RelayCommand]
+    async Task<LoginResponse> SignInWithGithub()
+    {
+        try
+        {
+            IsBusy = true; 
+            _sessionState.LoginResponse = await _authService.SignInWithGithub();
+            if (_sessionState.LoginResponse != null)
+            {
+                CloseOverlay();
+                Email = Password = string.Empty;
+                _nav.Navigate<HomepageViewModel>();
+                return _sessionState.LoginResponse;
+            }
+            else
+            {
+                MessageBox.Show("GitHub login failed. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error during GitHub login: {ex.Message}", "GitHub Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return null;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
 }

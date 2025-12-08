@@ -27,8 +27,6 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand GoAboutUsCommand { get; }
         public ICommand GoHistoryCommand { get; }
         public ICommand GoCompressCommand { get; }
-        public ICommand GoLoginCommand { get; }
-        public ICommand GoSignUpCommand { get; }
         public ICommand GoMyAccountCommand { get; }
         public ICommand GoMarkdownToTextCommand { get; set; }
         public ICommand GoRemoveBackground { get; }
@@ -68,8 +66,6 @@ namespace Converto_IT008_WPF.ViewModels
             GoAboutUsCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<AboutUsViewModel>(); });
             GoHistoryCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<HistoryViewModel>(); });
             GoCompressCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<CompressViewModel>(); });
-            GoLoginCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<UserViewModel.LoginViewModel>(); });
-            GoSignUpCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<UserViewModel.SignUpViewModel>(); });
             GoMyAccountCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<UserViewModel.MyAccountViewModel>(); });
             GoMarkdownToTextCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.MarkdownToTextViewModel>(); });
             GoRemoveBackground = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.RemoveBackgroundViewModel>(); });

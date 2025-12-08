@@ -15,7 +15,7 @@ from Entities.user_preferences import UserPreferences
 from Core.security import hash_password, verify_password, create_access_token
 from config import settings
 from Repositories.user_repository import UserRepository
-
+from Schemas.service import ThirdPartyRequest
 class AuthRepository(IAuthService):
     """Auth repository class"""
     def __init__(self, db: Session):
@@ -195,6 +195,7 @@ class AuthRepository(IAuthService):
                     Email=email,
                     FirstName=user_info.get("given_name"),
                     LastName=user_info.get("family_name"),
+                    ProfilePictureURL=user_info.get("picture"),
                     PhoneNumber=None,
                     Address=None,
                     City=None,
@@ -210,6 +211,12 @@ class AuthRepository(IAuthService):
                 )
 
                 self.db.add(new_user_preferences)
+
+                new_user_otp = UserOTP(
+                UserID=user.UserID
+                )
+
+                self.db.add(new_user_otp)
 
                 self.db.commit()
                 self.db.refresh(user)
@@ -235,3 +242,138 @@ class AuthRepository(IAuthService):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to process Google login: {str(e)}"
             ) from e
+
+    async def github_auth(self, code: str) -> dict[str, str | UserLoginResponse]:
+        async with httpx.AsyncClient() as client:
+            # --- BƯỚC 1: Đổi Code lấy Access Token ---
+
+            try:
+                token_res = await client.post(
+                    "https://github.com/login/oauth/access_token",
+                    headers={"Accept": "application/json"},
+                    data={
+                        "client_id": settings.GITHUB_CLIENT_ID,
+                        "client_secret": settings.GITHUB_CLIENT_SECRET,
+                        "code": code,
+                    },
+                )
+            except Exception as e:
+                raise ValueError(f"Failed to ask the github page: {str(e)}") from e 
+            token_data = token_res.json()
+            
+            # Kiểm tra lỗi nếu code sai hoặc hết hạn
+            if "error" in token_data:
+                raise HTTPException(status_code=400, detail="Invalid GitHub Code")
+                
+            access_token = token_data["access_token"]
+
+            # --- BƯỚC 2: Dùng Token lấy thông tin User từ GitHub ---
+            try:
+                user_res = await client.get(
+                    "https://api.github.com/user",
+                    headers={
+                        "Authorization": f"Bearer {access_token}",
+                        "Accept": "application/json",
+                    }
+                )
+            except Exception as e:
+                raise ValueError(f"Failed to extract infor: {str(e)}") from e 
+
+            if user_res.status_code != 200:
+                raise HTTPException(status_code=400, detail="Failed to fetch user info")
+            
+                
+            github_user = user_res.json()
+            
+            # Dữ liệu GitHub trả về sẽ trông như thế này:
+            # {
+            #    "id": 12345,
+            #    "login": "username",
+            #    "avatar_url": "...",
+            #    "email": "..." (có thể null nếu user để private)
+            # }
+
+            # --- BƯỚC 3: Lưu vào Database của BẠN ---
+            # Logic: Nếu user chưa có thì tạo mới, có rồi thì update
+            user_id = github_user["id"]
+            
+            user_in_db = {
+                "email": github_user["email"],
+                "given_name": github_user["login"],
+                "avatar": github_user["avatar_url"]
+            }
+
+
+            if user_in_db.get('email') is None:
+                print("Email is hidden, fetching from /user/emails...")
+                emails_res = await client.get(
+                    "https://api.github.com/user/emails",
+                    headers={
+                        "Authorization": f"Bearer {access_token}",
+                        "Accept": "application/json",
+                    }
+                )
+                if emails_res.status_code == 200:
+                    emails_data = emails_res.json()
+                    # Tìm email nào là primary và verified
+                    for e in emails_data:
+                        if e.get("primary") == True and e.get("verified") == True:
+                            user_in_db["email"] = e.get("email")
+                            break
+            
+            # Nếu vẫn không lấy được email (trường hợp cực hiếm) -> Báo lỗi
+            if user_in_db.get('email') is None:
+                    raise HTTPException(status_code=400, detail="Cannot retrieve email from GitHub account")
+
+            try:
+                user = self.db.query(User).filter(User.Email == user_in_db["email"]).first()
+                if not user:
+                    user = User(
+                        Email=user_in_db["email"],
+                        FirstName=user_in_db["given_name"],
+                        ProfilePictureURL=user_in_db["avatar"],
+                        PhoneNumber=None,
+                        Address=None,
+                        City=None,
+                        DateOfBirth=None,
+                        HashedPassword=hash_password(f"github_oauth_{user_in_db['email']}")
+                    )
+                    self.db.add(user)
+                    self.db.flush()
+
+                    new_user_preferences = UserPreferences(
+                        UserID=user.UserID
+                    )
+
+                    self.db.add(new_user_preferences)
+
+                    new_user_otp = UserOTP(
+                    UserID=user.UserID
+                    )
+
+                    self.db.add(new_user_otp)
+
+                    self.db.commit()
+                    self.db.refresh(user)
+
+                access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+                access_token = create_access_token(
+                    data={
+                        "sub": user.Email,
+                        "user_id": user.UserID,
+                        "email": user.Email
+                    },
+                    expires_delta=access_token_expires
+                )
+
+                return {
+                    "access_token": access_token,
+                    "token_type": "bearer",
+                    "user": UserLoginResponse.model_validate(user)
+                }
+            except Exception as e:
+                self.db.rollback()
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Failed to process Google login: {str(e)}"
+                ) from e

@@ -26,3 +26,7 @@ class IAuthService(ABC):
     @abstractmethod
     async def google_auth(self, google_data: GoogleUserData) -> dict[str, str | UserLoginResponse]:
         pass
+
+    @abstractmethod
+    async def github_auth(self, code: str) -> dict[str, str | UserLoginResponse]:
+        pass 

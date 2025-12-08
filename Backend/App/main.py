@@ -4,7 +4,8 @@ Entry point for the server
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from Database.connection import init_db
-from Handlers import auth_handler, conversion_handler, compression_handler, remove_background_handler, task_handler, user_handler
+from Handlers import auth_handler, conversion_handler, compression_handler,\
+      remove_background_handler, task_handler, user_handler
 
 from config import settings
 

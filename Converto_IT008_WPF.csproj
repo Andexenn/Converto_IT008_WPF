@@ -42,6 +42,7 @@
 
   <ItemGroup>
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
     <PackageReference Include="Google.Apis.Auth" Version="1.73.0" />
     <PackageReference Include="Markdig" Version="0.44.0" />
@@ -68,6 +69,12 @@
     <Resource Include="Resources\MONTSERRAT-SEMIBOLD.TTF" />
     <Resource Include="Resources\no-connection.png" />
     <Resource Include="Resources\SignUpBackground.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update=".env">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

@@ -14,4 +14,5 @@ public interface IAuthService
     public Task<bool> CheckMailExisting(string Email);
     public Task<LoginResponse> Login(LoginRequest loginRequest);
     public Task<LoginResponse> SignInWithGoolge();
+    public Task<LoginResponse> SignInWithGithub();
 }

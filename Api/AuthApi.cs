@@ -75,7 +75,7 @@ public class AuthApi : IAuthApi
     {
         try
         {
-            using HttpResponseMessage response = await _httpClient.GetAsync($"{BaseURL}/check-email/{Uri.EscapeDataString(Email)}");
+            using HttpResponseMessage response = await _httpClient.GetAsync($"{BaseURL}/auth/check-email/{Uri.EscapeDataString(Email)}");
             if (response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
@@ -101,7 +101,7 @@ public class AuthApi : IAuthApi
             var json = System.Text.Json.JsonSerializer.Serialize(loginRequest);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-            using HttpResponseMessage response = await _httpClient.PostAsync($"{BaseURL}/login", content);
+            using HttpResponseMessage response = await _httpClient.PostAsync($"{BaseURL}/auth/login", content);
 
             if (response.IsSuccessStatusCode)
             {
@@ -263,8 +263,6 @@ public class AuthApi : IAuthApi
                     var result = await response.Content.ReadAsStringAsync();
                     return JsonConvert.DeserializeObject<LoginResponse>(result);// Token của hệ thống bạn
                 }
-
-
             }
         }
         catch (Exception ex)

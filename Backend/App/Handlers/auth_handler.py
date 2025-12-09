@@ -33,7 +33,7 @@ async def sign_up(user_data: UserCreate, db: Session = Depends(get_db)) -> UserR
 @router.get("/check-email/{email}")
 async def check_email_exists(email: str, db: Session = Depends(get_db)) -> dict[str, bool | str]:
     """
-    ...
+    Mount a function to a check email exist endpoint
     """
     auth_service: IAuthService = AuthRepository(db)
     exists = await auth_service.user_exists(email)
@@ -42,7 +42,7 @@ async def check_email_exists(email: str, db: Session = Depends(get_db)) -> dict[
 @router.get("/user/{email}", response_model=UserResponse)
 async def get_user_by_email(email: str, db: Session = Depends(get_db)) -> UserResponse:
     """
-    ...
+    Mount a function to get information of the user
     """
     auth_service: IAuthService = AuthRepository(db)
     user = await auth_service.get_user_by_email(email)
@@ -59,7 +59,7 @@ async def login(
     db: Session = Depends(get_db)
 ) -> dict[str, str | UserLoginResponse]:
     """
-    ...
+    Mount a fucntion to login 
     """
     auth_service: IAuthService = AuthRepository(db)
     return await auth_service.login(user_data)
@@ -70,7 +70,7 @@ async def google_login(
     db: Session = Depends(get_db)
 )->dict[str, str | UserLoginResponse]:
     """
-        Mount a function to google login
+    Mount a function to google login
     """
     auth_service: IAuthService = AuthRepository(db)
     return await auth_service.google_auth(google_data)
@@ -81,7 +81,7 @@ async def github_login(
     db: Session = Depends(get_db)
 )->dict[str, str | UserLoginResponse]:
     """
-        Mount a function to google login
+    Mount a function to github login
     """
     auth_service: IAuthService = AuthRepository(db)
     return await auth_service.github_auth(code.code)

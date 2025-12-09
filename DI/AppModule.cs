@@ -29,10 +29,15 @@ public static class AppModule
         services.AddScoped<INavigationService, NavigationServiceImpl>();
         services.AddScoped<INetworkMonitorService, NetworkMonitorServiceImpl>();
         services.AddScoped<IAuthService, AuthServiceImpl>();
+        services.AddScoped<IRemoveBackgroundService, RemoveBackgroundServiceImpl>();
+        services.AddScoped<IUserService, UserServiceImpl>();
+        services.AddScoped<IProcessImageService, ProcessImageServiceImpl>();
 
         //------------------ APIs ------------------
 
         services.AddHttpClient<IAuthApi, AuthApi>();
+        services.AddHttpClient<IRemoveBackgroundApi, RemoveBackgroundApi>();
+        services.AddHttpClient<IUserApi, UserApi>();
 
         //------------------ ViewModels ------------------
         //GeneralViewModel

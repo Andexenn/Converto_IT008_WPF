@@ -21,6 +21,7 @@ public partial class LoginViewModel : BaseViewModel
     public ICommand GoSignUpCommand { get; }
     private readonly IAuthService _authService;
     private readonly INavigationService _nav;
+    private readonly IUserService _userService;
     private SessionState _sessionState;
 
     [ObservableProperty]
@@ -30,18 +31,39 @@ public partial class LoginViewModel : BaseViewModel
     [ObservableProperty]
     string errorMessage = string.Empty;
 
-    public LoginViewModel(INavigationService nav, IAuthService authService, SessionState sessionState)
+    public LoginViewModel(INavigationService nav, IAuthService authService, SessionState sessionState, IUserService userService)
     {
         _nav = nav;
         GoSignUpCommand = new RelayCommand(() => _nav.Navigate<SignUpViewModel>());
         _authService = authService;
         _sessionState = sessionState;
+        _userService = userService;
     }
 
     private void CloseOverlay()
     {
         WeakReferenceMessenger.Default.Send(
             new CloseOverlayMessage { CloseLogin = true, CloseSignUp = true });
+    }
+
+    async Task getUserPreference()
+    {
+        try
+        {
+            IsBusy = true;
+            UserPreferences prefs = await _userService.GetUserPreferencesAsync();
+            _sessionState.UserPreferences = prefs;
+
+            MessageBox.Show($"User preferences loaded: Theme - {prefs.Theme}, Language - {prefs.Language}", "Preferences Loaded", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        catch(Exception ex)
+        {
+            MessageBox.Show($"Error fetching user preferences: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     [RelayCommand]
@@ -56,16 +78,18 @@ public partial class LoginViewModel : BaseViewModel
                 Password = Password
             };
 
-            if(!await CheckEmailExisting())
+            if(!await _authService.CheckMailExisting(Email))
             {
                 MessageBox.Show("Email does not exist. Please sign up first.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             _sessionState.LoginResponse = await _authService.Login(loginRequest);
+
+
             if(_sessionState.LoginResponse != null)
             {   
-
+                await getUserPreference();
                 CloseOverlay();
                 Email = Password = string.Empty;
                 _nav.Navigate<HomepageViewModel>();
@@ -95,6 +119,7 @@ public partial class LoginViewModel : BaseViewModel
 
             if(_sessionState.LoginResponse != null)
             {
+                await getUserPreference();
                 CloseOverlay();
                 Email = Password = string.Empty;
                 _nav.Navigate<HomepageViewModel>();
@@ -120,21 +145,6 @@ public partial class LoginViewModel : BaseViewModel
         CloseOverlay();
         _nav.Navigate<HomepageViewModel>();
     }
-    
-    async Task<bool> CheckEmailExisting()
-    {
-        try
-        {
-            return await _authService.CheckMailExisting(Email);
-
-        }
-        catch(Exception ex)
-        {
-            MessageBox.Show($"Error checking email existence: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            return false;
-        }
-
-    }
 
     [RelayCommand]
     async Task<LoginResponse> SignInWithGithub()
@@ -145,6 +155,7 @@ public partial class LoginViewModel : BaseViewModel
             _sessionState.LoginResponse = await _authService.SignInWithGithub();
             if (_sessionState.LoginResponse != null)
             {
+                await getUserPreference();
                 CloseOverlay();
                 Email = Password = string.Empty;
                 _nav.Navigate<HomepageViewModel>();

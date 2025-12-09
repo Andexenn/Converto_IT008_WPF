@@ -12,17 +12,12 @@ namespace Converto_IT008_WPF.Stores;
 
 public partial class SessionState : ObservableObject
 {
-    [ObservableProperty]
-    private bool isUserLoggedIn;
-    public bool IsUserLoggedOut => !IsUserLoggedIn;
-
-    partial void OnIsUserLoggedInChanged(bool value)
-    {
-        OnPropertyChanged(nameof(IsUserLoggedOut));
-    }
 
     [ObservableProperty]
     LoginResponse? loginResponse = null;
+
+    [ObservableProperty]
+    UserPreferences? userPreferences = null;
 
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

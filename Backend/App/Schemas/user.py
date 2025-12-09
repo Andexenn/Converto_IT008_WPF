@@ -1,6 +1,8 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 from datetime import datetime
+
+import time
 
 class UserBase(BaseModel):
     Email: EmailStr
@@ -44,6 +46,10 @@ class UserLoginResponse(BaseModel):
     PhoneNumber: Optional[str] = None
     City: Optional[str] = None
     DateOfBirth: Optional[datetime] = None
+    ProfilePictureURL: Optional[str] = None 
+    MemberSince: Optional[datetime] = None 
+    LastLogin: Optional[datetime] = Field(default_factory=datetime.now)
+
     class Config:
         from_attributes = True
 

@@ -5,7 +5,7 @@ import httpx
 
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
-from fastapi import HTTPException, status, BackgroundTasks
+from fastapi import HTTPException, status
 
 from Services.auth_service import IAuthService
 from Schemas.user import GoogleUserData, UserCreate, UserResponse, UserLogin, UserLoginResponse
@@ -15,7 +15,6 @@ from Entities.user_preferences import UserPreferences
 from Core.security import hash_password, verify_password, create_access_token
 from config import settings
 from Repositories.user_repository import UserRepository
-from Schemas.service import ThirdPartyRequest
 class AuthRepository(IAuthService):
     """Auth repository class"""
     def __init__(self, db: Session):
@@ -377,3 +376,4 @@ class AuthRepository(IAuthService):
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                     detail=f"Failed to process Google login: {str(e)}"
                 ) from e
+            

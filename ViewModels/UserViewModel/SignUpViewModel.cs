@@ -1,8 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
-using Converto_IT008_WPF.Dto.SignUpDto;
 using Converto_IT008_WPF.Dto;
+using Converto_IT008_WPF.Dto.LoginDto;
+using Converto_IT008_WPF.Dto.SignUpDto;
+using Converto_IT008_WPF.ServicesFE;
+using Converto_IT008_WPF.Stores;
 using Converto_IT008_WPF.ViewModels.PopupViewModels;
 using Converto_IT008_WPF.Views.Popups;
 using System;
@@ -12,8 +15,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using Converto_IT008_WPF.ServicesFE;
-using Converto_IT008_WPF.Stores;
 
 namespace Converto_IT008_WPF.ViewModels.UserViewModel;
 
@@ -42,7 +43,7 @@ public partial class SignUpViewModel : BaseViewModel
         GoLoginCommand = new RelayCommand(() => _nav.Navigate<LoginViewModel>());
     }
 
-    void TurnOfOverlay()
+    void CloseOverlay()
     {
         WeakReferenceMessenger.Default.Send(
             new CloseOverlayMessage { CloseLogin = true, CloseSignUp = true });
@@ -108,7 +109,7 @@ public partial class SignUpViewModel : BaseViewModel
         try
         {
             SignUpResponse signUpReponse = await _authService.SignUp(signUpRequest);
-            _sessionState.IsUserLoggedIn = true;
+            //_sessionState.IsUserLoggedIn = true;
             MessageBox.Show("Sign up successful! Please log in with your new account.", "Sign Up Successful", MessageBoxButton.OK, MessageBoxImage.Information);
 
             WeakReferenceMessenger.Default.Send(
@@ -120,6 +121,66 @@ public partial class SignUpViewModel : BaseViewModel
         {
             // Xử lý lỗi (hiển thị thông báo lỗi, ghi log, v.v.)
             MessageBox.Show($"Error during sign up: {ex.Message}", "Sign Up Error", MessageBoxButton.OK, MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    async Task<LoginResponse> SignInWithGithub()
+    {
+        try
+        {
+            IsBusy = true;
+            _sessionState.LoginResponse = await _authService.SignInWithGithub();
+            if (_sessionState.LoginResponse != null)
+            {
+                CloseOverlay();
+                Email = Password = string.Empty;
+                _nav.Navigate<HomepageViewModel>();
+                return _sessionState.LoginResponse;
+            }
+            else
+            {
+                MessageBox.Show("GitHub login failed. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error during GitHub login: {ex.Message}", "GitHub Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            return null;
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    async Task SignInWithGoogle()
+    {
+        try
+        {
+            IsBusy = true;
+            _sessionState.LoginResponse = await _authService.SignInWithGoolge();
+
+            if (_sessionState.LoginResponse != null)
+            {
+                CloseOverlay();
+                Email = Password = string.Empty;
+                _nav.Navigate<HomepageViewModel>();
+            }
+            else
+            {
+                MessageBox.Show("Google login failed. Please try again.", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Error during Google login: {ex.Message}", "Google Login Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         finally
         {

@@ -31,7 +31,6 @@ def cleanup_temp_files(filepaths: List[str]):
 @router.post('/remove_background')
 async def remove_background_handler(
     input_paths: List[str] = Body(...),
-    temp: str = Body(...),
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ) -> FileResponse:

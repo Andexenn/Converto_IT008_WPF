@@ -27,7 +27,7 @@ public partial class MyAccountViewModel : BaseViewModel
     [RelayCommand]
     void Logout()
     {
-        _sessionState.IsUserLoggedIn = false;
+        //_sessionState.IsUserLoggedIn = false;
         if (_sessionState.LoginResponse != null)
         {
             _sessionState.LoginResponse.access_token = string.Empty;

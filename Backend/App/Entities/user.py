@@ -30,6 +30,6 @@ class User(Base):
     LastLogin: Mapped[Optional[datetime]] = mapped_column(DateTime, server_default=func.now()) #pylint: disable=not-callable
 
     #Relationship
-    UserTasks: Mapped[List["Tasks"]] = relationship(back_populates="User")
-    Preferences: Mapped["UserPreferences"] = relationship(back_populates="User")
-    UserOTP: Mapped["UserOTP"] = relationship(back_populates="User")
+    UserTasks: Mapped[List["Tasks"]] = relationship(back_populates="User", cascade="all, delete-orphan")
+    Preferences: Mapped["UserPreferences"] = relationship(back_populates="User", cascade="all, delete-orphan")
+    UserOTP: Mapped["UserOTP"] = relationship(back_populates="User", cascade="all, delete-orphan")

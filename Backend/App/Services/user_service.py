@@ -54,3 +54,7 @@ class IUserService(ABC):
     @abstractmethod
     async def verify_email_user(self, email: str ) -> bool:
         """Verify if the email exists"""
+
+    @abstractmethod
+    async def delete_user(self, user_id: int) -> None:
+        """Delete user from database"""

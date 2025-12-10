@@ -11,4 +11,5 @@ public interface IUserApi
 {
     public Task<UserPreferences> GetUserPreferencesAsync();
     public Task<UserInfo> UpdateUserInfoAsync(UserInfo userInfo);
+    public Task DeleteAccount();
 }

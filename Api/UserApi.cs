@@ -88,4 +88,25 @@ public class UserApi : IUserApi
             throw new ApplicationException("Error updating user info", ex);
         }
     }
+
+    public async Task DeleteAccount()
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
+            using HttpResponseMessage response = await _httpClient.DeleteAsync($"{BaseURL}/user/delete_user");
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new ApplicationException($"API Error: {response.StatusCode}, Content: {await response.Content.ReadAsStringAsync()}");
+            }
+            else
+            {
+                Debug.WriteLine("Account deleted successfully.");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error deleting account", ex);
+        }
+    }
 }

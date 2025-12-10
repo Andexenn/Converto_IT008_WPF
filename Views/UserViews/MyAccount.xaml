@@ -416,18 +416,26 @@
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
 
                                     <Button Content="Cancel" 
-                                            Background="Transparent" 
                                             Foreground="White" 
                                             FontSize="14" FontWeight="SemiBold"
-                                            BorderThickness="0" Cursor="Hand" Margin="0,30,20,0">
+                                            Cursor="Hand" Margin="0,30,20,0">
                                         <Button.Style>
                                             <Style TargetType="Button">
                                                 <Setter Property="Background" Value="Transparent" />
-                                                <Style.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter Property="Background" Value="Transparent"/>
-                                                    </Trigger>
-                                                </Style.Triggers>
+                                                <Setter Property="BorderThickness" Value="0" />
+
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="Button">
+                                                            <Border Background="{TemplateBinding Background}"
+                                                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                                                <ContentPresenter HorizontalAlignment="Center" 
+                                                                                  VerticalAlignment="Center"/>
+                                                            </Border>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
                                             </Style>
                                         </Button.Style>
                                     </Button>
@@ -622,7 +630,8 @@
                                            Foreground="{StaticResource Brush.Text.Secondary}" 
                                            Margin="0,0,0,20"/>
 
-                                <Button Content="Delete My Account" 
+                                <Button Content="Delete My Account"
+                                        Command="{Binding DeleteAccountCommand}"
                                         HorizontalAlignment="Left"
                                         Background="#991B1B" 
                                         Foreground="White"
@@ -633,7 +642,6 @@
                                         Cursor="Hand" 
                                         Height="29" 
                                         Width="159">
-
                                     <Button.Template>
                                         <ControlTemplate TargetType="Button">
                                             <Border Background="{TemplateBinding Background}" CornerRadius="6">

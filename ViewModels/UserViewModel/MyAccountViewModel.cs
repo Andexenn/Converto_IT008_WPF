@@ -7,6 +7,7 @@ using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.Stores;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -93,14 +94,24 @@ public partial class MyAccountViewModel : BaseViewModel
                 _sessionState.LoginResponse.user.ProfilePictureURL = selectedFilePath;
                 await _userService.UpdateUserInfoAsync(_sessionState.LoginResponse.user);
             }
-
-
         }
         catch (Exception ex)
         {
-            // Handle exceptions if necessary
+            Debug.WriteLine($"Error changing avatar: {ex.Message}");
         }
+    }
 
-        
+    [RelayCommand]
+    private async Task DeleteAccount()
+    {
+        try
+        {
+            goToLogin();
+            await _userService.DeleteAccount();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error deleting account: {ex.Message}");
+        }
     }
 }

@@ -1,7 +1,5 @@
 """User handler"""
 
-from typing import List
-
 from fastapi import APIRouter, Depends, Body, BackgroundTasks
 from sqlalchemy.orm import Session
 
@@ -92,3 +90,12 @@ async def verify_otp(
     
     user_service: IUserService = UserRepository(db)
     return await user_service.verify_otp(current_user.Email, otp_code)
+
+@router.delete('/user/delete_user')
+async def delete_user(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> None:
+    
+    user_service: IUserService = UserRepository(db)
+    return await user_service.delete_user(current_user.UserID)

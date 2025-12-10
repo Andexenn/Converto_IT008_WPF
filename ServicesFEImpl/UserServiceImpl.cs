@@ -17,13 +17,11 @@ public class UserServiceImpl : IUserService
         _userApi = userApi;
     }
 
-    public async Task<UserPreferences> GetUserPreferencesAsync()
-    {
-        return await _userApi.GetUserPreferencesAsync();
-    }
+    public async Task<UserPreferences> GetUserPreferencesAsync() => await _userApi.GetUserPreferencesAsync();
+    
 
-    public async Task<UserInfo> UpdateUserInfoAsync(UserInfo userInfo)
-    {
-        return await _userApi.UpdateUserInfoAsync(userInfo);
-    }
+    public async Task<UserInfo> UpdateUserInfoAsync(UserInfo userInfo) => await _userApi.UpdateUserInfoAsync(userInfo);
+    
+
+    public async Task DeleteAccount() => await _userApi.DeleteAccount();
 }

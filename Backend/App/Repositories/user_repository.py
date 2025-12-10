@@ -328,3 +328,23 @@ class UserRepository(IUserService):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail=f"Failed to verify OTP: {str(e)}"
             ) from e
+
+    async def delete_user(self, user_id: int) -> None:
+        """Delete user from database"""
+        try:
+            user_to_delete = self.db.query(User).filter(User.UserID == user_id).first()
+
+            if not user_to_delete:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"Failed to find the user with id: {user_id}"
+                )
+            
+            self.db.delete(user_to_delete)
+            self.db.commit()
+
+            return None
+
+        except Exception as e:
+            self.db.rollback()
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Failed to delete user: {str(e)}") from e

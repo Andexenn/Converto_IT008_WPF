@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 
@@ -18,13 +19,27 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
 {
     string[] filepaths = { };
     [ObservableProperty]
-    bool uploaded = false;
+    [NotifyPropertyChangedFor(nameof(NotUploaded))]
+    private bool uploaded;
     public bool NotUploaded => !Uploaded;
 
     [ObservableProperty]
-    ObservableCollection<ProcessedImageResult> processedImages = new ObservableCollection<ProcessedImageResult>();
+    [NotifyPropertyChangedFor(nameof(NotRemoved))]
+    private bool removed;
+
+    public bool NotRemoved => !Removed;
+
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotDownloading))]
+    private bool isDownloading;
+    public bool IsNotDownloading => !IsDownloading;
+
+    [ObservableProperty]
+    ObservableCollection<ProcessedImageResultDto> processedImages = new ObservableCollection<ProcessedImageResultDto>();
     [ObservableProperty]
     ObservableCollection<BitmapImage> unprocessedImages = new ObservableCollection<BitmapImage>();
+    [ObservableProperty]
+    ObservableCollection<UserTasksDto> userTasks = new ObservableCollection<UserTasksDto>();
 
     [ObservableProperty]
     BitmapImage beforeRemoved = new BitmapImage();
@@ -35,10 +50,15 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
 
     IRemoveBackgroundService _removeBackgroundService;
     IProcessImageService _processImageService;
-    public RemoveBackgroundViewModel(IRemoveBackgroundService removeBackgroundService, IProcessImageService processImageService)
+    ITaskService _taskService;
+
+    public RemoveBackgroundViewModel(IRemoveBackgroundService removeBackgroundService, IProcessImageService processImageService, ITaskService taskService)
     {
         _removeBackgroundService = removeBackgroundService;
         _processImageService = processImageService;
+        _taskService = taskService;
+
+        _ = GetUserTasks();
     }
 
     [RelayCommand]
@@ -51,9 +71,9 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
             {
                 filepaths = files;
                 Debug.WriteLine($"File dropped: {filepaths[0]}");
+                Uploaded = true;
+                BeforeRemoved = LoadBitmapImage(filepaths[0]);
             }
-            Uploaded = true;
-            BeforeRemoved = LoadBitmapImage(filepaths[0]);
         }
         catch(Exception ex)
         {
@@ -68,7 +88,7 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
         {
             var OpenFileDialog = new OpenFileDialog
             {
-                Multiselect = true, // Cho phép chọn nhiều file
+                Multiselect = true, 
                 Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp|All Files|*.*",
                 Title = "Chọn ảnh để convert"
             };
@@ -78,9 +98,9 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
             {
                 filepaths = OpenFileDialog.FileNames;
                 Debug.WriteLine($"File picked: {filepaths[0]}");
+                Uploaded = true;
+                BeforeRemoved = LoadBitmapImage(filepaths[0]);
             }
-            Uploaded = true;
-            BeforeRemoved = LoadBitmapImage(filepaths[0]);
         }
         catch (Exception ex)
         {
@@ -101,6 +121,7 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
     {
         try
         {
+            IsBusy = true;
             if(filepaths.Length == 0)
             {
                 Debug.WriteLine("No files to process.");
@@ -129,26 +150,33 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
         {
             Debug.WriteLine($"Error removing background: {ex.Message}");
         }
+        finally
+        {
+            Removed = true;
+            IsBusy = false;
+        }
     }
 
     [RelayCommand]
-    void nextBeforeImage()
+    private void NextBeforeImage()
     {
-        if(ProcessedImages.Count == 0) return;
-        beforeIndex = (beforeIndex + 1) % ProcessedImages.Count;
+        Debug.WriteLine($"filepaths length: {filepaths.Length}");
+        if (filepaths.Length == 0) return;
+        beforeIndex = (beforeIndex + 1) % filepaths.Length;
         BeforeRemoved = LoadBitmapImage(filepaths[beforeIndex]);
     }
 
     [RelayCommand]
-    void previousBeforeImage()
+    private void PreviousBeforeImage()
     {
-        if (ProcessedImages.Count == 0) return;
-        beforeIndex = (beforeIndex - 1 + ProcessedImages.Count) % ProcessedImages.Count;
+        Debug.WriteLine($"filepaths length: {filepaths.Length}");
+        if (filepaths.Length == 0) return;
+        beforeIndex = (beforeIndex - 1 + filepaths.Length) % filepaths.Length;
         BeforeRemoved = LoadBitmapImage(filepaths[beforeIndex]);
     }
 
     [RelayCommand]
-    void nextAfterImage()
+    private void NextAfterImage()
     {
         if (ProcessedImages.Count == 0) return;
         afterIndex = (afterIndex + 1) % ProcessedImages.Count;
@@ -156,10 +184,54 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    void previousAfterImage() {
+    private void PreviousAfterImage() {
         if (ProcessedImages.Count == 0) return;
         afterIndex = (afterIndex - 1 + ProcessedImages.Count) % ProcessedImages.Count;
         AfterRemoved = ProcessedImages[afterIndex].DisplayImage;
+    }
+
+    [RelayCommand]
+    private async Task DownloadImages()
+    {
+        try
+        {
+            IsDownloading = true;
+            await _processImageService.DownloadImages(ProcessedImages);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error downloading images: {ex.Message}");
+        }
+        finally
+        {
+            IsDownloading = false;
+        }
+    }
+    
+    private async Task GetUserTasks()
+    {
+        if(UserTasks != null && UserTasks.Count > 0)
+        {
+            return;
+        }
+
+        try
+        {
+            IsBusy = true;
+            var tasks = await _taskService.GetUserTasksAsync();
+            UserTasks = new ObservableCollection<UserTasksDto>(tasks);
+            Debug.WriteLine($"Fetched {UserTasks.Count} user tasks.");
+            Debug.WriteLine($"Original path: {UserTasks[0].OriginalFilePath}"); 
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error fetching user tasks: {ex.Message}");
+        }
+        finally
+        {
+            Debug.WriteLine($"User tasks fetched: {UserTasks.Count}");
+            IsBusy = false;
+        }
     }
 
     bool isZipFile(byte[] data)

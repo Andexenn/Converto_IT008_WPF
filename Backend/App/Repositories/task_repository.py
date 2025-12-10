@@ -33,7 +33,8 @@ class TaskRepository(ITaskService):
                 OutputFilePath=user_task.OutputFilePath,
                 OutputFileSize=user_task.OutputFileSize,
                 TaskStatus=user_task.TaskStatus,
-                TaskTime=user_task.TaskTime
+                TaskTime=user_task.TaskTime,
+                CreatedAt=user_task.CreatedAt
             ) for user_task in user_tasks
         ]
 

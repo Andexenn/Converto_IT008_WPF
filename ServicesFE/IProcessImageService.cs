@@ -11,8 +11,9 @@ namespace Converto_IT008_WPF.ServicesFE;
 
 public interface IProcessImageService
 {
-    public void ProcessZipResponse(ObservableCollection<ProcessedImageResult> targetList, byte[] response);
-    public void ProcessSingleImageResponse(ObservableCollection<ProcessedImageResult> targetList, byte[] response);
+    public void ProcessZipResponse(ObservableCollection<ProcessedImageResultDto> targetList, byte[] response);
+    public void ProcessSingleImageResponse(ObservableCollection<ProcessedImageResultDto> targetList, byte[] response);
     public BitmapImage BytesToBitmap(byte[] data);
+    public Task DownloadImages(ObservableCollection<ProcessedImageResultDto> processedImageResults);
 }
 

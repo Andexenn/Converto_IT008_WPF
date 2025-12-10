@@ -17,7 +17,8 @@ router = APIRouter()
 @router.get('/task/task_by_user', response_model=List[TaskByUserID])
 async def get_all_task_by_user(
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)) -> List[TaskByUserID]:
+    current_user: User = Depends(get_current_user)
+) -> List[TaskByUserID]:
     """
     Get all task by user_id
 

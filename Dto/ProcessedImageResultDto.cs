@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 
 namespace Converto_IT008_WPF.Dto;
 
-public class ProcessedImageResult
+public class ProcessedImageResultDto
 {
     public string FileName { get; set; } = string.Empty;
     public BitmapImage DisplayImage { get; set; } = new BitmapImage();

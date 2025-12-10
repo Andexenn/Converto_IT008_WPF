@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Converto_IT008_WPF.Dto;
 
-public class CloseOverlayMessage
+public class CloseOverlayMessageDto
 {
     public bool CloseLogin { get; set; }
     public bool CloseSignUp { get; set; }

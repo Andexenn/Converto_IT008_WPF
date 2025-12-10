@@ -43,7 +43,7 @@ public partial class LoginViewModel : BaseViewModel
     private void CloseOverlay()
     {
         WeakReferenceMessenger.Default.Send(
-            new CloseOverlayMessage { CloseLogin = true, CloseSignUp = true });
+            new CloseOverlayMessageDto { CloseLogin = true, CloseSignUp = true });
     }
 
     async Task getUserPreference()
@@ -54,7 +54,6 @@ public partial class LoginViewModel : BaseViewModel
             UserPreferences prefs = await _userService.GetUserPreferencesAsync();
             _sessionState.UserPreferences = prefs;
 
-            MessageBox.Show($"User preferences loaded: Theme - {prefs.Theme}, Language - {prefs.Language}", "Preferences Loaded", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch(Exception ex)
         {

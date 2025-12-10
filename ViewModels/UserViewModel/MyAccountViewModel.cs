@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Converto_IT008_WPF.Dto;
+using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.Stores;
 using System;
 using System.Collections.Generic;
@@ -13,15 +14,17 @@ namespace Converto_IT008_WPF.ViewModels.UserViewModel;
 public partial class MyAccountViewModel : BaseViewModel
 {
     private readonly SessionState _sessionState;
+    private UserInfo curUsre; 
     public MyAccountViewModel(SessionState sessionState)
     {
         _sessionState = sessionState;
+        curUsre = _sessionState.LoginResponse!.user;
     }
 
     void goToLogin()
     {
         WeakReferenceMessenger.Default.Send(
-            new CloseOverlayMessage { CloseLogin = false, CloseSignUp = true });
+            new CloseOverlayMessageDto { CloseLogin = false, CloseSignUp = true });
     }
 
     [RelayCommand]

@@ -81,5 +81,14 @@ namespace Converto_IT008_WPF.Views.ServiceViews
             return true;
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Grid_Drop(object sender, DragEventArgs e)
+        {
+            ResetUploadZoneVisual();
+        }
     }
 }

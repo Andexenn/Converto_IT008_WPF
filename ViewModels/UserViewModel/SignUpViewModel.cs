@@ -46,7 +46,7 @@ public partial class SignUpViewModel : BaseViewModel
     void CloseOverlay()
     {
         WeakReferenceMessenger.Default.Send(
-            new CloseOverlayMessage { CloseLogin = true, CloseSignUp = true });
+            new CloseOverlayMessageDto { CloseLogin = true, CloseSignUp = true });
     }
 
     [RelayCommand]
@@ -113,7 +113,7 @@ public partial class SignUpViewModel : BaseViewModel
             MessageBox.Show("Sign up successful! Please log in with your new account.", "Sign Up Successful", MessageBoxButton.OK, MessageBoxImage.Information);
 
             WeakReferenceMessenger.Default.Send(
-                new CloseOverlayMessage { CloseLogin = false, CloseSignUp = true });
+                new CloseOverlayMessageDto { CloseLogin = false, CloseSignUp = true });
 
             _nav.Navigate<LoginViewModel>();
         }

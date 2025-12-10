@@ -33,6 +33,7 @@ class TaskByUserID(BaseModel):
     OutputFilePath: Optional[str] = None 
     TaskStatus: bool 
     TaskTime: float 
+    CreatedAt: datetime
 
 
 

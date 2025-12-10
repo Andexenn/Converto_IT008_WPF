@@ -50,7 +50,7 @@ namespace Converto_IT008_WPF.ViewModels
                 }
             };
             
-            WeakReferenceMessenger.Default.Register<CloseOverlayMessage>(this, (r, m) =>
+            WeakReferenceMessenger.Default.Register<CloseOverlayMessageDto>(this, (r, m) =>
             {
                 if(m.CloseLogin)
                     IsLoginVisible = false;

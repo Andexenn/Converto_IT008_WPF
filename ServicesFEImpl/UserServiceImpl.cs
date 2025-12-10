@@ -22,4 +22,8 @@ public class UserServiceImpl : IUserService
         return await _userApi.GetUserPreferencesAsync();
     }
 
+    public async Task<UserInfo> UpdateUserInfoAsync(UserInfo userInfo)
+    {
+        return await _userApi.UpdateUserInfoAsync(userInfo);
+    }
 }

@@ -90,7 +90,7 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
             {
                 Multiselect = true, 
                 Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp|All Files|*.*",
-                Title = "Chọn ảnh để convert"
+                Title = "Choose images to remove background"
             };
 
 

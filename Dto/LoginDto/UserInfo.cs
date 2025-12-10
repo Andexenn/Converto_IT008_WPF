@@ -15,7 +15,7 @@ public class UserInfo
     public string? City { get; set; } = string.Empty;
     public DateTime? DateOfBirth { get; set; }
     public string? PhoneNumber { get; set; } = string.Empty;
-    public string? ProfilePictureUrl { get; set; } = string.Empty;
+    public string? ProfilePictureURL { get; set; } = string.Empty;
     public DateTime? MemberSince { get; set; } = null;
     public DateTime? LastLogin { get; set; } = null;
 }

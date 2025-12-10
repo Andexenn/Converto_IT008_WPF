@@ -10,4 +10,5 @@ namespace Converto_IT008_WPF.Interfaces;
 public interface IUserApi
 {
     public Task<UserPreferences> GetUserPreferencesAsync();
+    public Task<UserInfo> UpdateUserInfoAsync(UserInfo userInfo);
 }

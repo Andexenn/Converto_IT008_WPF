@@ -4,6 +4,7 @@ using Converto_IT008_WPF.Interfaces;
 using Converto_IT008_WPF.Stores;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
 using System.Net.Http;
@@ -45,6 +46,46 @@ public class UserApi : IUserApi
         {
             // Handle exceptions (e.g., log them)
             throw new ApplicationException("Error fetching user preferences", ex);
+        }
+    }
+
+    public async Task<UserInfo> UpdateUserInfoAsync(UserInfo userInfo)
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
+
+
+            var options = new System.Text.Json.JsonSerializerOptions
+            {
+                // Quan trọng: Bỏ qua các trường có giá trị null
+                DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+
+                // Đảm bảo không tự động đổi sang camelCase (nếu backend cần PascalCase)
+                PropertyNamingPolicy = null
+            };
+
+            var jsonPayload = System.Text.Json.JsonSerializer.Serialize(userInfo, options);
+            Debug.WriteLine("JSON gửi đi: " + jsonPayload);
+            var jsonPayloadContent = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
+
+            using HttpResponseMessage response = await _httpClient.PutAsync($"{BaseURL}/user/update_user_data", jsonPayloadContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return System.Text.Json.JsonSerializer.Deserialize<UserInfo>(json);
+         
+            }
+            else
+            {
+                throw new ApplicationException($"API Error: {response.StatusCode}, Content: {await response.Content.ReadAsStringAsync()}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle exceptions (e.g., log them)
+            throw new ApplicationException("Error updating user info", ex);
         }
     }
 }

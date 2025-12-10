@@ -72,7 +72,6 @@ class GoogleAuthResponse(BaseModel):
         from_attributes = True
 
 class UserData(BaseModel):
-    UserID: int 
     Email: Optional[EmailStr] = None 
     FirstName: Optional[str] = None 
     LastName: Optional[str] = None 
@@ -80,12 +79,11 @@ class UserData(BaseModel):
     PhoneNumber: Optional[str] = None
     City: Optional[str] = None
     DateOfBirth: Optional[datetime] = None
-    ProfilePictureUrl: Optional[str] = None
+    ProfilePictureURL: Optional[str] = None
     MemberSince: Optional[datetime] = None 
     LastLogin: Optional[datetime] = None 
 
 class UserPref(BaseModel):
-    UserID: int
     DefaultOutputFolder: Optional[str] = None 
     Language: Optional[str] = None 
     Theme: Optional[str] = None

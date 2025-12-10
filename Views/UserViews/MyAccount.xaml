@@ -229,14 +229,14 @@
                                 BorderBrush="#33FFFFFF" 
                                 BorderThickness="1"
                                 Padding="20"
-                                Height="380">
+                                Height="335">
                             
                             <Grid>
                                 <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                                    <Grid Width="120" Height="120" Margin="0,0,0,20">
+                                    <Grid Width="140" Height="140" Margin="0,0,0,20">
                                         <Ellipse Stroke="{StaticResource Brush.Brand}" StrokeThickness="2">
                                             <Ellipse.Fill>
-                                                <ImageBrush ImageSource="/Resources/DefaultUser.png" Stretch="UniformToFill"/>
+                                                <ImageBrush ImageSource="{Binding AvatarUrl}" Stretch="UniformToFill"/>
                                             </Ellipse.Fill>
                                         </Ellipse>
                                         <Border Background="{StaticResource Brush.Brand}" 
@@ -245,21 +245,37 @@
                                                 HorizontalAlignment="Right" 
                                                 VerticalAlignment="Bottom" 
                                                 Cursor="Hand">
+
+                                            <Border.InputBindings>
+                                                <MouseBinding MouseAction="LeftClick" Command="{Binding ChangeAvatarUrlCommand}"/>
+                                            </Border.InputBindings>
                                             
                                             <fa:FontAwesome Icon="Pencil" Foreground="White" FontSize="12" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                                         </Border>
                                     </Grid>
 
-                                    <TextBlock Text="John Doe" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,5"/>
-                                    <TextBlock Text="JohnDoe@gmail.com" FontSize="14" Foreground="{StaticResource Brush.Text.Secondary}" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{Binding FirstName}" FontSize="24" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                                    <TextBlock Text="{Binding Email}" FontSize="14" Foreground="{StaticResource Brush.Text.Secondary}" HorizontalAlignment="Center"/>
                                 </StackPanel>
 
-                                <TextBlock Text="Member since 01/01/2025" 
-                                           FontSize="12" 
-                                           Foreground="{StaticResource Brush.Text.Secondary}" 
-                                           VerticalAlignment="Bottom" 
-                                           HorizontalAlignment="Center" 
-                                           Opacity="0.5"/>
+
+                                <StackPanel VerticalAlignment="Bottom" HorizontalAlignment="Center" Orientation="Horizontal">
+                                    <TextBlock Text="Member Since:" 
+                                               FontSize="13" 
+                                               Foreground="{StaticResource Brush.Text.Secondary}" 
+                                               VerticalAlignment="Bottom" 
+                                               HorizontalAlignment="Center" 
+                                               Margin="0,0,7,0"
+                                               Opacity="0.5"/>
+                                
+                                    <TextBlock Text="{Binding MemberSince, StringFormat='dd/MM/yyyy'}" 
+                                               FontSize="13" 
+                                               Foreground="{StaticResource Brush.Text.Secondary}" 
+                                               VerticalAlignment="Bottom" 
+                                               HorizontalAlignment="Center" 
+                                               Opacity="0.5"/>
+                                    
+                                </StackPanel>
                             </Grid>
                         </Border>
                     </StackPanel>
@@ -270,7 +286,7 @@
                             <StackPanel>
                                 <Grid>
                                     <TextBlock Text="Personal Information" Style="{StaticResource SectionHeaderStyle}"/>
-                                    <Button Content=" Edit" 
+                                    <Button Content="Edit" 
                                             Foreground="{StaticResource Brush.Text.Secondary}" 
                                             Background="Transparent" 
                                             BorderThickness="0" 
@@ -282,7 +298,7 @@
                                             <ControlTemplate TargetType="Button">
                                                 <StackPanel Orientation="Horizontal">
                                                     <fa:FontAwesome Icon="Pencil" FontSize="12"/>
-                                                    <ContentPresenter Margin="5,0,0,0"/>
+                                                    <ContentPresenter Margin="10,0,5,0"/>
                                                 </StackPanel>
                                             </ControlTemplate>
                                         </Button.Template>
@@ -299,12 +315,12 @@
                                     <StackPanel Grid.Column="0">
                                         <TextBlock Text="First Name" Style="{StaticResource InputLabelStyle}"/>
                                         <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
-                                            <custom:PlaceholderTextBox Text="John" 
+                                            <custom:PlaceholderTextBox Text="{Binding FirstName}" 
                                                                        Placeholder="First Name" 
                                                                        Background="Transparent" 
                                                                        Foreground="White" 
                                                                        BorderThickness="0" 
-                                                                       Padding="10,0" 
+                                                                       Padding="5,0" 
                                                                        VerticalContentAlignment="Center" 
                                                                        FontSize="14"/>
                                         </Border>
@@ -313,12 +329,12 @@
                                     <StackPanel Grid.Column="2">
                                         <TextBlock Text="Last Name" Style="{StaticResource InputLabelStyle}"/>
                                         <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
-                                            <custom:PlaceholderTextBox Text="Doe" 
+                                            <custom:PlaceholderTextBox Text="{Binding LastName}" 
                                                                        Placeholder="Last Name" 
                                                                        Background="Transparent" 
                                                                        Foreground="White" 
                                                                        BorderThickness="0" 
-                                                                       Padding="10,0" 
+                                                                       Padding="5,0" 
                                                                        VerticalContentAlignment="Center" 
                                                                        FontSize="14"/>
                                         </Border>
@@ -335,12 +351,12 @@
                                     <StackPanel Grid.Column="0">
                                         <TextBlock Text="Email Address" Style="{StaticResource InputLabelStyle}"/>
                                         <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
-                                            <custom:PlaceholderTextBox Text="JohnDoe@gmail.com" 
+                                            <custom:PlaceholderTextBox Text="{Binding Email}" 
                                                                        Placeholder="Email" 
                                                                        Background="Transparent" 
                                                                        Foreground="White" 
                                                                        BorderThickness="0" 
-                                                                       Padding="10,0" 
+                                                                       Padding="5,0" 
                                                                        VerticalContentAlignment="Center" 
                                                                        FontSize="14"/>
                                         </Border>
@@ -349,12 +365,12 @@
                                     <StackPanel Grid.Column="2">
                                         <TextBlock Text="Phone Number" Style="{StaticResource InputLabelStyle}"/>
                                         <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
-                                            <custom:PlaceholderTextBox Text="+1 (555) 123456" 
+                                            <custom:PlaceholderTextBox Text="{Binding PhoneNumber}" 
                                                                        Placeholder="Phone" 
                                                                        Background="Transparent" 
                                                                        Foreground="White" 
                                                                        BorderThickness="0" 
-                                                                       Padding="10,0" 
+                                                                       Padding="5,0" 
                                                                        VerticalContentAlignment="Center" 
                                                                        FontSize="14"/>
                                         </Border>
@@ -371,12 +387,12 @@
                                     <StackPanel Grid.Column="0">
                                         <TextBlock Text="City" Style="{StaticResource InputLabelStyle}"/>
                                         <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
-                                            <custom:PlaceholderTextBox Text="Paris" 
+                                            <custom:PlaceholderTextBox Text="{Binding City}" 
                                                                        Placeholder="City" 
                                                                        Background="Transparent" 
                                                                        Foreground="White" 
                                                                        BorderThickness="0" 
-                                                                       Padding="10,0" 
+                                                                       Padding="5,0" 
                                                                        VerticalContentAlignment="Center" 
                                                                        FontSize="14"/>
                                         </Border>
@@ -385,17 +401,70 @@
                                     <StackPanel Grid.Column="2">
                                         <TextBlock Text="Birthday" Style="{StaticResource InputLabelStyle}"/>
                                         <Border Background="{StaticResource Brush.BG.Card}" CornerRadius="6" Height="42" BorderBrush="#33FFFFFF" BorderThickness="1">
-                                            <custom:PlaceholderTextBox Text="01/01/2025" 
+                                            <custom:PlaceholderTextBox Text="{Binding DateOfBirth, StringFormat='dd/MM/yyyy'}" 
                                                                        Placeholder="dd/mm/yyyy" 
                                                                        Background="Transparent" 
                                                                        Foreground="White" 
                                                                        BorderThickness="0" 
-                                                                       Padding="10,0" 
+                                                                       Padding="5,0" 
                                                                        VerticalContentAlignment="Center" 
                                                                        FontSize="14"/>
                                         </Border>
                                     </StackPanel>
                                 </Grid>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+
+                                    <Button Content="Cancel" 
+                                            Background="Transparent" 
+                                            Foreground="White" 
+                                            FontSize="14" FontWeight="SemiBold"
+                                            BorderThickness="0" Cursor="Hand" Margin="0,30,20,0">
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="Transparent" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="Transparent"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+                                    </Button>
+
+                                    <Button Content="Save changes" 
+                                        Foreground="White"
+                                        FontSize="14" 
+                                        Margin="0,30,0,0"
+                                        HorizontalAlignment="Right"
+                                        FontWeight="SemiBold"
+                                        Padding="20,10"
+                                        BorderThickness="0" 
+                                        Cursor="Hand" 
+                                        Height="33" 
+                                        Width="145">
+                                    <Button.Style>
+                                        <Style TargetType="Button">
+                                            <Setter Property="Background" Value="{StaticResource Brush.Brand}" />
+                                            <Style.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#D90404"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Button.Style>
+
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+
+                                </Button>
+                                </StackPanel>
+
                             </StackPanel>
                         </Border>
 
@@ -442,8 +511,7 @@
                                             FontSize="14" FontWeight="SemiBold"
                                             BorderThickness="0" Cursor="Hand" Margin="0,0,20,0"/>
 
-                                    <Button Content="Change Password" 
-                                            Background="{StaticResource Brush.Brand}" 
+                                    <Button Content="Change Password"  
                                             Foreground="White"
                                             FontSize="14" 
                                             FontWeight="SemiBold"
@@ -452,7 +520,18 @@
                                             Cursor="Hand" 
                                             Height="33" 
                                             Width="145">
-                                        
+
+                                        <Button.Style>
+                                            <Style TargetType="Button">
+                                                <Setter Property="Background" Value="{StaticResource Brush.Brand}" />
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#D90404"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Button.Style>
+
                                         <Button.Template>
                                             <ControlTemplate TargetType="Button">
                                                 <Border Background="{TemplateBinding Background}" CornerRadius="6">

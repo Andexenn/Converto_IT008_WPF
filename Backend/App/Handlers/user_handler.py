@@ -34,7 +34,7 @@ async def get_user_preference(
     user_serivce: IUserService = UserRepository(db)
     return await user_serivce.get_user_preference(current_user.UserID)
 
-@router.post('/user/update_user_data', response_model=UserData)
+@router.put('/user/update_user_data', response_model=UserData)
 async def update_user_data(
     updated_user: UserData = Body(),
     db: Session = Depends(get_db),
@@ -44,7 +44,7 @@ async def update_user_data(
     user_serivce: IUserService = UserRepository(db)
     return await user_serivce.update_user_data(updated_user)
 
-@router.post('/user/update_user_pref', response_model=UserPref)
+@router.put('/user/update_user_pref', response_model=UserPref)
 async def update_user_pref(
     updated_user_pref: UserPref = Body(),
     db: Session = Depends(get_db),
@@ -52,7 +52,7 @@ async def update_user_pref(
 ) -> UserPref:
     
     user_service: IUserService = UserRepository(db)
-    return await user_service.update_user_preferences(updated_user_pref)
+    return await user_service.update_user_preferences(updated_user_pref, current_user.UserID)
 
 @router.get('/user/verify_email', response_model=dict)
 async def verify_email(

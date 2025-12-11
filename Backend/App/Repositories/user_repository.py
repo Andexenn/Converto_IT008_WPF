@@ -368,5 +368,6 @@ class UserRepository(IUserService):
             self.db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Failed to change password: {str(e)}") from e
+                detail=f"Failed to change password: {str(e)}"
+            ) from e
         

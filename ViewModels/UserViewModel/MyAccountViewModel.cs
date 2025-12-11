@@ -7,6 +7,7 @@ using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.Stores;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -36,6 +37,18 @@ public partial class MyAccountViewModel : BaseViewModel
     string _phoneNumber = "Unknown";
     [ObservableProperty]
     DateTime _dateOfBirth = DateTime.Now;
+    [ObservableProperty]
+    string _username = "";
+    [ObservableProperty]
+    string _defaultOutputFolder = string.Empty;
+    [ObservableProperty]
+    string _language = string.Empty;
+
+    public string Password = string.Empty;
+    public string ConfirmPassword = string.Empty;
+
+    [ObservableProperty]
+    ObservableCollection<string> languages = new ObservableCollection<string>();
 
     private IUserService _userService;
 
@@ -50,7 +63,17 @@ public partial class MyAccountViewModel : BaseViewModel
         City = _sessionState.LoginResponse.user.City ?? "Unknown";
         Address = _sessionState.LoginResponse.user.Address ?? "Unknown";
         PhoneNumber = _sessionState.LoginResponse.user.PhoneNumber ?? "Unknown";
-        DateOfBirth = _sessionState.LoginResponse.user.DateOfBirth ?? DateTime.Now;
+        DateOfBirth = DateTime.Now;
+        Username = FirstName;
+
+        DefaultOutputFolder = _sessionState.UserPreferences.DefaultOutputFolder;
+    
+
+        Languages = new ObservableCollection<string> {
+                "Vietnamese", "English"
+            };
+
+        Language = Languages[1];
 
         _userService = userService;
     }
@@ -112,6 +135,110 @@ public partial class MyAccountViewModel : BaseViewModel
         catch (Exception ex)
         {
             Debug.WriteLine($"Error deleting account: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task SaveChanges()
+    {
+        try
+        {
+            _sessionState.LoginResponse.user.FirstName = FirstName;
+            _sessionState.LoginResponse.user.LastName = LastName;
+            _sessionState.LoginResponse.user.City = City;
+            _sessionState.LoginResponse.user.Address = Address;
+            _sessionState.LoginResponse.user.PhoneNumber = PhoneNumber;
+            _sessionState.LoginResponse.user.DateOfBirth = DateOfBirth.ToString("yyyy-MM-dd");
+
+            await _userService.SaveChanges(_sessionState.LoginResponse.user);
+            Username = FirstName;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error saving changes: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task ChangePassword()
+    {
+        try
+        {
+            await _userService.ChangePassword(Password);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error changing password: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task ChangeDefaultOutputFolder()
+    {
+        try
+        {
+            var OpenFolderDialog = new FolderBrowserDialog
+            {
+                Description = "Select Default Output Folder",
+                Multiselect = false,
+            };
+            if (OpenFolderDialog.ShowDialog() == DialogResult.OK)
+            {
+                DefaultOutputFolder = OpenFolderDialog.SelectedPath;
+                _sessionState.UserPreferences.DefaultOutputFolder = DefaultOutputFolder;
+                await _userService.UpdateUserPreference(_sessionState.UserPreferences);
+            }
+            
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error changing default output folder: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task ChangeLanguage()
+    {
+        try
+        {
+            _sessionState.UserPreferences.Language = Language;
+            await _userService.UpdateUserPreference(_sessionState.UserPreferences);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error changing language: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task CancelChangeInfo()
+    {
+        try
+        {
+            FirstName = _sessionState.LoginResponse.user.FirstName;
+            LastName = _sessionState.LoginResponse.user.LastName;
+            City = _sessionState.LoginResponse.user.City ?? "Unknown";
+            Address = _sessionState.LoginResponse.user.Address ?? "Unknown";
+            PhoneNumber = _sessionState.LoginResponse.user.PhoneNumber ?? "Unknown";
+            DateOfBirth = DateTime.Parse(_sessionState.LoginResponse.user.DateOfBirth ?? DateTime.Now.ToString());
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error cancelling changes: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    private async Task CancelChangePassword()
+    {
+        try
+        {
+            Password = string.Empty;
+            ConfirmPassword = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error cancelling password change: {ex.Message}");
         }
     }
 }

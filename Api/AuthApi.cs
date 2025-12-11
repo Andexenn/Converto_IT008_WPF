@@ -52,7 +52,7 @@ public class AuthApi : IAuthApi
             var json = System.Text.Json.JsonSerializer.Serialize(signUpRequest);
             var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
 
-            using HttpResponseMessage response = await _httpClient.PostAsync($"{BaseURL}/signup", content);
+            using HttpResponseMessage response = await _httpClient.PostAsync($"{BaseURL}/auth/signup", content);
 
             if(response.IsSuccessStatusCode)
             {

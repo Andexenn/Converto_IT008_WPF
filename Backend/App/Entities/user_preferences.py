@@ -21,7 +21,7 @@ class UserPreferences(Base):
     UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID", ondelete="CASCADE"), nullable=False, unique=True, index=True)
 
     DefaultOutputFolder: Mapped[str] = mapped_column(String(255), default='C:/Downloads', nullable=False)
-    Language: Mapped[str] = mapped_column(String(100), default='en', nullable=False)
+    Language: Mapped[str] = mapped_column(String(100), default='English', nullable=False)
     Theme: Mapped[str] = mapped_column(String(100), default='dark')
 
     CreatedAt:Mapped[datetime] = mapped_column(DateTime, server_default=func.now()) #pylint: disable=not-callable

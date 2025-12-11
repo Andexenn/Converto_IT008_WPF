@@ -35,6 +35,11 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
     public bool IsNotDownloading => !IsDownloading;
 
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotRemoving))]
+    private bool isRemoving;
+    public bool IsNotRemoving => !IsRemoving;
+
+    [ObservableProperty]
     ObservableCollection<ProcessedImageResultDto> processedImages = new ObservableCollection<ProcessedImageResultDto>();
     [ObservableProperty]
     ObservableCollection<BitmapImage> unprocessedImages = new ObservableCollection<BitmapImage>();
@@ -121,7 +126,7 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
     {
         try
         {
-            IsBusy = true;
+            IsRemoving = true;
             if(filepaths.Length == 0)
             {
                 Debug.WriteLine("No files to process.");
@@ -144,6 +149,8 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
             else
                 _processImageService.ProcessSingleImageResponse(ProcessedImages, response);
 
+            
+
             AfterRemoved = ProcessedImages[0].DisplayImage;
         }
         catch(Exception ex)
@@ -153,7 +160,8 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
         finally
         {
             Removed = true;
-            IsBusy = false;
+            IsRemoving = false;
+            _ = GetUserTasks();
         }
     }
 
@@ -210,10 +218,6 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
     
     private async Task GetUserTasks()
     {
-        if(UserTasks != null && UserTasks.Count > 0)
-        {
-            return;
-        }
 
         try
         {

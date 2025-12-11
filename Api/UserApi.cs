@@ -1,4 +1,5 @@
-﻿using Converto_IT008_WPF.Dto.LoginDto;
+﻿using Converto_IT008_WPF.Dto;
+using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.Dto.SignUpDto;
 using Converto_IT008_WPF.Interfaces;
 using Converto_IT008_WPF.Stores;
@@ -58,7 +59,6 @@ public class UserApi : IUserApi
 
             var options = new System.Text.Json.JsonSerializerOptions
             {
-                // Quan trọng: Bỏ qua các trường có giá trị null
                 DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
 
                 // Đảm bảo không tự động đổi sang camelCase (nếu backend cần PascalCase)
@@ -95,6 +95,7 @@ public class UserApi : IUserApi
         {
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
             using HttpResponseMessage response = await _httpClient.DeleteAsync($"{BaseURL}/user/delete_user");
+
             if (!response.IsSuccessStatusCode)
             {
                 throw new ApplicationException($"API Error: {response.StatusCode}, Content: {await response.Content.ReadAsStringAsync()}");
@@ -107,6 +108,78 @@ public class UserApi : IUserApi
         catch (Exception ex)
         {
             throw new ApplicationException("Error deleting account", ex);
+        }
+    }
+
+    public async Task<UserInfo> SaveChanges(UserInfo userInfo)
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
+            var payload = System.Text.Json.JsonSerializer.Serialize(userInfo);
+            var payloadContent = new StringContent(payload, Encoding.UTF8, "application/json");
+            using HttpResponseMessage response = await _httpClient.PutAsync($"{BaseURL}/user/update_user_data", payloadContent);
+
+            if(response.IsSuccessStatusCode)
+            {
+                var json = await response.Content.ReadAsStringAsync();
+                return System.Text.Json.JsonSerializer.Deserialize<UserInfo>(json);
+            }
+            else
+            {
+                throw new ApplicationException($"API Error: {response.StatusCode}, Content: {await response.Content.ReadAsStringAsync()}");
+            }
+
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error saving changes", ex);
+        }
+    }
+
+    public async Task<bool> ChangePassword(string newPassword)
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
+            var payload = System.Text.Json.JsonSerializer.Serialize(new { new_password = newPassword });
+            var payloadContent = new StringContent(payload, Encoding.UTF8, "application/json");
+            using HttpResponseMessage response = await _httpClient.PutAsync($"{BaseURL}/user/change_password", payloadContent);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                throw new ApplicationException($"API Error: {response.StatusCode}, Content: {await response.Content.ReadAsStringAsync()}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error changing password", ex);
+        }
+    }
+
+    public async Task<bool> UpdateUserPreference(UserPreferences userPreferences)
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
+            var payload = System.Text.Json.JsonSerializer.Serialize(userPreferences);
+            var payloadContent = new StringContent(payload, Encoding.UTF8, "application/json");
+            using HttpResponseMessage response = await _httpClient.PutAsync($"{BaseURL}/user/update_user_pref", payloadContent);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                throw new ApplicationException($"API Error: {response.StatusCode}, Content: {await response.Content.ReadAsStringAsync()}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error updating user preferences", ex);
         }
     }
 }

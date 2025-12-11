@@ -1,4 +1,5 @@
-﻿using Converto_IT008_WPF.Dto.LoginDto;
+﻿using Converto_IT008_WPF.Dto;
+using Converto_IT008_WPF.Dto.LoginDto;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,4 +13,7 @@ public interface IUserService
     public Task<UserPreferences> GetUserPreferencesAsync();
     public Task<UserInfo> UpdateUserInfoAsync(UserInfo userInfo);
     public Task DeleteAccount();
+    public Task<UserInfo> SaveChanges(UserInfo userInfo);
+    public Task<bool> ChangePassword(string newPassword);
+    public Task<bool> UpdateUserPreference(UserPreferences userPreferences);
 }

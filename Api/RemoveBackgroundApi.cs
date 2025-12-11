@@ -26,7 +26,7 @@ public class RemoveBackgroundApi : IRemoveBackgroundApi
     {
         try
         {
-            string jsonPayload = JsonSerializer.Serialize(filepaths);
+            string jsonPayload = JsonSerializer.Serialize(new {input_paths = filepaths });
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
             string token = _sessionState.LoginResponse.access_token;
 

@@ -306,9 +306,9 @@
                                                HorizontalAlignment="Center" 
                                                VerticalAlignment="Center"
                                                FontSize="14"
-                                               Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                               Visibility="{Binding IsNotRemoving, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
-                                    <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                                    <fa:ImageAwesome Visibility="{Binding IsRemoving, Converter={StaticResource BoolToVisibilityConverter}}"
                                                Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
 
                                 </Grid>

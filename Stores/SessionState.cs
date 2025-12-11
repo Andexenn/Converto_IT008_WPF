@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Converto_IT008_WPF.Dto;
 using Converto_IT008_WPF.Dto.LoginDto;
 using System;
 using System.Collections.Generic;

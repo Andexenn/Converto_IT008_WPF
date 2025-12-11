@@ -187,4 +187,6 @@ public partial class SignUpViewModel : BaseViewModel
             IsBusy = false;
         }
     }
+
+    
 }

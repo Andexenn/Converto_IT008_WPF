@@ -1,4 +1,5 @@
-﻿using Converto_IT008_WPF.Dto.LoginDto;
+﻿using Converto_IT008_WPF.Dto;
+using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.Interfaces;
 using Converto_IT008_WPF.ServicesFE;
 using System;
@@ -24,4 +25,8 @@ public class UserServiceImpl : IUserService
     
 
     public async Task DeleteAccount() => await _userApi.DeleteAccount();
+    
+    public async Task<UserInfo> SaveChanges(UserInfo userInfo) => await _userApi.SaveChanges(userInfo);
+    public async Task<bool> ChangePassword(string newPassword) => await _userApi.ChangePassword(newPassword);
+    public async Task<bool> UpdateUserPreference(UserPreferences userPreferences) => await _userApi.UpdateUserPreference(userPreferences);
 }

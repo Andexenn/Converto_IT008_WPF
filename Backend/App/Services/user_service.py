@@ -42,7 +42,7 @@ class IUserService(ABC):
         """
 
     @abstractmethod
-    async def update_user_preferences(self, user_preferences: UserPref) -> UserPref:
+    async def update_user_preferences(self, user_preferences: UserPref, user_id: int) -> UserPref:
         """
         Update preferences of the user
         """
@@ -58,3 +58,7 @@ class IUserService(ABC):
     @abstractmethod
     async def delete_user(self, user_id: int) -> None:
         """Delete user from database"""
+
+    @abstractmethod
+    async def change_password(self, user_id: int, new_password: str) -> bool:
+        """Change password"""

@@ -34,9 +34,9 @@ async def get_user_preference(
 
 @router.put('/user/update_user_data', response_model=UserData)
 async def update_user_data(
-    updated_user: UserData = Body(),
+    updated_user: UserData = Body(...),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_user)
+    current_user: User = Depends(get_current_user)
 ) -> UserData:
     
     user_serivce: IUserService = UserRepository(db)
@@ -44,11 +44,11 @@ async def update_user_data(
 
 @router.put('/user/update_user_pref', response_model=UserPref)
 async def update_user_pref(
-    updated_user_pref: UserPref = Body(),
+    updated_user_pref: UserPref = Body(...),
     db: Session = Depends(get_db),
-    current_user: User = Depends(get_user)
+    current_user: User = Depends(get_current_user)
 ) -> UserPref:
-    
+    print("update user preferences")
     user_service: IUserService = UserRepository(db)
     return await user_service.update_user_preferences(updated_user_pref, current_user.UserID)
 
@@ -99,3 +99,13 @@ async def delete_user(
     
     user_service: IUserService = UserRepository(db)
     return await user_service.delete_user(current_user.UserID)
+
+@router.put('/user/change_password')
+async def change_password(
+    new_password: str = Body(..., embed=True),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> bool:
+    
+    user_service: IUserService = UserRepository(db)
+    return await user_service.change_password(current_user.UserID, new_password)

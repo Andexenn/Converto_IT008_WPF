@@ -27,4 +27,20 @@ public partial class MyAccount : UserControl
         InitializeComponent();
         DataContext = App.ServiceProvider?.GetRequiredService<MyAccountViewModel>();
     }
+
+    private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext != null)
+        {
+            ((MyAccountViewModel)DataContext).Password = ((PasswordBox)sender).Password;
+        }
+    }
+
+    private void PasswordBox_PasswordChanged_1(object sender, RoutedEventArgs e)
+    {
+        if (DataContext != null)
+        {
+            ((MyAccountViewModel)DataContext).ConfirmPassword = ((PasswordBox)sender).Password;
+        }
+    }
 }

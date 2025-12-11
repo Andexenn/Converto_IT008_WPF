@@ -13,7 +13,7 @@ public class UserInfo
     public string Email { get; set; } = string.Empty;
     public string? Address { get; set; } = string.Empty;
     public string? City { get; set; } = string.Empty;
-    public DateTime? DateOfBirth { get; set; }
+    public string? DateOfBirth { get; set; } = string.Empty;
     public string? PhoneNumber { get; set; } = string.Empty;
     public string? ProfilePictureURL { get; set; } = string.Empty;
     public DateTime? MemberSince { get; set; } = null;

@@ -5,6 +5,7 @@ on:
     branches:
       - "main"
       - "test"
+      - "HH"
   pull_request:
     branches:
       - "main"
@@ -15,7 +16,7 @@ jobs:
     steps:
       - name: Check health endpoint
         env:
-          URL: ${{ secrets.TAILSCALE_BASE_ENDPOINT }}/health
+          URL: ${{ secrets.TAILSCALE_BASE_ENDPOINT }}health
         run: |
           echo "Checking health at: $URL"
           curl -f -v --retry 5 --retry-delay 5 --max-time 10 "$URL"

@@ -10,4 +10,4 @@ python-dotenv
 passlib
 Pillow 
 httpx
-jose
+python-jose[cryptography]

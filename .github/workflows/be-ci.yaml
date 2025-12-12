@@ -11,16 +11,71 @@ on:
       - "main"
 
 jobs:
-  check-health-be-linux:
+  smoke-test:
+    name: Smoke test on linux
     runs-on: ubuntu-latest
-    steps:
-      - name: Check health endpoint
+
+    services:
+      mysql-service:
+        image: mysql:8.0
+
         env:
-          URL: ${{ secrets.TAILSCALE_BASE_ENDPOINT }}health
+          MYSQL_ROOT_PASSWORD: hungdepzai123
+          MYSQL_DATABASE: convertodb
+
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    strategy:
+      fail-fast: false # 1 cai bug thi nhung cai khac van chay tiep
+      matrix:
+        python-version: ['3.9', '3.10']
+
+    steps:
+      - name: Checkout code  # lay code
+        uses: actions/checkout@v4
+
+      - name: Setup Python & Cache  #setup python va kich hoat cache luon
+        uses: actions/setup-python@v4 
+        with: 
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+      
+      - name: Start Server & Check Health 
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root 
+          DB_PASSWORD: hungdepzai123
+          DB_NAME: convertodb
         run: |
-          echo "Checking health at: $URL"
-          curl -f -v --retry 5 --retry-delay 5 --max-time 10 "$URL"
-          echo "Server backend vẫn sống khỏe!"
+          echo "Starting fastAPI server"
+          uvicorn main:app --host 127.0.0.1 --port 5050 &
+
+          SERVER_PID=$!
+
+          echo "Waiting for server to startup"
+          sleep 5
+
+          echo "Checking Health endpoint"
+
+          curl -f -v http://127.0.0.1:5050/health
+
+          echo "Server khoi dong thanh cong"
+          kill $SERVER_PID
+
+      
+
+
+
 
 
   

@@ -37,10 +37,16 @@ jobs:
         python-version: ['3.9', '3.10']
 
     steps:
-      - name: Checkout code  # lay code
+      - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Python & Cache  #setup python va kich hoat cache luon
+      # 👇 THÊM BƯỚC NÀY: Cài thư viện hệ thống cho rembg/opencv
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgl1-mesa-glx
+
+      - name: Setup Python & Cache
         uses: actions/setup-python@v4 
         with: 
           python-version: ${{ matrix.python-version }}
@@ -55,37 +61,41 @@ jobs:
           DB_PORT: 3306
           DB_USER: root 
           DB_PASSWORD: hungdepzai123
-          DB_NAME: convertodb
+          DB_NAME: convertodb # Đảm bảo khớp với MYSQL_DATABASE ở trên
 
-          SECRET_KEY: abc
-          GOOGLE_CLIENT_ID: abc
-          GOOGLE_CLIENT_SECRET: abc
-          MAIL_USER: abc
-          MAIL_PASSWORD: abc
-          MAIL_FROM: abc
-          MAIL_PORT: 5000
-          MAIL_SERVER: abc
-          GITHUB_CLIENT_ID: abc
-          GITHUB_CLIENT_SECRET: abc
-          MAIL_USERNAME: abc
-
+          # Các biến môi trường khác (Fake giá trị hợp lý)
+          SECRET_KEY: "secret_fake"
+          GOOGLE_CLIENT_ID: "fake_id"
+          GOOGLE_CLIENT_SECRET: "fake_secret"
+          MAIL_USERNAME: "fake_mail_user"
+          MAIL_PASSWORD: "fake_mail_password"
+          MAIL_FROM: "test@example.com"
+          MAIL_PORT: 587             # 👈 Để số
+          MAIL_SERVER: "smtp.gmail.com"
+          GITHUB_CLIENT_ID: "fake_gh_id"
+          GITHUB_CLIENT_SECRET: "fake_gh_secret"
 
         run: |
-          echo "Starting fastAPI server"
-          cd Backend/App
-
-          uvicorn main:app --host 127.0.0.1 --port 5050 &
+          echo "Starting fastAPI server..."
+          
+          # 👇 SỬA CÁCH 1: Debug xem lỗi gì (Quan trọng nhất)
+          # Nếu server chết, ta cần log của nó.
+          # Redirect log ra file 'server.log' để đọc sau nếu lỗi
+          
+          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          uvicorn Backend.App.main:app --host 127.0.0.1 --port 5050 > server.log 2>&1 &
 
           SERVER_PID=$!
 
-          echo "Waiting for server to startup"
+          echo "Waiting for server to startup..."
           sleep 5
 
-          echo "Checking Health endpoint"
+          echo "Checking Health endpoint..."
+          
+          # Nếu curl thất bại, in ra log của server để biết tại sao nó chết
+          curl -f -v http://127.0.0.1:5050/health || (echo "❌ Server Start Failed! Log below:" && cat server.log && exit 1)
 
-          curl -f -v http://127.0.0.1:5050/health
-
-          echo "Server khoi dong thanh cong"
+          echo "✅ Server started successfully"
           kill $SERVER_PID
 
       

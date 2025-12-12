@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     DEBUG: bool = True
 
     GOOGLE_CLIENT_ID: str
-    GOOGLE_CLINET_SECRET: str
+    GOOGLE_CLIENT_SECRET: str
 
     MAIL_USERNAME: str
     MAIL_PASSWORD: SecretStr

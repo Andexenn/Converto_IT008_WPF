@@ -67,6 +67,7 @@ jobs:
           MAIL_SERVER: abc
           GITHUB_CLIENT_ID: abc
           GITHUB_CLIENT_SECRET: abc
+          MAIL_USERNAME: abc
 
 
         run: |

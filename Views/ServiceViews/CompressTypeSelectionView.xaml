@@ -3,79 +3,512 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Converto_IT008_WPF.Views.ServiceViews"
-             xmlns:custom="clr-namespace:PlaceholderTextBoxControl"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:local="clr-namespace:Converto_IT008_WPF.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="550" d:DesignWidth="800">
+             d:DesignHeight="900" d:DesignWidth="1200"
+             FontFamily="Segoe UI" FontSize="14">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="Color.Bg" Color="#050505"/>
+        <SolidColorBrush x:Key="Color.Card" Color="#121212"/>
+        <SolidColorBrush x:Key="Color.Border" Color="#333333"/>
+        <SolidColorBrush x:Key="Color.Brand" Color="#FF1E1E"/>
+        <SolidColorBrush x:Key="Color.Text.Primary" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="Color.Text.Secondary" Color="#888888"/>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <local:DropEventArgsConverter x:Key="DropEventArgsConverter"/>
+
+        <Style x:Key="ModernSliderStyle" TargetType="Slider">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid VerticalAlignment="Center">
+                            <Border x:Name="TrackBackground" Height="2" CornerRadius="1" Background="#333333" VerticalAlignment="Center"/>
+                            <Canvas VerticalAlignment="Center" Height="4">
+                                <Border x:Name="PART_SelectionRange" Height="2" CornerRadius="1" Background="{StaticResource Color.Brand}" Visibility="Visible"/>
+                            </Canvas>
+                            <Track x:Name="PART_Track">
+                                <Track.Thumb>
+                                    <Thumb Width="16" Height="16">
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse Fill="{StaticResource Color.Brand}" Stroke="White" StrokeThickness="2"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="RadioButton">
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="Margin" Value="0,0,20,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="RadioButton">
+                        <StackPanel Orientation="Horizontal" Background="Transparent">
+                            <Border Width="16" Height="16" CornerRadius="8" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1" Background="Transparent">
+                                <Ellipse x:Name="Dot" Width="8" Height="8" Fill="{StaticResource Color.Brand}" Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Margin="8,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Dot" Property="Visibility" Value="Visible"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource Color.Brand}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="BorderBrush" Value="#666666"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="30" />
+                </Grid.ColumnDefinitions>
+                <Border x:Name="Border" 
+                Grid.ColumnSpan="2"
+                CornerRadius="8"
+                Background="#111111"
+                BorderBrush="#333333"
+                BorderThickness="1" />
+
+                <Path x:Name="Arrow" 
+              Grid.Column="1" 
+              Fill="White"
+              HorizontalAlignment="Center" 
+              VerticalAlignment="Center"
+              Data="M 0 0 L 4 4 L 8 0"
+              Stroke="White" StrokeThickness="1"/>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter TargetName="Border" Property="BorderBrush" Value="{StaticResource Color.Brand}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <Style x:Key="DarkComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#111111"/>
+            <Setter Property="BorderBrush" Value="#333333"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="15,0"/>
+            <Setter Property="Height" Value="44"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <ToggleButton Name="ToggleButton" 
+                                  Template="{StaticResource ComboBoxToggleButton}" 
+                                  Grid.Column="2" 
+                                  Focusable="false"
+                                  IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}"
+                                  ClickMode="Press">
+                            </ToggleButton>
+
+                            <ContentPresenter Name="ContentSite" 
+                                      IsHitTestVisible="False" 
+                                      Content="{TemplateBinding SelectionBoxItem}"
+                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                      ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                      Margin="15,0,30,0"
+                                      VerticalAlignment="Center"
+                                      HorizontalAlignment="Left" />
+
+                            <Popup Name="Popup"
+                           Placement="Bottom"
+                           IsOpen="{TemplateBinding IsDropDownOpen}"
+                           AllowsTransparency="True" 
+                           Focusable="False"
+                           PopupAnimation="Slide">
+                                <Grid Name="DropDown"
+                              SnapsToDevicePixels="True"
+                              MinWidth="{TemplateBinding ActualWidth}"
+                              MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder"
+                                    Background="#1A1A1A"
+                                    BorderThickness="1"
+                                    BorderBrush="#333333"
+                                    CornerRadius="8"
+                                    Margin="0,5,0,0">
+                                        <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="Border" Padding="{TemplateBinding Padding}" Background="Transparent" CornerRadius="4">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#333333"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{StaticResource Color.Brand}"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
     <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
-        <Grid Background="#FFFBFBFB" Height="538">
+        <Grid Background="{StaticResource Color.Bg}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
+            <StackPanel Grid.Row="0" Margin="40,40,40,20">
+                <TextBlock Text="Compress" FontSize="36" FontWeight="Bold" Foreground="{StaticResource Color.Text.Primary}"/>
+                <TextBlock Text="Reduce the size of your files without compromising quality" 
+                           FontSize="14" Foreground="{StaticResource Color.Text.Secondary}" Margin="0,5,0,0"/>
+            </StackPanel>
 
-            <custom:PlaceholderTextBox 
-                Style="{StaticResource Search}"
-                Placeholder="Search"  
-                Width="754" />
-
-            <Grid Grid.Row="1" Margin="0,40,0,0">
+            <Grid Grid.Row="1" Margin="40,0">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
+                <StackPanel Grid.Column="0">
+                    <Grid Height="360">
 
-                <TextBlock Text="Video &amp; Audio" Style="{StaticResource HeaderHomepage}"/>
-                <Border Grid.Column="1" BorderThickness="1 0 0 0" Height="30" BorderBrush="#4F4E4E"/>
-                <TextBlock Text="Image" Grid.Column="2" Style="{StaticResource HeaderHomepage}"/>
-                <Border Grid.Column="3" BorderThickness="1 0 0 0" Height="30" BorderBrush="#4F4E4E"/>
-                <TextBlock Text="PDF &amp; Document" Grid.Column="4" Style="{StaticResource HeaderHomepage}"/>
-                <Border Grid.Column="5" BorderThickness="1 0 0 0" Height="30" BorderBrush="#4F4E4E"/>
-                <TextBlock Text="GIF" Grid.Column="6" Style="{StaticResource HeaderHomepage}" />
+                        <Border x:Name="UploadZoneBackground" 
+                                Background="#222222" 
+                                CornerRadius="12" 
+                                Opacity="0.5"/>
 
-                <Border Grid.Row="1" Grid.ColumnSpan="7" BorderThickness="0.5" BorderBrush="#4F4E4E" Margin="0,15,0,15"/>
+                        <Rectangle x:Name="UploadZoneBorder"
+                                   Stroke="{StaticResource Color.Text.Secondary}" 
+                                   StrokeThickness="1" 
+                                   StrokeDashArray="4 4" 
+                                   RadiusX="12" RadiusY="12"
+                                   Fill="Transparent"
+                                   IsHitTestVisible="False"
+                                   Opacity="0.5"/>
 
-                <StackPanel Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center">
-                    <Button Content="Video Compressor" Style="{StaticResource TextOption}"/>
-                    <Button Content="MP3 Compressor" Style="{StaticResource TextOption}"/>
-                    <Button Content="WAV Compressor" Style="{StaticResource TextOption}"/>
+                        <Grid AllowDrop="True" 
+                              Background="Transparent"
+                              Cursor="Hand"
+                              Visibility="{Binding NotUploaded, Converter={StaticResource BoolToVisibilityConverter}}">
 
+                            <i:Interaction.Triggers>
+                                <i:EventTrigger EventName="DragEnter">
+                                    <i:InvokeCommandAction Command="{Binding OnDragEnterCommand}"/>
+                                </i:EventTrigger>
+
+                                <i:EventTrigger EventName="DragLeave">
+                                    <i:InvokeCommandAction Command="{Binding OnDragLeaveCommand}"/>
+                                </i:EventTrigger>
+
+                                <i:EventTrigger EventName="Drop">
+                                    <i:InvokeCommandAction Command="{Binding DropFileCommand}" 
+                                                       PassEventArgsToCommand="True"
+                                                       EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
+                                </i:EventTrigger>
+
+                                <i:EventTrigger EventName="MouseLeftButtonUp">
+                                    <i:InvokeCommandAction Command="{Binding PickFileCommand}"/>
+                                </i:EventTrigger>
+                            </i:Interaction.Triggers>
+
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="False">
+                                <Grid Margin="0,0,0,15" HorizontalAlignment="Center">
+                                    <fa:FontAwesome Icon="File" FontSize="50" Foreground="{StaticResource Color.Brand}"/>
+                                    <fa:FontAwesome Icon="ArrowUp" 
+                                                    FontSize="20" 
+                                                    Foreground="#1e1e1e" 
+                                                    VerticalAlignment="Center" 
+                                                    HorizontalAlignment="Center" 
+                                                    Margin="0,5,0,0"/>
+                                </Grid>
+
+                                <TextBlock Text="Click to upload or drop images here" 
+                                           Foreground="White" 
+                                           FontWeight="Bold" 
+                                           FontSize="16" 
+                                           HorizontalAlignment="Center" 
+                                           Margin="0,0,0,5"/>
+
+                                <TextBlock Text="PNG, JPG, or WEBP (max. 10MB)" 
+                                           Foreground="{StaticResource Color.Text.Secondary}" 
+                                           FontSize="13" 
+                                           HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid Cursor="Hand"
+                              Visibility="{Binding Uploaded, Converter={StaticResource BoolToVisibilityConverter}}">
+
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" IsHitTestVisible="True">
+                                <Image x:Name="ImgUploadedPreview" 
+                                       Source="{Binding PreviewImage}" 
+                                       Stretch="Uniform" 
+                                       MaxHeight="340"/>
+                            </StackPanel>
+
+                            <Button Command="{Binding ClearUploadFilesCommand}" 
+                                    HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
+                                    Width="30" Height="30" Background="#88000000" BorderThickness="0" Foreground="White" Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border CornerRadius="15" Background="{TemplateBinding Background}">
+                                            <fa:FontAwesome Icon="Close" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" Height="44" Cursor="Hand" BorderThickness="0"
+                                Command="{Binding PickFileCommand}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{StaticResource Color.Brand}" CornerRadius="6">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <fa:ImageAwesome Icon="CloudUpload" Foreground="White" Height="14" Margin="0,0,8,0"/>
+                                            <TextBlock Text="Upload Image" Foreground="White" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+
+                        <Button Grid.Column="2" Height="44" Cursor="Hand" Command="{Binding ClearUploadFilesCommand}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="#1A1A1A" CornerRadius="6" BorderBrush="#333333" BorderThickness="1">
+                                        <TextBlock Text="Clear" Foreground="White" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </Grid>
+
+                    <Border Margin="0,20,0,0" Background="#111111" CornerRadius="6" Height="44" BorderBrush="#333333" BorderThickness="1">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock Text="Download your files here: " Foreground="{StaticResource Color.Text.Secondary}"/>
+                            <TextBlock Text="abc123dfsdfdfd" Foreground="White" TextDecorations="Underline" Cursor="Hand" FontWeight="SemiBold" Margin="5,0,0,0"/>
+                        </StackPanel>
+                    </Border>
                 </StackPanel>
 
-                <Border Grid.Row="2" Grid.Column="1" BorderThickness="1 0 0 0" Height="350" BorderBrush="#4F4E4E" Margin="0,5,0,0" VerticalAlignment="Top"/>
+                <Border Grid.Column="2" 
+        Background="{StaticResource Color.Card}" 
+        CornerRadius="16" 
+        BorderBrush="{StaticResource Color.Border}" 
+        BorderThickness="1" 
+        Padding="30"
+        VerticalAlignment="Center" Height="488">
 
-                <StackPanel Grid.Row="2" Grid.Column="2" HorizontalAlignment="Center">
-                    <Button Content="Image Compressor" Style="{StaticResource TextOption}"/>
-                    <Button Content="JPEG Compressor" Style="{StaticResource TextOption}"/>
-                    <Button Content="PNG Compressor" Style="{StaticResource TextOption}"/>
-                </StackPanel>
+                    <StackPanel>
+                        <TextBlock Text="Settings" FontSize="22" FontWeight="Bold" Foreground="White" Margin="0,0,0,30"/>
 
-                <Border Grid.Row="2" Grid.Column="3" BorderThickness="1 0 0 0" Height="350" BorderBrush="#4F4E4E" Margin="0,5,0,0" VerticalAlignment="Top"/>
+                        <Grid Margin="0,0,0,25">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Row="2" Grid.Column="4" HorizontalAlignment="Center">
-                    <Button Content="PDF Compressor" Style="{StaticResource TextOption}"/>
-                </StackPanel>
+                            <TextBlock Grid.Column="0" 
+                                       Text="Type format" 
+                                       Foreground="White" 
+                                       FontWeight="SemiBold" 
+                                       VerticalAlignment="Center"/>
 
-                <Border Grid.Row="2" Grid.Column="5" BorderThickness="1 0 0 0" Height="350" BorderBrush="#4F4E4E" Margin="0,5,0,0" VerticalAlignment="Top"/>
+                            <ComboBox Grid.Column="1" 
+                                      Style="{StaticResource DarkComboBoxStyle}"
+                                      Width="180"
+                                      SelectedIndex="0">
+                                <ComboBoxItem Content="Images"/>
+                                <ComboBoxItem Content="Documents"/>
+                                <ComboBoxItem Content="Videos"/>
+                            </ComboBox>
+                        </Grid>
 
-                <StackPanel Grid.Row="2" Grid.Column="6" HorizontalAlignment="Center">
-                    <Button Content="GIF Compressor" Style="{StaticResource TextOption}"/>
-                </StackPanel>
+                        <TextBlock Text="Output folder" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <RadioButton Grid.Column="0" 
+                 Content="Default output folder" 
+                 IsChecked="True"
+                 HorizontalAlignment="Left"/>
+
+                            <RadioButton Grid.Column="1" 
+                 Content="Customized folder"
+                 HorizontalAlignment="Right"/>
+                        </Grid>
+                        <Grid Margin="0,0,0,30">
+                            <TextBlock Text="Change" Foreground="#666666" FontSize="13" HorizontalAlignment="Left" TextDecorations="Underline" Cursor="Hand" Margin="301,0,0,0"/>
+                            <TextBlock Text="C:/Download/images" Foreground="#444444" FontSize="13" HorizontalAlignment="Right"/>
+                        </Grid>
+
+                        <TextBlock Text="Quality" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                        <Slider Maximum="100" Minimum="0" Value="50" Margin="0,0,0,10" 
+                                IsSnapToTickEnabled="True" TickFrequency="50"
+                                Style="{StaticResource ModernSliderStyle}"/>
+
+                        <Grid Margin="0,0,0,65">
+                            <TextBlock Text="Low" Foreground="#666666" HorizontalAlignment="Left" FontSize="12"/>
+                            <TextBlock Text="Medium" Foreground="#666666" HorizontalAlignment="Center" FontSize="12"/>
+                            <TextBlock Text="High" Foreground="#666666" HorizontalAlignment="Right" FontSize="12"/>
+                        </Grid>
+
+                        <Button Height="52" Cursor="Hand">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Border Background="{StaticResource Color.Brand}" CornerRadius="8">
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                            <fa:ImageAwesome Icon="FolderOpen" Foreground="White" Height="16" Margin="0,0,10,0"/>
+                                            <TextBlock Text="Compress files" Foreground="White" FontWeight="Bold" FontSize="16"/>
+                                        </StackPanel>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter Property="Opacity" Value="0.9"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </Border>
             </Grid>
 
-        </Grid>
+            <StackPanel Grid.Row="2" Margin="40,50,40,40">
+                <TextBlock Text="Recently Processed" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,20"/>
 
+                <Border Background="#121212" CornerRadius="10" BorderBrush="#222222" BorderThickness="1">
+                    <StackPanel>
+                        <Grid Background="#1A1A1A" Height="45">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="FILENAME" Grid.Column="0" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" Margin="25,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="DATE" Grid.Column="1" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center"/>
+                            <TextBlock Text="STATUS" Grid.Column="2" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Text="FILESIZE" Grid.Column="3" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Text="OUTPUTSIZE" Grid.Column="4" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <Border BorderBrush="#222222" BorderThickness="0,1,0,0" Height="55">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="profile-picture.png" 
+                                           Grid.Column="0" 
+                                           Foreground="White" 
+                                           Margin="25,0" 
+                                           VerticalAlignment="Center" 
+                                           FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis" 
+                                           TextWrapping="NoWrap"
+                                           ToolTip="profile-picture.png"/>
+                                <TextBlock Text="5 hours ago" Grid.Column="1" Foreground="#888888" VerticalAlignment="Center"/>
+
+                                <Border Grid.Column="2" Background="#103820" CornerRadius="15" Padding="15,5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="Completed" Foreground="#4ADE80" FontSize="12" FontWeight="SemiBold"/>
+                                </Border>
+
+                                <TextBlock Text="1 MB" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="0.2 MB" Grid.Column="4" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+
+                        <Border BorderBrush="#222222" BorderThickness="0,1,0,0" Height="55">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                    <ColumnDefinition Width="1*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="Dog-picture.jpg" 
+                                           Grid.Column="0" 
+                                           Foreground="White" 
+                                           Margin="25,0" 
+                                           VerticalAlignment="Center" 
+                                           FontWeight="SemiBold"
+                                           TextTrimming="CharacterEllipsis" 
+                                           TextWrapping="NoWrap"
+                                           ToolTip="Dog-picture.jpg"/>
+                                <TextBlock Text="6 hours ago" Grid.Column="1" Foreground="#888888" VerticalAlignment="Center"/>
+
+                                <Border Grid.Column="2" Background="#3A1515" CornerRadius="15" Padding="25,5" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <TextBlock Text="Failed" Foreground="#F87171" FontSize="12" FontWeight="SemiBold"/>
+                                </Border>
+
+                                <TextBlock Text="0.5 MB" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="-" Grid.Column="4" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+        </Grid>
     </ScrollViewer>
 </UserControl>

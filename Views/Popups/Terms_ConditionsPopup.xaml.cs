@@ -20,24 +20,10 @@ namespace Converto_IT008_WPF.Views.Popups;
 /// <summary>
 /// Interaction logic for Terms_ConditionsPopup.xaml
 /// </summary>
-public partial class Terms_ConditionsPopup : Window
+public partial class Terms_ConditionsPopup : UserControl
 {
     public Terms_ConditionsPopup()
     {
         InitializeComponent();
-        DataContext = App.ServiceProvider?.GetRequiredService<Terms_ConditionsPopupViewModel>();
-
-        if(DataContext is Terms_ConditionsPopupViewModel vm)
-        {
-            vm.RequestClose += () => this.Close();
-        }
-    }
-
-    private void Border_MouseDown(object sender, MouseButtonEventArgs e)
-    {
-        if(e.ChangedButton == MouseButton.Left)
-        {
-            this.DragMove();
-        }
     }
 }

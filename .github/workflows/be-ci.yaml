@@ -99,21 +99,31 @@ jobs:
           SOFFICE_PATH: "/usr/bin/soffice"
 
         run: |
-          echo "Starting fastAPI server..."
-          
-          export PYTHONPATH=$PYTHONPATH:$(pwd)
+          echo "📂 Di chuyển vào thư mục Backend/App..."
           cd Backend/App
           
-          # Start server with logs
-          uvicorn main:app --host 127.0.0.1 --port 5050 > server.log 2>&1 &
+          # 💡 QUAN TRỌNG:
+          # Vì đã cd vào trong, nên ta gọi 'main:app' (không cần Backend.App...)
+          # Server log sẽ được tạo nằm ngay trong thư mục Backend/App
+          
+          echo "🚀 Starting FastAPI server..."
+          python -u -m uvicorn main:app --host 127.0.0.1 --port 5050 > server.log 2>&1 &
+          
           SERVER_PID=$!
 
-          echo "Waiting for server to startup..."
-          sleep 10  # 👈 Increased from 5 to 10 seconds
+          echo "⏳ Waiting for server to startup (15s)..."
+          sleep 15
 
-          echo "Checking Health endpoint..."
+          echo "🔍 Checking Health endpoint..."
           
-          curl -f -v http://127.0.0.1:5050/health || (echo "❌ FAIL! Debug Info:" && ls -la server.log && echo "--- LOG CONTENT ---" && cat server.log && exit 1)
+          # Nếu curl lỗi, ta in file log ra.
+          # Vì đang đứng trong Backend/App nên cat server.log là đúng đường dẫn.
+          curl -f -v http://127.0.0.1:5050/health || ( \
+            echo "❌ CRITICAL FAILURE!" && \
+            echo "--- LOG CONTENT ---" && \
+            cat server.log && \
+            exit 1 \
+          )
 
           echo "✅ Server started successfully"
           kill $SERVER_PID

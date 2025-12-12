@@ -82,7 +82,6 @@ jobs:
           DB_USER: root 
           DB_PASSWORD: hungdepzai123
           DB_NAME: convertodb
-
           SECRET_KEY: "secret_fake"
           GOOGLE_CLIENT_ID: "fake_id"
           GOOGLE_CLIENT_SECRET: "fake_secret"
@@ -94,36 +93,26 @@ jobs:
           GITHUB_CLIENT_ID: "fake_gh_id"
           GITHUB_CLIENT_SECRET: "fake_gh_secret"
           PYTHONUNBUFFERED: "1"
-          
-          # 👇 ADD: Explicitly set LibreOffice path
           SOFFICE_PATH: "/usr/bin/soffice"
 
         run: |
-          echo "📂 Di chuyển vào thư mục Backend/App..."
           cd Backend/App
           
-          # 💡 QUAN TRỌNG:
-          # Vì đã cd vào trong, nên ta gọi 'main:app' (không cần Backend.App...)
-          # Server log sẽ được tạo nằm ngay trong thư mục Backend/App
+          # Option 1: Test if app can even start
+          echo "🧪 Testing if app can import without errors..."
+          python -c "from main import app; print('✅ App imported successfully')" || (echo "❌ Failed to import app" && exit 1)
           
-          echo "🚀 Starting FastAPI server..."
-          python -u -m uvicorn main:app --host 127.0.0.1 --port 5050 > server.log 2>&1 &
+          # Option 2: Start server with timeout
+          echo "🚀 Starting FastAPI server with timeout..."
+          timeout 30s python -m uvicorn main:app --host 127.0.0.1 --port 5050 --log-level debug &
           
           SERVER_PID=$!
-
-          echo "⏳ Waiting for server to startup (15s)..."
-          sleep 15
-
-          echo "🔍 Checking Health endpoint..."
           
-          # Nếu curl lỗi, ta in file log ra.
-          # Vì đang đứng trong Backend/App nên cat server.log là đúng đường dẫn.
-          curl -f -v http://127.0.0.1:5050/health || ( \
-            echo "❌ CRITICAL FAILURE!" && \
-            echo "--- LOG CONTENT ---" && \
-            cat server.log && \
-            exit 1 \
-          )
-
-          echo "✅ Server started successfully"
-          kill $SERVER_PID
+          echo "⏳ Waiting 15s for startup..."
+          sleep 15
+          
+          echo "🔍 Testing health endpoint..."
+          curl -f -v http://127.0.0.1:5050/health || exit 1
+          
+          echo "✅ Success!"
+          kill $SERVER_PID 2>/dev/null || true

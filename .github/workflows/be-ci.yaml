@@ -58,6 +58,7 @@ jobs:
           DB_NAME: convertodb
         run: |
           echo "Starting fastAPI server"
+          cd Backend/App
           uvicorn main:app --host 127.0.0.1 --port 5050 &
 
           SERVER_PID=$!

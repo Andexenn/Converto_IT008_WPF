@@ -32,7 +32,7 @@ jobs:
           --health-retries=5
 
     strategy:
-      fail-fast: false # 1 cai bug thi nhung cai khac van chay tiep
+      fail-fast: false
       matrix:
         python-version: ['3.9', '3.10']
 
@@ -40,11 +40,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 👇 THÊM BƯỚC NÀY: Cài thư viện hệ thống cho rembg/opencv
+      # 👇 UPDATED: Install ALL system dependencies including LibreOffice
       - name: Install System Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libgl1 libglib2.0-0
+          sudo apt-get install -y \
+            libgl1 \
+            libglib2.0-0 \
+            libreoffice \
+            libreoffice-writer \
+            libreoffice-calc \
+            libreoffice-impress \
+            default-jre-headless \
+            fonts-liberation \
+            libxinerama1 \
+            libfontconfig1 \
+            libdbus-glib-1-2 \
+            libcairo2 \
+            libcups2
+
+      # 👇 VERIFY LibreOffice is installed
+      - name: Verify LibreOffice Installation
+        run: |
+          which soffice
+          soffice --version
+          ls -la /usr/bin/soffice
 
       - name: Setup Python & Cache
         uses: actions/setup-python@v4 
@@ -61,48 +81,39 @@ jobs:
           DB_PORT: 3306
           DB_USER: root 
           DB_PASSWORD: hungdepzai123
-          DB_NAME: convertodb # Đảm bảo khớp với MYSQL_DATABASE ở trên
+          DB_NAME: convertodb
 
-          # Các biến môi trường khác (Fake giá trị hợp lý)
           SECRET_KEY: "secret_fake"
           GOOGLE_CLIENT_ID: "fake_id"
           GOOGLE_CLIENT_SECRET: "fake_secret"
           MAIL_USERNAME: "fake_mail_user"
           MAIL_PASSWORD: "fake_mail_password"
           MAIL_FROM: "test@example.com"
-          MAIL_PORT: 587             # 👈 Để số
+          MAIL_PORT: 587
           MAIL_SERVER: "smtp.gmail.com"
           GITHUB_CLIENT_ID: "fake_gh_id"
           GITHUB_CLIENT_SECRET: "fake_gh_secret"
+          
+          # 👇 ADD: Explicitly set LibreOffice path
+          SOFFICE_PATH: "/usr/bin/soffice"
 
         run: |
           echo "Starting fastAPI server..."
           
-          # 👇 SỬA CÁCH 1: Debug xem lỗi gì (Quan trọng nhất)
-          # Nếu server chết, ta cần log của nó.
-          # Redirect log ra file 'server.log' để đọc sau nếu lỗi
-          
           export PYTHONPATH=$PYTHONPATH:$(pwd)
           cd Backend/App
+          
+          # Start server with logs
           uvicorn main:app --host 127.0.0.1 --port 5050 > server.log 2>&1 &
-
           SERVER_PID=$!
 
           echo "Waiting for server to startup..."
-          sleep 5
+          sleep 10  # 👈 Increased from 5 to 10 seconds
 
           echo "Checking Health endpoint..."
           
-          # Nếu curl thất bại, in ra log của server để biết tại sao nó chết
+          # If curl fails, show the server log
           curl -f -v http://127.0.0.1:5050/health || (echo "❌ Server Start Failed! Log below:" && cat server.log && exit 1)
 
           echo "✅ Server started successfully"
           kill $SERVER_PID
-
-      
-
-
-
-
-
-  

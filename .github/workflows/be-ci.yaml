@@ -56,9 +56,23 @@ jobs:
           DB_USER: root 
           DB_PASSWORD: hungdepzai123
           DB_NAME: convertodb
+
+          SECRET_KEY: abc
+          GOOGLE_CLIENT_ID: abc
+          GOOGLE_CLIENT_SECRET: abc
+          MAIL_USER: abc
+          MAIL_PASSWORD: abc
+          MAIL_FROM: abc
+          MAIL_PORT: 5000
+          MAIL_SERVER: abc
+          GITHUB_CLIENT_ID: abc
+          GITHUB_CLIENT_SECRET: abc
+
+
         run: |
           echo "Starting fastAPI server"
           cd Backend/App
+
           uvicorn main:app --host 127.0.0.1 --port 5050 &
 
           SERVER_PID=$!

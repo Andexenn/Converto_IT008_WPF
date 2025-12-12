@@ -13,5 +13,3 @@ httpx
 python-jose[cryptography]
 fastapi-mail
 python-multipart 
-win32com
-pythoncom

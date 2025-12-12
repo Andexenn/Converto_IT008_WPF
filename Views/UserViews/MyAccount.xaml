@@ -533,7 +533,8 @@
                                                  Padding="10,0" 
                                                  VerticalContentAlignment="Center" 
                                                  FontSize="14"
-                                                 PasswordChanged="PasswordBox_PasswordChanged"/>
+                                                 PasswordChanged="PasswordBox_PasswordChanged"
+                                                 PreviewMouseWheel="PasswordBox_PreviewMouseWheel"/>
                                 </Border>
 
                                 <TextBlock Text="Confirm New Password" Style="{StaticResource InputLabelStyle}"/>
@@ -550,7 +551,8 @@
                                                  Padding="10,0" 
                                                  VerticalContentAlignment="Center" 
                                                  FontSize="14"
-                                                 PasswordChanged="PasswordBox_PasswordChanged_1"/>
+                                                 PasswordChanged="PasswordBox_PasswordChanged_1"
+                                                 PreviewMouseWheel="PasswordBox_PreviewMouseWheel"/>
                                 </Border>
 
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">

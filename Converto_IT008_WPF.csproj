@@ -36,6 +36,7 @@
     <None Remove="Resources\MONTSERRAT-REGULAR.TTF" />
     <None Remove="Resources\MONTSERRAT-SEMIBOLD.TTF" />
     <None Remove="Resources\no-connection.png" />
+    <None Remove="Resources\NoConnection.png" />
     <None Remove="Resources\SignUpBackground.png" />
     <None Remove="Resources\TransparentBackground.jpg" />
     <None Remove="Resources\user %282%29.png" />
@@ -69,6 +70,7 @@
     <Resource Include="Resources\MONTSERRAT-REGULAR.TTF" />
     <Resource Include="Resources\MONTSERRAT-SEMIBOLD.TTF" />
     <Resource Include="Resources\no-connection.png" />
+    <Resource Include="Resources\NoConnection.png" />
     <Resource Include="Resources\SignUpBackground.png" />
     <Resource Include="Resources\TransparentBackground.jpg" />
   </ItemGroup>

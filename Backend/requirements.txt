@@ -5,9 +5,11 @@ pydantic
 pydantic[email]
 pydantic-settings
 pymysql
-datetime
 python-dotenv
-passlib
-Pillow 
+passlib[bcrypt]  
+bcrypt          
+Pillow
 httpx
 python-jose[cryptography]
+fastapi-mail
+python-multipart 

@@ -93,6 +93,7 @@ jobs:
           MAIL_SERVER: "smtp.gmail.com"
           GITHUB_CLIENT_ID: "fake_gh_id"
           GITHUB_CLIENT_SECRET: "fake_gh_secret"
+          PYTHONUNBUFFERED: "1"
           
           # 👇 ADD: Explicitly set LibreOffice path
           SOFFICE_PATH: "/usr/bin/soffice"
@@ -112,11 +113,7 @@ jobs:
 
           echo "Checking Health endpoint..."
           
-          if ! curl -f -v http://127.0.0.1:5050/health; then
-            echo "❌ Server Start Failed! Log below:"
-            cat server.log
-            exit 1
-          fi
+          curl -f -v http://127.0.0.1:5050/health || (echo "❌ FAIL! Debug Info:" && ls -la server.log && echo "--- LOG CONTENT ---" && cat server.log && exit 1)
 
           echo "✅ Server started successfully"
           kill $SERVER_PID

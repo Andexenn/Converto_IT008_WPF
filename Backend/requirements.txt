@@ -2,6 +2,7 @@ fastapi
 uvicorn[standard]
 sqlalchemy
 pydantic
+pydantic[email]
 pydantic-settings
 pymysql
 datetime

@@ -112,8 +112,11 @@ jobs:
 
           echo "Checking Health endpoint..."
           
-          # If curl fails, show the server log
-          curl -f -v http://127.0.0.1:5050/health || (echo "❌ Server Start Failed! Log below:" && cat server.log && exit 1)
+          if ! curl -f -v http://127.0.0.1:5050/health; then
+            echo "❌ Server Start Failed! Log below:"
+            cat server.log
+            exit 1
+          fi
 
           echo "✅ Server started successfully"
           kill $SERVER_PID

@@ -364,3 +364,4 @@ FodyWeavers.xsd
 TODO.txt
 .env
 .venv
+launch.json

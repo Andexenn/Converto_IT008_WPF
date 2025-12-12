@@ -11,16 +11,108 @@ on:
       - "main"
 
 jobs:
-  check-health-be-linux:
+  smoke-test:
+    name: Smoke test on linux
     runs-on: ubuntu-latest
-    steps:
-      - name: Check health endpoint
+
+    services:
+      mysql-service:
+        image: mysql:8.0
+
         env:
-          URL: ${{ secrets.TAILSCALE_BASE_ENDPOINT }}health
+          MYSQL_ROOT_PASSWORD: hungdepzai123
+          MYSQL_DATABASE: convertodb
+
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.13']
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 👇 UPDATED: Install ALL system dependencies including LibreOffice
+      - name: Install System Dependencies
         run: |
-          echo "Checking health at: $URL"
-          curl -f -v --retry 5 --retry-delay 5 --max-time 10 "$URL"
-          echo "Server backend vẫn sống khỏe!"
+          sudo apt-get update
+          sudo apt-get install -y \
+            libgl1 \
+            libglib2.0-0 \
+            libreoffice \
+            libreoffice-writer \
+            libreoffice-calc \
+            libreoffice-impress \
+            default-jre-headless \
+            fonts-liberation \
+            libxinerama1 \
+            libfontconfig1 \
+            libdbus-glib-1-2 \
+            libcairo2 \
+            libcups2
 
+      # 👇 VERIFY LibreOffice is installed
+      - name: Verify LibreOffice Installation
+        run: |
+          which soffice
+          soffice --version
+          ls -la /usr/bin/soffice
 
-  
+      - name: Setup Python & Cache
+        uses: actions/setup-python@v4 
+        with: 
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: pip install -r Backend/requirements.txt
+      
+      - name: Start Server & Check Health 
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root 
+          DB_PASSWORD: hungdepzai123
+          DB_NAME: convertodb
+          SECRET_KEY: "secret_fake"
+          GOOGLE_CLIENT_ID: "fake_id"
+          GOOGLE_CLIENT_SECRET: "fake_secret"
+          MAIL_USERNAME: "fake_mail_user"
+          MAIL_PASSWORD: "fake_mail_password"
+          MAIL_FROM: "test@example.com"
+          MAIL_PORT: 587
+          MAIL_SERVER: "smtp.gmail.com"
+          GITHUB_CLIENT_ID: "fake_gh_id"
+          GITHUB_CLIENT_SECRET: "fake_gh_secret"
+          PYTHONUNBUFFERED: "1"
+          SOFFICE_PATH: "/usr/bin/soffice"
+
+        run: |
+          cd Backend/App
+          
+          # Option 1: Test if app can even start
+          echo "🧪 Testing if app can import without errors..."
+          python -c "from main import app; print('✅ App imported successfully')" || (echo "❌ Failed to import app" && exit 1)
+          
+          # Option 2: Start server with timeout
+          echo "🚀 Starting FastAPI server with timeout..."
+          timeout 30s python -m uvicorn main:app --host 127.0.0.1 --port 5050 --log-level debug &
+          
+          SERVER_PID=$!
+          
+          echo "⏳ Waiting 15s for startup..."
+          sleep 15
+          
+          echo "🔍 Testing health endpoint..."
+          curl -f -v http://127.0.0.1:5050/health || exit 1
+          
+          echo "✅ Success!"
+          kill $SERVER_PID 2>/dev/null || true

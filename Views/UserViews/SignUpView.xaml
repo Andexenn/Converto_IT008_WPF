@@ -5,7 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              xmlns:custom="clr-namespace:PlaceholderTextBoxControl" 
-             xmlns:userviewmodel="clr-namespace:Converto_IT008_WPF.ViewModels.UserViewModel" 
+             xmlns:userviewmodel="clr-namespace:Converto_IT008_WPF.ViewModels.UserViewModel"
+             xmlns:views="clr-namespace:Converto_IT008_WPF.Views.Popups"
              d:DataContext="{d:DesignInstance Type=userviewmodel:SignUpViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="850" d:DesignWidth="1200"
@@ -339,6 +340,27 @@
                         </Grid>
                     </Border>
 
+                    <StackPanel Orientation="Horizontal" 
+                                HorizontalAlignment="Left" 
+                                Margin="5,0,0,10">
+                        <CheckBox IsChecked="{Binding IsTermsAccepted, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                  VerticalAlignment="Center"
+                                  Cursor="Hand">
+                            <CheckBox.LayoutTransform>
+                                <ScaleTransform ScaleX="0.85" ScaleY="0.85"/>
+                            </CheckBox.LayoutTransform>
+                        </CheckBox>
+
+                        <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" FontSize="13">
+                    <Run Text="I agree to the " Foreground="{StaticResource Brush.Text.Secondary}"/>
+                    <Hyperlink Command="{Binding GoTermsAndConditionsCommand}" 
+                               TextDecorations="None"
+                               Foreground="{StaticResource Brush.Brand}">
+                        <Run Text="Terms of Service"/>
+                    </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+
                     <Button Command="{Binding SignUpCommand}"
                             Content="Create Account"
                             Height="50"
@@ -436,5 +458,19 @@
                 </StackPanel>
             </Grid>
         </Border>
+
+        <Grid Visibility="{Binding IsTermsPopupVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+              d:Visibility="Collapsed">
+
+            <Border Background="Black" Opacity="0.5">
+                <Border.InputBindings>
+                    <MouseBinding MouseAction="LeftClick" Command="{Binding CloseTermsAndConditionsCommand}"/>
+                </Border.InputBindings>
+            </Border>
+
+            <views:Terms_ConditionsPopup VerticalAlignment="Center" 
+                                         HorizontalAlignment="Center"
+                                         Width="500" Height="600"/>
+        </Grid>
     </Grid>
 </UserControl>

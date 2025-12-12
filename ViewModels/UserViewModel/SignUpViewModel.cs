@@ -31,6 +31,11 @@ public partial class SignUpViewModel : BaseViewModel
     string email = string.Empty;
     [ObservableProperty]
     string password = string.Empty;
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SignUpCommand))]
+    bool isTermsAccepted;
+    [ObservableProperty]
+    bool isTermsPopupVisible;
     public ICommand GoLoginCommand { get; }
 
     private readonly INavigationService _nav;
@@ -52,39 +57,34 @@ public partial class SignUpViewModel : BaseViewModel
     [RelayCommand]
     void GoTermsAndConditions()
     {
-        Terms_ConditionsPopup popup = new Terms_ConditionsPopup();
-
-        var vm = new Terms_ConditionsPopupViewModel();
-        popup.DataContext = vm;
-        popup.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        popup.Owner = Application.Current.MainWindow;
-
-        vm.RequestClose += () =>
-        {
-            AcceptTermsAndConditionsStatus = vm.AcceptTermsAndConditionsStatus;
-
-            // đóng popup
-            popup.Close();
-        };
-
-        popup.ShowDialog();
-    }
-
-    bool checkCondition()
-    {
-        return AcceptTermsAndConditionsStatus & !string.IsNullOrEmpty(FirstName) & !string.IsNullOrEmpty(LastName)
-            & !string.IsNullOrEmpty(Email) & !string.IsNullOrEmpty(Password);
+        IsTermsPopupVisible = true;
     }
 
     [RelayCommand]
+    void CloseTermsAndConditions()
+    {
+        IsTermsPopupVisible = false;
+    }
+
+    [RelayCommand]
+    void AcceptTerms()
+    {
+        IsTermsAccepted = true;
+        IsTermsPopupVisible = false;
+    }
+
+    private bool CanSignUp()
+    {
+        return IsTermsAccepted
+            && !string.IsNullOrEmpty(FirstName)
+            && !string.IsNullOrEmpty(LastName)
+            && !string.IsNullOrEmpty(Email)
+            && !string.IsNullOrEmpty(Password);
+    }
+
+    [RelayCommand(CanExecute = nameof(CanSignUp))]
     async Task SignUp()
     {
-        //if (!checkCondition())
-        //{
-        //    MessageBox.Show("Please fill in all fields and accept the terms and conditions.", "Incomplete Information", MessageBoxButton.OK, MessageBoxImage.Warning);
-        //    return;
-        //}
-
         if(Password.Length <= 8 || !Password.Any(c => char.IsUpper(c)) || !Password.Any(c => char.IsLower(c)) || !Password.Any(c => char.IsDigit(c)) || !Password.Any(c => char.IsLetterOrDigit(c)))
         {
             MessageBox.Show("Password must be at least 8 characters long and include uppercase letters, lowercase letters, and digits.", "Weak Password", MessageBoxButton.OK, MessageBoxImage.Warning);

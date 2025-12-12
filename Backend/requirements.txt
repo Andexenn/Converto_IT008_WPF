@@ -2,6 +2,7 @@ fastapi
 uvicorn[standard]
 sqlalchemy
 pydantic
+gunicorn
 pydantic[email]
 pydantic-settings
 pymysql
@@ -14,3 +15,9 @@ python-jose[cryptography]
 fastapi-mail
 python-multipart 
 rembg
+onnxruntime
+numpy
+pytest
+pytest-asyncio
+aiomysql
+alembic

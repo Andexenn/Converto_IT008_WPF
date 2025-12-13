@@ -33,12 +33,15 @@ public static class AppModule
         services.AddScoped<IUserService, UserServiceImpl>();
         services.AddScoped<IProcessImageService, ProcessImageServiceImpl>();
         services.AddScoped<ITaskService, TaskServiceImpl>();
+        services.AddScoped<ICompressService, CompressServiceImpl>();
+
         //------------------ APIs ------------------
 
         services.AddHttpClient<IAuthApi, AuthApi>();
         services.AddHttpClient<IRemoveBackgroundApi, RemoveBackgroundApi>();
         services.AddHttpClient<IUserApi, UserApi>();
         services.AddHttpClient<ITaskApi, TaskApi>();
+        services.AddHttpClient<ICompressApi, CompressApi>();
 
         //------------------ ViewModels ------------------
         //GeneralViewModel

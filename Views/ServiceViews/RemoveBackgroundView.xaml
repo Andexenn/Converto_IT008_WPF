@@ -7,19 +7,16 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:Converto_IT008_WPF.Converters"
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1000">
+             d:DesignHeight="1000" d:DesignWidth="1000">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <local:DropEventArgsConverter x:Key="DropEventArgsConverter"/> 
     </UserControl.Resources>
-    
+
     <Grid Background="{StaticResource Brush.MainBG}">
-        <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
-                 Icon="Refresh" Spin="True" Width="60" Height="60" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
-        
-        <ScrollViewer VerticalScrollBarVisibility="Hidden"
-                      Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
+
+        <ScrollViewer VerticalScrollBarVisibility="Hidden" >
             <StackPanel Margin="50,40,50,40">
                 <TextBlock Text="Remove background" 
                            Foreground="White" 
@@ -442,34 +439,12 @@
                                        VerticalAlignment="Center" 
                                        HorizontalAlignment="Right"/>
                         </Grid>
-
-                        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                            <!--<Border BorderBrush="#33FFFFFF" BorderThickness="0,1,0,0" Padding="20,12">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="1.5*"/>
-                                        <ColumnDefinition Width="1.5*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock Grid.Column="0" Text="profile-picture.png" Foreground="White" VerticalAlignment="Center"/>
-
-                                    <TextBlock Grid.Column="1" Text="5 hours ago" Foreground="White" VerticalAlignment="Center"/>
-
-                                    <Border Grid.Column="2" Background="#332ECC71" CornerRadius="12" HorizontalAlignment="Center" Padding="15,4">
-                                        <Border.Effect>
-                                            <DropShadowEffect Color="#2ECC71" BlurRadius="5" ShadowDepth="0" Opacity="0.2"/>
-                                        </Border.Effect>
-
-                                        <TextBlock Text="Completed" Foreground="#2ECC71" FontWeight="SemiBold" FontSize="12"/>
-                                    </Border>
-
-                                    <TextBlock Grid.Column="3" Text="1 MB" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                </Grid>
-                            </Border>-->
-
-                            <ItemsControl ItemsSource="{Binding UserTasks}">
+                        
+                        <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                                            Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
+                        <ScrollViewer  Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                       >
+                            <ItemsControl ItemsSource="{Binding UserTasks}" Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Border BorderBrush="#33FFFFFF" BorderThickness="0,1,0,0" Padding="20,12">

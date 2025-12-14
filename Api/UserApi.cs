@@ -182,4 +182,25 @@ public class UserApi : IUserApi
             throw new ApplicationException("Error updating user preferences", ex);
         }
     }
+
+    public async Task<bool> SendEmail(string email_type)
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
+            using HttpResponseMessage response = await _httpClient.GetAsync($"{BaseURL}/user/send_email/{email_type}");
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                throw new ApplicationException($"API Error: {response.StatusCode}, Content: {await response.Content.ReadAsStringAsync()}");
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error sending email", ex);
+        }
+    }
 }

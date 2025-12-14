@@ -19,5 +19,5 @@ onnxruntime
 numpy
 pytest
 pytest-asyncio
-aiomysql
+pytest-dotenv
 alembic

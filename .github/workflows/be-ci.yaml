@@ -91,7 +91,7 @@ jobs:
       - name: Verify FFmpeg Installation
         run: |
           which ffmpeg
-          ffmpeg --version 
+          ffmpeg -version 
 
       # setup python cache
       - name: Setup Python & Cache

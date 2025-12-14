@@ -3,10 +3,492 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:Converto_IT008_WPF.Views"
+             xmlns:local="clr-namespace:Converto_IT008_WPF.Views.ServiceViews"
+             xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+             d:DesignHeight="750" d:DesignWidth="1100"
+             Background="#050505" Foreground="White">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="Color.Bg" Color="#050505"/>
+        <SolidColorBrush x:Key="Color.Card" Color="#121212"/>
+        <SolidColorBrush x:Key="Color.Border" Color="#333333"/>
+        <SolidColorBrush x:Key="Color.Brand" Color="#FF1E1E"/>
+        <SolidColorBrush x:Key="Color.Text.Primary" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="Color.Text.Secondary" Color="#888888"/>
+        
+        <Style x:Key="PrimaryBtn" TargetType="Button">
+            <Setter Property="Background" Value="#FF0000"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#CC0000"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TabBtn" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#888888"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="5,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="8" Padding="15,8">
+                            <StackPanel Orientation="Horizontal">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="TopOptionBtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#AAAAAA"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="8">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#AAAAAA"/>
+                                <Setter Property="Foreground" Value="#1E1E1E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FileCloseBtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" Background="{TemplateBinding Background}" CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#FF0000"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <ControlTemplate x:Key="ComboBoxToggleButton" TargetType="ToggleButton">
+            <Border x:Name="Border" CornerRadius="8" Background="#252525" BorderBrush="#333333" BorderThickness="1" Padding="10,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="20"/>
+                    </Grid.ColumnDefinitions>
+                    <fa:ImageAwesome Grid.Column="1" Icon="ChevronDown" Height="12" Foreground="#888888" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                </Grid>
+            </Border>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter TargetName="Border" Property="BorderBrush" Value="#555555"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="RoundedComboBoxTheme" TargetType="{x:Type ComboBox}">
+            <Grid>
+                <ToggleButton x:Name="ToggleButton" Template="{StaticResource ComboBoxToggleButton}" Focusable="false" ClickMode="Press" IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"/>
+                <ContentPresenter x:Name="ContentSite" IsHitTestVisible="False"  Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="15,0,30,0" VerticalAlignment="Center" HorizontalAlignment="Left" />
+                <Popup x:Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True" Focusable="False" PopupAnimation="Slide">
+                    <Grid x:Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                        <Border x:Name="DropDownBorder" Background="#252525" BorderThickness="1" BorderBrush="#333333" CornerRadius="8" Margin="0,5,0,0">
+                            <ScrollViewer Margin="4,6,4,6" SnapsToDevicePixels="True">
+                                <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained" />
+                            </ScrollViewer>
+                        </Border>
+                    </Grid>
+                </Popup>
+            </Grid>
+        </ControlTemplate>
+
+        <Style x:Key="RedSlider" TargetType="Slider">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Slider">
+                        <Grid VerticalAlignment="Center">
+                            <Border Name="TrackBackground" Height="4" CornerRadius="2" Background="#444444" VerticalAlignment="Center"/>
+                            <Canvas Name="PART_SelectionRange"/>
+                            <Track Name="PART_Track">
+                                <Track.Thumb>
+                                    <Thumb>
+                                        <Thumb.Template>
+                                            <ControlTemplate TargetType="Thumb">
+                                                <Ellipse Width="18" Height="18" Fill="#FF0000" Stroke="White" StrokeThickness="0"/>
+                                            </ControlTemplate>
+                                        </Thumb.Template>
+                                    </Thumb>
+                                </Track.Thumb>
+                            </Track>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SwitchStyle" TargetType="ToggleButton">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid Width="40" Height="22">
+                            <Border x:Name="Border" Background="#333333" CornerRadius="11"/>
+                            <Ellipse x:Name="Ellipse" Fill="White" Width="16" Height="16" HorizontalAlignment="Left" Margin="3,0,0,0">
+                                <Ellipse.RenderTransform>
+                                    <TranslateTransform X="0"/>
+                                </Ellipse.RenderTransform>
+                            </Ellipse>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#FF0000"/>
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="18" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="Ellipse" Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="0:0:0.2"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ZoomBtnStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#AAAAAA"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#AAAAAA"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                CornerRadius="5">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#AAAAAA"/>
+                                <Setter Property="Foreground" Value="#1E1E1E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+    </UserControl.Resources>
+
+    <Grid Margin="20" Background="{StaticResource Color.Bg}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                <fa:ImageAwesome Icon="Refresh" Foreground="#FF0000" Height="20" Margin="0,0,10,0"/>
+                <TextBlock Text="File Converter" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Style="{StaticResource TopOptionBtnStyle}" Margin="5">
+                    <fa:ImageAwesome Icon="History" 
+                                     Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" 
+                                     Height="18"/>
+                </Button>
+
+                <Button Style="{StaticResource TopOptionBtnStyle}" Margin="5">
+                    <fa:ImageAwesome Icon="Cog" 
+                                     Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" 
+                                     Height="18"/>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1" Margin="0,15,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="280"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="320"/>
+            </Grid.ColumnDefinitions>
+
+            <Grid Grid.Column="0" Margin="0,0,20,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <Button Style="{StaticResource PrimaryBtn}" 
+                        Content="+ Add Files" 
+                        Height="45" 
+                        FontSize="16" 
+                        Margin="0,0,0,20" 
+                        Command="{Binding OpenFolderCommand}"/>
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+                    <StackPanel>
+                        <Border BorderBrush="#FF0000" BorderThickness="1" Background="#252525" CornerRadius="8" Padding="10" Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Background="#333333" Width="40" Height="40" CornerRadius="5">
+                                    <fa:ImageAwesome Icon="Photo" Foreground="#FF0000" Height="20"/>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="10,0">
+                                    <TextBlock Text="mountain-scenery.jpg" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="2.4 MB" Foreground="#888888" FontSize="12"/>
+                                </StackPanel>
+                                <Button Grid.Column="2" Style="{StaticResource FileCloseBtnStyle}">
+                                    <fa:ImageAwesome Icon="Close" Foreground="#666666" Height="10"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+
+                        <Border Background="#252525" CornerRadius="8" Padding="10" Margin="0,0,0,10" BorderThickness="1" BorderBrush="#333333">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Background="#333333" Width="40" Height="40" CornerRadius="5">
+                                    <fa:ImageAwesome Icon="VideoCamera" Foreground="Gray" Height="20"/>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="10,0">
+                                    <TextBlock Text="drone-footage.mp4" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="152.1 MB" Foreground="#888888" FontSize="12"/>
+                                </StackPanel>
+                                <Button Grid.Column="2" Style="{StaticResource FileCloseBtnStyle}">
+                                    <fa:ImageAwesome Icon="Close" Foreground="#666666" Height="10"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+
+                        <Border Background="#252525" CornerRadius="8" Padding="10" Margin="0,0,0,10">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border Background="#333333" Width="40" Height="40" CornerRadius="5">
+                                    <fa:ImageAwesome Icon="Music" Foreground="Gray" Height="20"/>
+                                </Border>
+                                <StackPanel Grid.Column="1" Margin="10,0">
+                                    <TextBlock Text="podcast_episode.mp3" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="45.8 MB" Foreground="#888888" FontSize="12"/>
+                                </StackPanel>
+                                <Button Grid.Column="2" Style="{StaticResource FileCloseBtnStyle}">
+                                    <fa:ImageAwesome Icon="Close" Foreground="#666666" Height="10"/>
+                                </Button>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Button Grid.Row="2" Style="{StaticResource PrimaryBtn}" Height="50" Margin="0,10,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <fa:ImageAwesome Icon="Bolt" Foreground="White" Height="16" Margin="0,0,10,0"/>
+                        <TextBlock Text="Convert All (3)" FontSize="16" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="60"/>
+                </Grid.RowDefinitions>
+                <DockPanel LastChildFill="False">
+                    <TextBlock Text="Dimensions: 1920x1080" VerticalAlignment="Center" Foreground="#AAAAAA"/>
+
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
+                        <Button Style="{StaticResource ZoomBtnStyle}">
+                            <fa:ImageAwesome Icon="SearchPlus" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Height="14"/>
+                        </Button>
+                        <Button Style="{StaticResource ZoomBtnStyle}">
+                            <fa:ImageAwesome Icon="SearchMinus" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}" Height="14"/>
+                        </Button>
+                    </StackPanel>
+                </DockPanel>
+                <Border Grid.Row="1" Background="#5A7D7C" CornerRadius="8" ClipToBounds="True" BorderThickness="1" BorderBrush="#333333">
+                    <Image x:Name="PreviewImage" Stretch="Uniform" Margin="20">
+                        <Image.LayoutTransform>
+                            <ScaleTransform x:Name="ImageScaleTransform" 
+                                            ScaleX="{Binding ZoomScale}" 
+                                            ScaleY="{Binding ZoomScale}"/>
+                        </Image.LayoutTransform>
+                        <Image.Source>
+                            <BitmapImage UriSource="https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg"/>
+                        </Image.Source>
+                    </Image>
+                </Border>
+                <Border Grid.Row="2" Background="#1E1E1E" CornerRadius="0,0,8,8" Margin="0,-10,0,0" Panel.ZIndex="-1" Padding="15,15,15,5" BorderThickness="1" BorderBrush="#333333">
+                    <Grid VerticalAlignment="Center">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0" HorizontalAlignment="Left">
+                            <TextBlock Text="Original: mountain-scenery.jpg" FontSize="12" Foreground="#DDDDDD"/>
+                            <TextBlock Text="(2.4 MB)" FontSize="11" Foreground="#888888"/>
+                        </StackPanel>
+                        <fa:ImageAwesome Grid.Column="1" Icon="ArrowRight" Foreground="#FF0000" Height="10" Margin="15,0"/>
+                        <StackPanel Grid.Column="2" HorizontalAlignment="Left">
+                            <TextBlock Text="Output: mountain-scenery.png" FontSize="12" Foreground="#DDDDDD"/>
+                            <TextBlock Text="(~1.8 MB)" FontSize="11" Foreground="#888888"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Column="2" Margin="20,0,0,0">
+                <StackPanel>
+                    <TextBlock Text="Conversion Settings" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+
+                    <TextBlock Text="Original Type Format" Foreground="#AAAAAA" Margin="0,0,0,8"/>
+                    <ComboBox Height="40" Foreground="White" FontSize="14" SelectedIndex="0" Template="{StaticResource RoundedComboBoxTheme}" Margin="0,0,0,20">
+                        <ComboBoxItem Content="Image"/>
+                        <ComboBoxItem Content="Video"/>
+                        <ComboBoxItem Content="Audio"/>
+                        <ComboBoxItem Content="Office (Word, Excel, PPT)"/>
+                        <ComboBoxItem Content="GIF"/>
+                    </ComboBox>
+
+                    <TextBlock Text="Convert To" Foreground="#AAAAAA" Margin="0,0,0,8"/>
+                    <ComboBox Height="40" Foreground="White" FontSize="14" SelectedIndex="0" Template="{StaticResource RoundedComboBoxTheme}">
+                        <ComboBoxItem Content="PNG (Portable Network Graphics)"/>
+                        <ComboBoxItem Content="JPG (JPEG Image)"/>
+                        <ComboBoxItem Content="WEBP"/>
+                    </ComboBox>
+
+                    <Grid Margin="0,30,0,15">
+                        <TextBlock Text="Advanced Options" FontWeight="SemiBold" FontSize="14"/>
+                        <fa:ImageAwesome Icon="ChevronUp" Height="10" Foreground="#AAAAAA" HorizontalAlignment="Right"/>
+                    </Grid>
+
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Quality" Foreground="#AAAAAA"/>
+                        <TextBlock Grid.Column="1" Text="{Binding ElementName=QualitySlider, Path=Value, StringFormat={}{0:0}%}" Foreground="White" FontWeight="Bold"/>
+                    </Grid>
+
+                    <Slider x:Name="QualitySlider" 
+                            Style="{StaticResource RedSlider}"
+                            Maximum="100" Value="80" 
+                            IsSnapToTickEnabled="True" 
+                            TickFrequency="1"/>
+
+                    <Grid Margin="0,25,0,15">
+                        <TextBlock Text="Resize Image" VerticalAlignment="Center" Foreground="#AAAAAA"/>
+                        <ToggleButton Style="{StaticResource SwitchStyle}" HorizontalAlignment="Right"/>
+                    </Grid>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Height="35" Background="#252525" BorderBrush="#333333" BorderThickness="1" CornerRadius="5" Padding="5,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <fa:ImageAwesome Icon="ArrowsH" Foreground="#666666" Height="5" Margin="5,0,5,0" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="1" Text="1920" Background="Transparent" BorderThickness="0" Foreground="White" VerticalContentAlignment="Center" Padding="5,0"/>
+                            </Grid>
+                        </Border>
+
+                        <Border Grid.Column="2" Height="35" Background="#252525" BorderBrush="#333333" BorderThickness="1" CornerRadius="5" Padding="5,0">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <fa:ImageAwesome Icon="ArrowsV" Foreground="#666666" Height="12" Margin="5,0,5,0" VerticalAlignment="Center"/>
+                                <TextBox Grid.Column="1" Text="1080" Background="Transparent" BorderThickness="0" Foreground="White" VerticalContentAlignment="Center" Padding="5,0"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <CheckBox Margin="0,20,0,0" Content="Maintain aspect ratio" Foreground="#AAAAAA" IsChecked="True" Background="#FF0000" BorderBrush="#FF0000"/>
+
+                </StackPanel>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>

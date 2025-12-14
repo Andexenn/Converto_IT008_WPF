@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <Color x:Key="Color.Brand">#F90606</Color>
-    
-    <Color x:Key="Color.MainBG">#131212</Color>
+
+    <Color x:Key="Color.MainBG">#050505</Color>
     <Color x:Key="Color.BG.Gradient">#211111</Color>
     <Color x:Key="Color.BG.Shape">#1E1E1E</Color>
     <Color x:Key="Color.BG.Card">#0D0D0D</Color>

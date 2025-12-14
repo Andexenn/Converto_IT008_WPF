@@ -8,7 +8,8 @@
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
              mc:Ignorable="d" 
-             d:DesignHeight="1200" d:DesignWidth="1000">
+             d:DesignHeight="1200" d:DesignWidth="1000"
+             Background="{StaticResource Brush.MainBG}">
 
     <UserControl.Resources>
         <ResourceDictionary>

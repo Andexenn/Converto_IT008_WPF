@@ -8,7 +8,8 @@
              xmlns:local="clr-namespace:Converto_IT008_WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1200"
-             FontFamily="Segoe UI" FontSize="14">
+             FontFamily="Segoe UI" FontSize="14"
+             Background="{StaticResource Brush.MainBG}">
 
     <UserControl.Resources>
         <SolidColorBrush x:Key="Color.Bg" Color="#050505"/>
@@ -188,7 +189,7 @@
         </Style>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" Background="{StaticResource Color.Bg}">
         <Grid Background="{StaticResource Color.Bg}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>

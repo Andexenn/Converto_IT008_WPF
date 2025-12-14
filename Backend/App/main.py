@@ -1,9 +1,12 @@
 """
 Entry point for the server
 """
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from Database.connection import init_db
+from Database.connection import init_db, get_db
+from sqlalchemy.orm import Session
+from sqlalchemy import text
+from sqlalchemy.exc import OperationalError
 from Handlers import auth_handler, conversion_handler, compression_handler,\
       remove_background_handler, task_handler, user_handler
 
@@ -45,8 +48,12 @@ def root():
     }
 
 @app.get("/health")
-def health_check():
+def health_check(db:Session = Depends(get_db)):
     """
-    Check if api is work well
+    Check if server is working well
     """
+    try:
+        db.execute(text("SELECT 1"))
+    except OperationalError as e:
+        print(f"Can not connect to the database {str(e)}") 
     return {"status": "healthy"}

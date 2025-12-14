@@ -26,7 +26,7 @@ public class ProcessImageServiceImpl : IProcessImageService
         _sessionState = sessionState;
     }
 
-    public void ProcessZipResponse(ObservableCollection<ProcessedImageResultDto> targetList, byte[] response)
+    public void ProcessZipResponse(ObservableCollection<ProcessedFileResultDto> targetList, byte[] response)
     {
         using (var ms = new MemoryStream(response))
         using (var archive = new ZipArchive(ms, ZipArchiveMode.Read)) 
@@ -41,7 +41,7 @@ public class ProcessImageServiceImpl : IProcessImageService
                 entryStream.CopyTo(entryMs);
                 byte[] imageData = entryMs.ToArray();
 
-                var item = new ProcessedImageResultDto
+                var item = new ProcessedFileResultDto
                 {
                     FileName = entry.Name,
                     RawData = imageData,
@@ -54,15 +54,14 @@ public class ProcessImageServiceImpl : IProcessImageService
                 });
 
 
-                    // Xử lý imageData theo yêu cầu, ví dụ tạo đối tượng ProcessedImageResult và thêm vào targetList
             }
         }
     }
 
-    public void ProcessSingleImageResponse(ObservableCollection<ProcessedImageResultDto> targetList, byte[] response)
+    public void ProcessSingleImageResponse(ObservableCollection<ProcessedFileResultDto> targetList, byte[] response)
     {
         var bitmap = BytesToBitmap(response);
-        var item = new ProcessedImageResultDto
+        var item = new ProcessedFileResultDto
         {
             FileName = "ProcessedImage.png", // Hoặc tên file phù hợp
             RawData = response,
@@ -98,7 +97,7 @@ public class ProcessImageServiceImpl : IProcessImageService
         }
     }
 
-    public async Task DownloadImages(ObservableCollection<ProcessedImageResultDto> processedImageResults)
+    public async Task DownloadImages(ObservableCollection<ProcessedFileResultDto> processedImageResults)
     {
         if(processedImageResults == null || processedImageResults.Count == 0)
         {
@@ -138,7 +137,7 @@ public class ProcessImageServiceImpl : IProcessImageService
                 {
                     if (item.RawData == null || item.RawData.Length == 0)
                         continue;
-                    string safeFileName = $"{Path.GetFileName(item.FileName)}_removedbg";
+                    string safeFileName = $"{Path.GetFileName(item.FileName)}";
                     string fullPath = Path.Combine(savePath, safeFileName);
 
                     // Xử lý trùng tên: Nếu file đã tồn tại, thêm số (1), (2)...

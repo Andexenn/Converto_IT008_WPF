@@ -101,7 +101,7 @@ class ICompressionSerivce(ABC):
         """
 
     @abstractmethod
-    async def compress_audios_batch(self, input_paths: List[str], bitrate: str = 'low', timeout: int = 600) -> List[Tuple[str, str, int, bool]]:
+    async def compress_audios_batch(self, input_paths: List[str], bitrate: str = '64k', timeout: int = 600) -> List[Tuple[str, str, int, bool]]:
         """
         Compress multiple audio files in parallel
 

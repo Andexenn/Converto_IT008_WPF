@@ -11,10 +11,9 @@ import subprocess
 from typing import List, Tuple
 import tempfile
 import asyncio
+import shutil
 
 from sqlalchemy.orm import Session
-import win32com.client
-import pythoncom
 from PIL import Image
 
 from Services.conversion_service import IConversionService
@@ -627,7 +626,7 @@ class ConversionRepository(IConversionService):
 
             self._record_task(task)
 
-        return (str(task.OutputFilePath), int(task.OutputFileSize))
+        return (str(task.OutputFilePath), task.OutputFileSize or 0)
 
     async def convert_gif_batch(self, input_paths: List[str], output_format: str, timeout: int = 300) -> List[Tuple[str, str, int, bool]]:
         """
@@ -833,21 +832,12 @@ class ConversionRepository(IConversionService):
         output_format = output_format.lstrip('.').lower()
 
         try:
-            data = {}
-            if input_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt'] and output_format == 'pdf':
-                data = await self._run_in_executor(
-                    self._convert_office_to_pdf_sync,
-                    input_path
-                )
-
-            elif input_format == 'pdf' and output_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt']:
-                data = await self._run_in_executor(
-                    self._convert_pdf_to_office_sync,
-                    input_path,
-                    output_format,
-                    self.soffice_path,
-                    timeout
-                )
+            data = await self._run_in_executor(
+                self._convert_office_to_pdf_sync,
+                input_path,
+                self.soffice_path,
+                timeout
+            )
 
             task = TaskConversion(
                 UserID=self.user_id,
@@ -882,7 +872,7 @@ class ConversionRepository(IConversionService):
             )
 
             self._record_task(task)
-        return (str(task.OutputFilePath), int(task.OutputFileSize))
+        return (str(task.OutputFilePath), task.OutputFileSize or 0)
 
     async def convert_pdf_office_batch(
         self,
@@ -911,238 +901,157 @@ class ConversionRepository(IConversionService):
 
         results = []
 
-        for input_path in input_paths:
-            try:
-                input_format = Path(input_path).suffix.lstrip('.').lower()
-                data = {}
-                if input_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt'] and output_format == 'pdf':
-                    data = await self._run_in_executor(
-                        self._convert_office_to_pdf_sync,
-                        input_path
+        with ProcessPoolExecutor(max_workers=self.max_workers) as executor:
+            future_to_path = {
+                executor.submit(
+                    self._convert_office_to_pdf_sync,
+                    input_path,
+                    self.soffice_path,
+                    timeout
+                ) : input_path for input_path in input_paths
+            }
+            results = []
+            for future in as_completed(future_to_path):
+                input_path = future_to_path[future]
+                try:
+                    data = future.result()
+                    task = TaskConversion(
+                        UserID=self.user_id,
+                        ServiceTypeID=SERVICETYPEID,
+                        OriginalFileName=data["OriginalFileName"],
+                        OriginalFileSize=data["OriginalFileSize"],
+                        OriginalFilePath=data["OriginalFilePath"],
+                        OutputFileName=data["OutputFileName"],
+                        OutputFileSize=data["OutputFileSize"],
+                        OutputFilePath=data["OutputFilePath"],
+                        InputFormat=data["InputFormat"],
+                        OutputFormat=data["OutputFormat"],
+                        TaskStatus=True,
+                        TaskTime=data["TaskTime"]
                     )
 
-                elif input_format == 'pdf' and output_format in ['docx', 'doc', 'xlsx', 'xls', 'pptx', 'ppt']:
-                    data = await self._run_in_executor(
-                        self._convert_pdf_to_office_sync,
-                        input_path,
-                        output_format,
-                        self.soffice_path,
-                        timeout
+                    self._record_task(task)
+                    results.append([task.OriginalFilePath, task.OutputFilePath, task.OutputFileSize, True])
+                except Exception as e:
+                    print(f"Failed to convert {input_path}: {str(e)}")
+                    task = TaskConversion(
+                        UserID=self.user_id,
+                        ServiceTypeID=SERVICETYPEID,
+                        OriginalFileName=Path(input_path).stem,
+                        OriginalFileSize=os.path.getsize(input_path),
+                        OriginalFilePath=input_path,
+                        InputFormat=Path(input_path).suffix.lstrip('.').upper(),
+                        OutputFormat=output_format.upper(),
+                        TaskStatus=False,
+                        TaskTime=0
                     )
-
-                task = TaskConversion(
-                    UserID=self.user_id,
-                    ServiceTypeID=SERVICETYPEID,
-                    OriginalFileName=data["OriginalFileName"],
-                    OriginalFileSize=data["OriginalFileSize"],
-                    OriginalFilePath=data["OriginalFilePath"],
-                    OutputFileName=data["OutputFileName"],
-                    OutputFileSize=data["OutputFileSize"],
-                    OutputFilePath=data["OutputFilePath"],
-                    InputFormat=data["InputFormat"],
-                    OutputFormat=data["OutputFormat"],
-                    TaskStatus=True,
-                    TaskTime=data["TaskTime"]
-                )
-
-                self._record_task(task)
-                results.append([task.OriginalFilePath, task.OutputFilePath, task.OutputFileSize, True])
-
-
-            except Exception as e:
-                print(f"Failed to convert {input_path}: {str(e)}")
-                task = TaskConversion(
-                    UserID=self.user_id,
-                    ServiceTypeID=SERVICETYPEID,
-                    OriginalFileName=Path(input_path).stem,
-                    OriginalFileSize=os.path.getsize(input_path),
-                    OriginalFilePath=input_path,
-                    InputFormat=Path(input_path).suffix.lstrip('.').upper(),
-                    OutputFormat=output_format.upper(),
-                    TaskStatus=False,
-                    TaskTime=0
-                )
-                self._record_task(task)
-                results.append([task.OriginalFilePath, None, 0, False])
+                    self._record_task(task)
+                    results.append([task.OriginalFilePath, None, 0, False])
         
         return results
 
     @staticmethod
-    def _convert_office_to_pdf_sync( input_path:str) -> dict:
+    def _convert_office_to_pdf_sync(input_path: str, soffice_path: str, timeout: int = 300) -> dict:
         """
-        Convert from office to PDF
-
-        Parameter:
-        ----------
-            output_path(str): contains the final file path
-            timeout(int): timeout in seconds
-
-        Return:
-        -------
-            True if success else False
+        Convert from office to PDF using LibreOffice (headless)
         """
+        # 1. Validate 
 
-        if not Path(input_path).exists():
+        if soffice_path is None:
+            raise ValueError("soffice_path cannot be None. Please provide the path to LibreOffice executable.")
+    
+        if not os.path.exists(soffice_path):
+            raise FileNotFoundError(f"LibreOffice executable not found at: {soffice_path}")
+
+        input_path_obj = Path(input_path)
+        if not input_path_obj.exists():
             raise FileNotFoundError(f"File {input_path} not found!")
 
         if not os.access(input_path, os.R_OK):
             raise PermissionError(f"Cannot read file: {input_path}")
 
-        input_format = Path(input_path).suffix.lstrip('.').lower()
-
-        output_format = 'pdf'
-
-        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f'.{output_format}')
-        output_path = temp_file.name
-        temp_file.close()
-
-        pythoncom.CoInitialize() #pylint: disable=no-member
-
         start_time = time.perf_counter()
 
+        # 2. Tạo nơi chứa file kết quả cuối cùng (Persistent Temp File)
+        # Chúng ta tạo một file giữ chỗ để sau khi convert xong sẽ move data vào đây.
+        final_output_temp = tempfile.NamedTemporaryFile(delete=False, suffix='.pdf')
+        final_output_path = final_output_temp.name
+        final_output_temp.close()
+
         try:
-            if input_format in ['docx', 'doc']:
-                # Convert Word to PDF
-                word = None
-                doc = None
-                try:
-                    word = win32com.client.DispatchEx("Word.Application")
-                    word.Visible = False 
-                    word.DisplayAlerts = False  
+            # 3. Sử dụng TemporaryDirectory để làm môi trường chạy (Sandbox)
+            # Điều này giúp tự động dọn dẹp các file rác của LibreOffice sau khi chạy xong
+            with tempfile.TemporaryDirectory() as temp_run_dir:
+                
+                # Cấu hình UserProfile riêng biệt cho process này để tránh lỗi "Lock file"
+                user_profile_path = Path(temp_run_dir) / "user_profile"
+                # Lưu ý: Cú pháp file:/// cần đúng chuẩn URI
+                user_installation_arg = f"-env:UserInstallation=file:///{user_profile_path.as_posix()}"
 
-                    doc = word.Documents.Open(input_path)
+                cmd = [
+                    "soffice",
+                    user_installation_arg,  # Quan trọng: Chạy profile độc lập
+                    "--headless",
+                    "--convert-to", "pdf",
+                    "--outdir", temp_run_dir, # Output tạm thời vào thư mục này
+                    str(input_path)
+                ]
 
-                    # Save as PDF (format 17 = wdFormatPDF)
-                    doc.SaveAs(output_path, FileFormat=17)
+                # 4. Thực thi lệnh (Thay thế multiprocessing)
+                result = subprocess.run(
+                    cmd,
+                    capture_output=True, # Bắt log stdout/stderr
+                    text=True,
+                    timeout=timeout,
+                    check=False
+                )
 
-                finally:
-                    # Clean up
-                    if doc:
-                        doc.Close(SaveChanges=False)
-                    if word:
-                        word.Quit()
+                if result.returncode != 0:
+                    # Gộp stderr vào lỗi để debug dễ hơn
+                    raise ValueError(f"Soffice conversion failed (Code {result.returncode}): {result.stderr}")
 
-            elif input_format in ['xlsx', 'xls']:
-                excel = None
-                wb = None
-                try:
-                    excel = win32com.client.DispatchEx("Excel.Application")
-                    excel.Visible = False 
-                    excel.DisplayAlerts = False 
+                # 5. Xác định file PDF do LibreOffice sinh ra
+                # LibreOffice giữ nguyên tên file gốc, chỉ đổi đuôi. Ví dụ: abc.docx -> abc.pdf
+                original_stem = input_path_obj.stem
+                expected_temp_pdf = Path(temp_run_dir) / f"{original_stem}.pdf"
 
-                    wb = excel.Workbooks.Open(input_path)
+                if not expected_temp_pdf.exists():
+                    raise FileNotFoundError(f"Conversion finished but output file not found at {expected_temp_pdf}")
+                
+                if expected_temp_pdf.stat().st_size == 0:
+                    raise ValueError("Generated PDF file is empty")
 
-                    wb.ExportAsFixedFormat(0, output_path)
+                # 6. Di chuyển file kết quả từ thư mục tạm sang file đích cuối cùng
+                shutil.move(str(expected_temp_pdf), final_output_path)
 
-                finally:
-                    # Clean up
-                    if wb:
-                        wb.Close(SaveChanges=False)
-                    if excel:
-                        excel.Quit()
-
-            elif input_format in ['pptx', 'ppt']:
-                ppt = None
-                presentation = None
-                try:
-                    ppt = win32com.client.DispatchEx("Powerpoint.Application")
-                    ppt.Visible = 1  
-
-                    presentation = ppt.Presentations.Open(input_path, WithWindow=False)
-
-                    presentation.SaveAs(output_path, 32)
-
-                finally:
-                    # Clean up
-                    if presentation:
-                        presentation.Close()
-                    if ppt:
-                        ppt.Quit()
-            else:
-                raise ValueError(f"Unsupported input format: {input_format}")
-
-
+        except subprocess.TimeoutExpired:
+            # Dọn dẹp file output rỗng nếu timeout
+            if os.path.exists(final_output_path):
+                os.remove(final_output_path)
+            raise TimeoutError(f"Soffice conversion timed out after {timeout}s")
+            
         except Exception as e:
-            raise ValueError(f"Conversion failed: {str(e)}") from e
-        finally:
-            pythoncom.CoUninitialize() #pylint: disable=no-member
+            # Dọn dẹp file output rỗng nếu có lỗi
+            if os.path.exists(final_output_path):
+                os.remove(final_output_path)
+            raise ValueError(f"Conversion process error: {str(e)}") from e
 
         end_time = time.perf_counter()
+        
+        # Lấy kích thước file cuối cùng
+        final_size = os.path.getsize(final_output_path)
 
         return {
-            "OriginalFileName": Path(input_path).stem,
+            "OriginalFileName": input_path_obj.stem,
             "OriginalFileSize": os.path.getsize(input_path),
-            "OriginalFilePath": input_path,
-            "OutputFileName": Path(output_path).stem,
-            "OutputFileSize": os.path.getsize(output_path),
-            "OutputFilePath": output_path,
-            "TaskStatus": (True if os.path.getsize(output_path) != 0 else False),
-            "InputFormat": Path(input_path).suffix.lstrip('.').upper(),
-            "OutputFormat": output_format,
+            "OriginalFilePath": str(input_path),
+            "OutputFileName": Path(final_output_path).stem, # Tên file temp (ngẫu nhiên)
+            "OutputFileSize": final_size,
+            "OutputFilePath": final_output_path,
+            "TaskStatus": (True if final_size > 0 else False),
+            "InputFormat": input_path_obj.suffix.lstrip('.').upper(),
+            "OutputFormat": 'pdf',
             "TaskTime": end_time - start_time
         }
 
-    @staticmethod
-    def _convert_pdf_to_office_sync(input_path: str, output_format: str, soffice_path: str , timeout: int = 300) -> Tuple[str, int]:
-        """Convert from pdf to office"""
-
-        if not Path(input_path).exists():
-            raise FileNotFoundError(f"File not found: {input_path}")
-
-        output_format = output_format.lstrip('.').lower()
-
-        format_to_filter = {
-            'docx': 'docx',
-            'doc':  'doc',
-            'xlsx': 'xlsx',
-            'xls':  'xls',
-            'pptx': 'pptx',
-            'ppt':  'ppt',
-        }
-
-        if output_format not in format_to_filter:
-            raise ValueError(f"Unsupported convert from PDF to {output_format}")
-
-        libreoffice_filter = format_to_filter[output_format]
-
-        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=f'.{output_format}')
-        output_path = temp_file.name
-        temp_file.close()
-
-        try:
-            cmd = [
-                "soffice",
-                "--headless",
-                "--invisible",
-                "--nocrashreport",
-                "--nodefault",
-                "--nofirststartwizard",
-                "--nologo",
-                "--norestore",
-                '--convert-to', libreoffice_filter,
-                output_path,
-                '--outdir', str(Path(output_path).parent),
-                str(input_path)
-            ]
-
-            with multiprocessing.Pool(processes=1) as pool:
-                result = pool.apply_async(ConversionRepository._execute_subprocess, (cmd, ))
-                return_code = result.get(timeout=timeout)
-
-            if return_code != 0:
-                raise ValueError("Soffice conversion failed")
-
-            if not os.path.exists(output_path):
-                raise FileNotFoundError("Output file not created")
-
-            if os.path.getsize(output_path) == 0:
-                raise ValueError("Output file is empty")
-
-            file_size = os.path.getsize(output_path)
-            return output_path, file_size
-
-        #pylint: disable=unused-variable
-        except Exception as e:
-            if Path(output_path).exists():
-                os.unlink(output_path)
-            raise
+    

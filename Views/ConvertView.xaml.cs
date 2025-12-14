@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Converto_IT008_WPF.ViewModels;
+using Converto_IT008_WPF.ViewModels.UserViewModel;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,15 +16,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Converto_IT008_WPF.Views.ServiceViews;
+namespace Converto_IT008_WPF.Views;
 
 /// <summary>
-/// Interaction logic for CompressView.xaml
+/// Interaction logic for ConvertView.xaml
 /// </summary>
-public partial class CompressView : UserControl
+public partial class ConvertView : UserControl
 {
-    public CompressView()
+    public ConvertView()
     {
         InitializeComponent();
+        DataContext = App.ServiceProvider?.GetRequiredService<ConvertViewModel>();
     }
 }

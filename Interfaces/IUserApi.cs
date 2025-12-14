@@ -16,4 +16,5 @@ public interface IUserApi
     public Task<UserInfo> SaveChanges(UserInfo userInfo);
     public Task<bool> ChangePassword(string newPassword);
     public Task<bool> UpdateUserPreference(UserPreferences userPreferences);
+    public Task<bool> SendEmail(string email_type);
 }

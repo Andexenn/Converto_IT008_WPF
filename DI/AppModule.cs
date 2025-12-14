@@ -33,12 +33,15 @@ public static class AppModule
         services.AddScoped<IUserService, UserServiceImpl>();
         services.AddScoped<IProcessImageService, ProcessImageServiceImpl>();
         services.AddScoped<ITaskService, TaskServiceImpl>();
+        services.AddScoped<ICompressService, CompressServiceImpl>();
+
         //------------------ APIs ------------------
 
         services.AddHttpClient<IAuthApi, AuthApi>();
         services.AddHttpClient<IRemoveBackgroundApi, RemoveBackgroundApi>();
         services.AddHttpClient<IUserApi, UserApi>();
         services.AddHttpClient<ITaskApi, TaskApi>();
+        services.AddHttpClient<ICompressApi, CompressApi>();
 
         //------------------ ViewModels ------------------
         //GeneralViewModel
@@ -47,16 +50,12 @@ public static class AppModule
         services.AddTransient<ViewModels.HomepageViewModel>();
         services.AddTransient<ViewModels.AboutUsViewModel>();
         services.AddTransient<ViewModels.HistoryViewModel>();
+
         services.AddTransient<ViewModels.SideServices.MarkdownToTextViewModel>();
         services.AddTransient<ViewModels.SideServices.RemoveBackgroundViewModel>();
-
-
-        //CompressViewModel
+        services.AddTransient<ViewModels.ConvertViewModel>();
         services.AddTransient<CompressViewModel>();
 
-        //ConvertViewModel
-
-        //UserViewModel
         services.AddTransient<ViewModels.UserViewModel.LoginViewModel>();
         services.AddTransient<ViewModels.UserViewModel.SignUpViewModel>();
         services.AddTransient<ViewModels.UserViewModel.MyAccountViewModel>();

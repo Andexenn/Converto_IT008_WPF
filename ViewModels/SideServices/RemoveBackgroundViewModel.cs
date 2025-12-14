@@ -40,7 +40,7 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
     public bool IsNotRemoving => !IsRemoving;
 
     [ObservableProperty]
-    ObservableCollection<ProcessedImageResultDto> processedImages = new ObservableCollection<ProcessedImageResultDto>();
+    ObservableCollection<ProcessedFileResultDto> processedImages = new ObservableCollection<ProcessedFileResultDto>();
     [ObservableProperty]
     ObservableCollection<BitmapImage> unprocessedImages = new ObservableCollection<BitmapImage>();
     [ObservableProperty]

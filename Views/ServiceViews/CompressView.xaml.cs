@@ -1,5 +1,4 @@
-﻿using Converto_IT008_WPF.ViewModels.PopupViewModels;
-using Converto_IT008_WPF.ViewModels.UserViewModel;
+﻿using Converto_IT008_WPF.ViewModels.SideServices;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,17 +12,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Converto_IT008_WPF.Views.Popups;
+namespace Converto_IT008_WPF.Views.ServiceViews;
 
 /// <summary>
-/// Interaction logic for Terms_ConditionsPopup.xaml
+/// Interaction logic for CompressView.xaml
 /// </summary>
-public partial class Terms_ConditionsPopup : UserControl
+public partial class CompressView : UserControl
 {
-    public Terms_ConditionsPopup()
+    public CompressView()
     {
         InitializeComponent();
+        DataContext = App.ServiceProvider?.GetRequiredService<CompressViewModel>();
     }
 }

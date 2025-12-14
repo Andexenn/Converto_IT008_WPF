@@ -1,50 +1,241 @@
-﻿<Window x:Class="Converto_IT008_WPF.Views.Popups.Terms_ConditionsPopup"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Converto_IT008_WPF.Views.Popups"
-        mc:Ignorable="d"
-        Height="500" Width="450"
-        WindowStyle="None"
-        Background="Transparent"
-        AllowsTransparency="True"
-        ResizeMode="NoResize">
+﻿<UserControl x:Class="Converto_IT008_WPF.Views.Popups.Terms_ConditionsPopup"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d"
+             Height="550" Width="480"
+             FontFamily="/Converto_IT008_WPF;component/Resources/#Inter">
 
-    <Border CornerRadius="5" Background="White" MouseDown="Border_MouseDown" BorderBrush="Black" BorderThickness="1">
-        <Grid Margin="20">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Converto_IT008_WPF;component/Resources/Colors.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
 
+            <Style x:Key="ScrollThumb" TargetType="{x:Type Thumb}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type Thumb}">
+                            <Grid Background="Transparent">
+                                <Border x:Name="Border" Background="{TemplateBinding Background}" CornerRadius="4" Width="6"/>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsDragging" Value="True">
+                                    <Setter TargetName="Border" Property="Background" Value="#FFFFFFFF"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="ModernScrollBarStyle" TargetType="{x:Type ScrollBar}">
+                <Setter Property="Stylus.IsPressAndHoldEnabled" Value="false"/>
+                <Setter Property="Stylus.IsFlicksEnabled" Value="false"/>
+                <Setter Property="Width" Value="10"/>
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="Foreground" Value="#44FFFFFF"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type ScrollBar}">
+                            <Grid x:Name="Bg" SnapsToDevicePixels="true" Background="{TemplateBinding Background}">
+                                <Track x:Name="PART_Track" IsDirectionReversed="true" IsEnabled="{TemplateBinding IsMouseOver}">
+                                    <Track.Thumb>
+                                        <Thumb Style="{StaticResource ScrollThumb}" Background="{TemplateBinding Foreground}"/>
+                                    </Track.Thumb>
+                                </Track>
+                            </Grid>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="true">
+                                    <Setter Property="Foreground" Value="#88FFFFFF"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Border CornerRadius="16" 
+            Background="{StaticResource Brush.BG.Shape}" 
+            BorderBrush="#33FFFFFF" 
+            BorderThickness="1">
+
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="40" ShadowDepth="10" Opacity="0.5" Color="Black"/>
+        </Border.Effect>
+
+        <Grid Margin="25">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <Button Style="{StaticResource CancelButton}" HorizontalAlignment="Right" Content="x" Margin="0,0,5,0" Command="{Binding ClosePopupCommand}" Cursor="Hand"/>
-
-            <TextBlock  Text="Terms and Conditions" 
-                        Grid.Row="1"
-                        Foreground="#F24822"
-                        FontWeight="SemiBold"
-                        HorizontalAlignment="Left"
-                        FontSize="28"/>
-
-            <ScrollViewer Grid.Row="2">
-                
-            </ScrollViewer>
-
-            <Grid Grid.Row="3" Margin="0,10,0,0">
+            <Grid Grid.Row="0" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Button Style="{StaticResource CTA}" Background="#F24822" Content="Accecpt" Foreground="White" Padding="15,5,15,5" BorderThickness="0" Command="{Binding AcceptTermsAndConditionsCommand}"/>
-                <Button Style="{StaticResource Signup}" Content="Decline" Grid.Column="2" Margin="0,0,20,0" Padding="10,5,10,5" VerticalAlignment="Center" Command="{Binding DeclineTermsAndConditionsCommand}"/>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Terms of Service" 
+                               Foreground="White"
+                               FontWeight="Bold"
+                               FontSize="22"/>
+                    <TextBlock Text="Last updated: Dec 2025" 
+                               Foreground="{StaticResource Brush.Text.Secondary}"
+                               FontSize="12"
+                               Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Content="✕" 
+                        Command="{Binding CloseTermsAndConditionsCommand}" 
+                        Cursor="Hand"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontSize="16"
+                        VerticalAlignment="Top"
+                        Foreground="{StaticResource Brush.Text.Secondary}">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="White"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+
+            <Border Grid.Row="1" 
+                    Background="#1A000000" 
+                    CornerRadius="8" 
+                    Padding="10"
+                    Margin="0,0,0,20">
+
+                <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
+                    <ScrollViewer.Resources>
+                        <Style TargetType="ScrollBar" BasedOn="{StaticResource ModernScrollBarStyle}"/>
+                    </ScrollViewer.Resources>
+
+                    <TextBlock TextWrapping="Wrap" 
+                               Foreground="{StaticResource Brush.Text.Secondary}" 
+                               FontSize="14" 
+                               LineHeight="24">
+                        <Run Text="1. Introduction" FontWeight="Bold" Foreground="White"/>
+                        <LineBreak/>
+                        <Run Text="Welcome to Converto. By accessing or using our application, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the service."/>
+                        <LineBreak/><LineBreak/>
+                        
+                        <Run Text="2. User Obligations" FontWeight="Bold" Foreground="White"/>
+                        <LineBreak/>
+                        <Run Text="You agree to provide accurate and complete information during the registration process. You are responsible for safeguarding the password that you use to access the service."/>
+                        <LineBreak/><LineBreak/>
+
+                        <Run Text="3. Privacy Policy" FontWeight="Bold" Foreground="White"/>
+                        <LineBreak/>
+                        <Run Text="Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and share information about you."/>
+                        <LineBreak/><LineBreak/>
+
+                        <Run Text="4. Termination" FontWeight="Bold" Foreground="White"/>
+                        <LineBreak/>
+                        <Run Text="We may terminate or suspend access to our service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms."/>
+                         <LineBreak/><LineBreak/>
+                        
+                        <Run Text="5. Changes" FontWeight="Bold" Foreground="White"/>
+                         <LineBreak/>
+                        <Run Text="We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms."/>
+                    </TextBlock>
+                </ScrollViewer>
+            </Border>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="15"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0"
+                        Content="I Agree &amp; Continue" 
+                        Command="{Binding AcceptTermsCommand}"
+                        Height="45"
+                        FontSize="15"
+                        FontWeight="Bold"
+                        Foreground="White"
+                        Cursor="Hand"
+                        BorderThickness="0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="{StaticResource Brush.Brand}"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#D90404"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+
+                    <Button.Effect>
+                        <DropShadowEffect Color="{StaticResource Color.Brand}" BlurRadius="15" ShadowDepth="0" Opacity="0.4"/>
+                    </Button.Effect>
+                </Button>
+
+                <Button Grid.Column="2"
+                        Content="Decline" 
+                        Command="{Binding CloseTermsAndConditionsCommand}"
+                        Background="Transparent"
+                        Foreground="{StaticResource Brush.Text.Secondary}"
+                        BorderThickness="0"
+                        Cursor="Hand"
+                        FontSize="14"
+                        FontWeight="SemiBold"
+                        Padding="15,0">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Background="{TemplateBinding Background}" CornerRadius="8">
+                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Border>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="White"/>
+                                    <Setter Property="Background" Value="#1AFFFFFF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
 
             </Grid>
         </Grid>
     </Border>
-</Window>
+</UserControl>

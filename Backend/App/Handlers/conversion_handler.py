@@ -502,7 +502,7 @@ async def convert_pdf(
             )
             results = [(input_paths[0], output_path, file_converted_size, True)]
         else:
-            results = await conversion_repo.convert_gif_batch(input_paths, output_format, 300)
+            results = await conversion_repo.convert_pdf_office_batch(input_paths, output_format, 300)
 
         successful_results = [r for r in results if r[3]]
         failed_results = [r for r in results if not r[3]]

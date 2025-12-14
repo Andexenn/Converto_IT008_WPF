@@ -29,5 +29,6 @@ public class UserServiceImpl : IUserService
     public async Task<UserInfo> SaveChanges(UserInfo userInfo) => await _userApi.SaveChanges(userInfo);
     public async Task<bool> ChangePassword(string newPassword) => await _userApi.ChangePassword(newPassword);
     public async Task<bool> UpdateUserPreference(UserPreferences userPreferences) => await _userApi.UpdateUserPreference(userPreferences);
-    public async Task<bool> SendEmail(string email_type) => await _userApi.SendEmail(email_type);
+    public async Task<bool> SendEmail(string emailType) => await _userApi.SendEmail(emailType);
+    public async Task<bool> VerifyOTP(string otpCode) => await _userApi.VerifyOTP(otpCode);
 }

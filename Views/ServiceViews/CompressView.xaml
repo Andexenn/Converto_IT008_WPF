@@ -135,15 +135,15 @@
                                       HorizontalAlignment="Left" />
 
                             <Popup Name="Popup"
-                           Placement="Bottom"
-                           IsOpen="{TemplateBinding IsDropDownOpen}"
-                           AllowsTransparency="True" 
-                           Focusable="False"
-                           PopupAnimation="Slide">
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True" 
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
                                 <Grid Name="DropDown"
-                              SnapsToDevicePixels="True"
-                              MinWidth="{TemplateBinding ActualWidth}"
-                              MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
                                     Background="#1A1A1A"
                                     BorderThickness="1"
@@ -227,17 +227,21 @@
                                    Opacity="0.5"/>
 
                         <Grid AllowDrop="True" 
+                              DragOver="File_DragOver"
+                              DragEnter="File_DragEnter"
+                              DragLeave="File_DragLeave"
+                              Drop="File_Drop"
                               Background="Transparent"
                               Cursor="Hand"
                               Visibility="{Binding NotUploaded, Converter={StaticResource BoolToVisibilityConverter}}">
 
                             <i:Interaction.Triggers>
                                 <i:EventTrigger EventName="DragEnter">
-                                    <i:InvokeCommandAction Command="{Binding OnDragEnterCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding DragEnterCommand}"/>
                                 </i:EventTrigger>
 
                                 <i:EventTrigger EventName="DragLeave">
-                                    <i:InvokeCommandAction Command="{Binding OnDragLeaveCommand}"/>
+                                    <i:InvokeCommandAction Command="{Binding DragLeaveCommand}"/>
                                 </i:EventTrigger>
 
                                 <i:EventTrigger EventName="Drop">
@@ -303,7 +307,7 @@
                             </StackPanel>
 
                             <!--co the cho phep xoa 1 so anh-->
-                            <Button Command="{Binding ClearUploadFilesCommand}" 
+                            <Button Command="{Binding DeleteCurrentPreviewedFileCommand}" 
                                     HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
                                     Width="30" Height="30" Background="#88000000" BorderThickness="0" Foreground="White" Cursor="Hand">
                                 <Button.Template>
@@ -465,6 +469,7 @@
                             <ComboBox Grid.Column="1" 
                                       Style="{StaticResource DarkComboBoxStyle}"
                                       Width="180"
+                                      Name="ComboBoxTypeFormat"
                                       SelectedIndex="0"
                                       ItemsSource="{Binding TypeFormats}"
                                       SelectedItem="{Binding SelectedTypeFormat}">

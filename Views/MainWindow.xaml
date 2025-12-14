@@ -176,7 +176,7 @@
                                          Click="SidebarButton_Click"/>
 
                             <RadioButton Content="Remove Background" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.Image}"
-                                         Style="{StaticResource DarkSidebarButton}" Command="{Binding GoRemoveBackground}"
+                                         Style="{StaticResource DarkSidebarButton}" Command="{Binding GoRemoveBackgroundCommand}"
                                          Click="SidebarButton_Click"/>
 
                             <RadioButton Content="Markdown to text" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.FileText}"

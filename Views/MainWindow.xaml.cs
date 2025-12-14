@@ -4,7 +4,10 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 
 namespace Converto_IT008_WPF.Views
 {
@@ -21,6 +24,11 @@ namespace Converto_IT008_WPF.Views
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             UpdateTitleBarColor();
+
+            if (BtnDashboard != null)
+            {
+                MoveIndicator(BtnDashboard, false);
+            }
         }
 
 
@@ -62,6 +70,41 @@ namespace Converto_IT008_WPF.Views
             else
             {
                 e.Cancel = true;
+            }
+        }
+
+        private void SidebarButton_Click(object sender, RoutedEventArgs e)
+        {
+            var button = sender as RadioButton;
+            MoveIndicator(button, true);
+        }
+
+        private void MoveIndicator(RadioButton button, bool animate)
+        {
+            if (button == null) return;
+
+            Point relativePoint = button.TranslatePoint(new Point(0, 0), SidebarGrid);
+
+            double targetHeight = button.ActualHeight;
+            if (targetHeight == 0) targetHeight = 45;
+
+            ActiveIndicator.Height = targetHeight;
+            ActiveIndicator.Visibility = Visibility.Visible;
+
+            double targetY = relativePoint.Y;
+
+            if (animate)
+            {
+                DoubleAnimation animation = new DoubleAnimation();
+                animation.To = targetY;
+                animation.Duration = TimeSpan.FromMilliseconds(300);
+                animation.EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut };
+
+                IndicatorTransform.BeginAnimation(TranslateTransform.YProperty, animation);
+            }
+            else
+            {
+                IndicatorTransform.Y = targetY;
             }
         }
     }

@@ -59,13 +59,14 @@
                                   DragLeave="Image_DragLeave"
                                   Background="Transparent"
                                   Cursor="Hand"
-                                  Visibility="{Binding NotUploaded, Converter={StaticResource BoolToVisibilityConverter}}" Drop="Grid_Drop">
+                                  Visibility="{Binding NotUploaded, Converter={StaticResource BoolToVisibilityConverter}}" 
+                                  Drop="Grid_Drop">
 
                                 <i:Interaction.Triggers>
                                     <i:EventTrigger EventName="Drop">
                                         <i:InvokeCommandAction Command="{Binding DropFileCommand}" 
-                                   PassEventArgsToCommand="True"
-                                   EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
+                                                               PassEventArgsToCommand="True"
+                                                               EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
                                     </i:EventTrigger>
 
                                     <i:EventTrigger EventName="MouseLeftButtonUp">

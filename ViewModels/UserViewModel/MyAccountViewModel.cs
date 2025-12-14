@@ -55,7 +55,8 @@ public partial class MyAccountViewModel : BaseViewModel
     public MyAccountViewModel(SessionState sessionState, IUserService userService)
     {
         _sessionState = sessionState;
-        AvatarUrl = _sessionState.LoginResponse.user.ProfilePictureURL;
+        if (!string.IsNullOrEmpty(_sessionState.LoginResponse.user.ProfilePictureURL))
+            AvatarUrl = _sessionState.LoginResponse.user.ProfilePictureURL;
         FirstName = _sessionState.LoginResponse.user.FirstName;
         LastName = _sessionState.LoginResponse.user.LastName;
         Email = _sessionState.LoginResponse.user.Email;

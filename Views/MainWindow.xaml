@@ -164,7 +164,7 @@
                                      GroupName="NavGroup" 
                                      Tag="{x:Static fa:FontAwesomeIcon.Exchange}" 
                                      Style="{StaticResource DarkSidebarButton}" 
-                                     Command="{Binding GoHomepageCommand}"/>
+                                     Command="{Binding GoConvertCommand}"/>
 
                         <RadioButton Content="Compress" 
                                      GroupName="NavGroup" 
@@ -187,12 +187,6 @@
 
                     <StackPanel Grid.Row="2" VerticalAlignment="Bottom">
                         <Separator Background="{StaticResource Brush.Line}" Margin="0,10,0,10"/>
-
-                        <RadioButton Content="Settings" 
-                                     GroupName="NavGroup" 
-                                     Tag="{x:Static fa:FontAwesomeIcon.Cog}" 
-                                     Style="{StaticResource DarkSidebarButton}" 
-                                     Command="{Binding GoSettingsCommand}"/>
 
                         <RadioButton Content="Profile" 
                                      GroupName="NavGroup" 

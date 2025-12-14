@@ -116,6 +116,17 @@
                                         Opacity="0.7"
                                         BorderThickness="0"
                                         Width="40" Height="30" HorizontalAlignment="Right" Content="Next" Foreground="{StaticResource Brush.Brand}"/>
+                                <Button Command="{Binding DeleteCurrentPreviewedFileCommand}" 
+                                        HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
+                                        Width="30" Height="30" Background="#88000000" BorderThickness="0" Foreground="White" Cursor="Hand">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border CornerRadius="15" Background="{TemplateBinding Background}">
+                                                <fa:FontAwesome Icon="Close" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
                             </Grid>
 
                         </Grid>

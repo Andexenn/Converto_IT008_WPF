@@ -5,6 +5,7 @@ using Converto_IT008_WPF.ServicesFE;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Printing;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
@@ -13,9 +14,8 @@ namespace Converto_IT008_WPF.ViewModels.SideServices;
 
 public partial class CompressViewModel : BaseViewModel
 {
-    private string[] _filepaths = { };
-    private int NextIndex;
-    private int PreviousIndex;
+    private string[] filepaths = { };
+    private int CurrentIndex = 0;
     private readonly ICompressService _compressService;
     private readonly IProcessImageService _processImageService;
     private readonly ITaskService _taskService;
@@ -80,13 +80,13 @@ public partial class CompressViewModel : BaseViewModel
         _ = GetUserTasks();
     }
     [RelayCommand]
-    void OnDragEnter()
+    void DragEnter()
     {
         IsDragging = true;
     }
 
     [RelayCommand]
-    void OnDragLeave()
+    void DragLeave()
     {
         IsDragging = false;
     }
@@ -101,10 +101,10 @@ public partial class CompressViewModel : BaseViewModel
             string[] files = data as string[];
             if (files != null && files.Length > 0)
             {
-                _filepaths = files;
-                Debug.WriteLine($"So luong file drop: {_filepaths.Length}");
+                filepaths = files;
+                Debug.WriteLine($"So luong file drop: {filepaths.Length}");
                 Uploaded = true;
-                PreviewImage = LoadBitmapImage(_filepaths[0]);
+                PreviewImage = LoadBitmapImage(filepaths[0]);
             }
         }
         catch (Exception ex)
@@ -118,21 +118,31 @@ public partial class CompressViewModel : BaseViewModel
     {
         try
         {
+            var filter = "";
+            if (SelectedTypeFormat != null)
+            {
+                if(SelectedTypeFormat == "Image")
+                    filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.webp;*.tiff|All Files|*.*";
+                else if(SelectedTypeFormat == "Video")
+                    filter = "Video Files|*.mp4;*.webm;*.mov;*.avi;*.mkv;*.aac|All Files|*.*";
+                else if(SelectedTypeFormat == "Audio")
+                    filter = "Audio Files|*.mp3;*.wav;*.flac;*.aac;*.ogg;*.m4a|All Files|*.*";
+            }
             var openFileDialog = new OpenFileDialog
             {
                 Multiselect = true,
-                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.webp|All Files|*.*",
+                Filter = filter,
                 Title = "Choose images to compress"
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _filepaths = openFileDialog.FileNames;
-                Debug.WriteLine($"File picked: {_filepaths[0]}");
-                Debug.WriteLine($"So luong file drop: {_filepaths.Length}");
+                filepaths = openFileDialog.FileNames;
+                Debug.WriteLine($"File picked: {filepaths[0]}");
+                Debug.WriteLine($"So luong file drop: {filepaths.Length}");
 
                 Uploaded = true;
-                PreviewImage = LoadBitmapImage(_filepaths[0]);
+                PreviewImage = LoadBitmapImage(filepaths[0]);
             }
         }
         catch (Exception ex)
@@ -144,7 +154,7 @@ public partial class CompressViewModel : BaseViewModel
     [RelayCommand]
     void ClearUploadFiles()
     {
-        _filepaths = Array.Empty<string>();
+        filepaths = Array.Empty<string>();
         Uploaded = false;
         PreviewImage = null;
         Debug.WriteLine("Upload files cleared.");
@@ -171,21 +181,38 @@ public partial class CompressViewModel : BaseViewModel
         return bitmap;
     }
 
+    [RelayCommand]
+    private void DeleteCurrentPreviewedFile()
+    {
+        if (filepaths.Length == 0)
+            return;
+        if(filepaths.Length == 1)
+        {
+            ClearUploadFiles();
+            filepaths = Array.Empty<string>();
+            Uploaded = false;
+            return;
+        }
+        filepaths = filepaths.Where((source, index) => index != CurrentIndex).ToArray();
+
+        NextPreviewedImage();
+    }
+
 
     [RelayCommand]
     private void NextPreviewedImage()
     {
-        NextIndex = (NextIndex + 1) % _filepaths.Length;
-        Debug.WriteLine($"{NextIndex}");
-        PreviewImage = LoadBitmapImage(_filepaths[NextIndex]);
+        CurrentIndex = (CurrentIndex + 1) % filepaths.Length;
+        Debug.WriteLine($"{CurrentIndex}");
+        PreviewImage = LoadBitmapImage(filepaths[CurrentIndex]);
     }
 
     [RelayCommand]
     private void PreviousPreviewedImage()
     {
-        PreviousIndex = (PreviousIndex - 1 + _filepaths.Length) % _filepaths.Length;
-        Debug.WriteLine($"{PreviousIndex}");
-        PreviewImage = LoadBitmapImage(_filepaths[PreviousIndex]);
+        CurrentIndex = (CurrentIndex - 1 + filepaths.Length) % filepaths.Length;
+        Debug.WriteLine($"{CurrentIndex}");
+        PreviewImage = LoadBitmapImage(filepaths[CurrentIndex]);
     }
 
     [RelayCommand]
@@ -210,15 +237,46 @@ public partial class CompressViewModel : BaseViewModel
         try
         {
             IsCompressing = true;
-            Debug.WriteLine($"Starting compressing {_filepaths.Length} files");
-            byte[] response = await _compressService.CompressAsync(_filepaths, SelectedTypeFormat, SliderValue.ToString(), SliderValue.ToString());
+            Debug.WriteLine($"Starting compressing {filepaths.Length} files");
+
+            string quality = "";
+            if(SelectedTypeFormat == "Image")
+            {
+                if(SliderValue == 0)
+                    quality = "25";
+                else if(SliderValue == 50)
+                    quality = "50";
+                else
+                    quality = "75";
+            }
+            else if(SelectedTypeFormat == "Video")
+            {
+                if(SliderValue == 0)
+                    quality = "low";
+                else if(SliderValue == 50)
+                    quality = "medium";
+                else
+                    quality = "high";
+            }
+            else if(SelectedTypeFormat == "Audio")
+            {
+                if(SliderValue == 0)
+                    quality = "32k";
+                else if(SliderValue == 50)
+                    quality = "64k";
+                else
+                    quality = "128k";
+            }
+
+
+            byte[] response = await _compressService.CompressAsync(filepaths, SelectedTypeFormat, quality, quality);
 
             ProcessedFiles.Clear();
 
             if(IsZipFile(response))
                 _processImageService.ProcessZipResponse(ProcessedFiles, response);
             else
-                _processImageService.ProcessSingleImageResponse(ProcessedFiles, response);
+                _processImageService.ProcessSingleImageResponse(ProcessedFiles, response, Path.GetFileNameWithoutExtension(filepaths[0]), Path.GetExtension(filepaths[0]), "compressed");
 
         }
         catch(Exception e)
@@ -245,7 +303,12 @@ public partial class CompressViewModel : BaseViewModel
         try
         {
             IsDownloading = true;
-            await _processImageService.DownloadImages(ProcessedFiles);
+            if(SelectedOutputFolderMode == OutputFolderMode.Custom && !string.IsNullOrEmpty(CustomOutputFolderPath))
+            {
+                await _processImageService.DownloadImages(ProcessedFiles, CustomOutputFolderPath);
+            }
+            else
+                await _processImageService.DownloadImages(ProcessedFiles);
         }
         catch(Exception e)
         {

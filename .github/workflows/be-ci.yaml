@@ -30,10 +30,11 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+
     strategy:
       fail-fast: false
       matrix:
-        python-version: ['3.13']
+        python-version: ['3.13', '3.12', '3.11']
 
     steps:
       - name: Checkout code

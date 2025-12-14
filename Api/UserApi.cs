@@ -183,12 +183,12 @@ public class UserApi : IUserApi
         }
     }
 
-    public async Task<bool> SendEmail(string email_type)
+    public async Task<bool> SendEmail(string emailType)
     {
         try
         {
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
-            using HttpResponseMessage response = await _httpClient.GetAsync($"{BaseURL}/user/send_email/{email_type}");
+            using HttpResponseMessage response = await _httpClient.GetAsync($"{BaseURL}/user/send_email/{emailType}");
             if (response.IsSuccessStatusCode)
             {
                 return true;
@@ -201,6 +201,27 @@ public class UserApi : IUserApi
         catch (Exception ex)
         {
             throw new ApplicationException("Error sending email", ex);
+        }
+    }
+
+    public async Task<bool> VerifyOTP(string otpCode)
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
+            var response = await _httpClient.GetAsync($"{BaseURL}/user/verify_otp/{otpCode}");
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error verifying OTP", ex);
         }
     }
 }

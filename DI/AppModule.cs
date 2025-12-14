@@ -34,6 +34,7 @@ public static class AppModule
         services.AddScoped<IProcessImageService, ProcessImageServiceImpl>();
         services.AddScoped<ITaskService, TaskServiceImpl>();
         services.AddScoped<ICompressService, CompressServiceImpl>();
+        services.AddScoped<IConvertService, ConvertServiceImpl>();
 
         //------------------ APIs ------------------
 
@@ -42,6 +43,7 @@ public static class AppModule
         services.AddHttpClient<IUserApi, UserApi>();
         services.AddHttpClient<ITaskApi, TaskApi>();
         services.AddHttpClient<ICompressApi, CompressApi>();
+        services.AddHttpClient<IConvertApi, ConvertApi>();
 
         //------------------ ViewModels ------------------
         //GeneralViewModel

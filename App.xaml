@@ -44,15 +44,14 @@
                 <vi:RemoveBackgroundView/>
             </DataTemplate>
 
-            <!-- ############# Compress ############# -->
             <DataTemplate DataType="{x:Type ssv:CompressViewModel}">
                 <vi:CompressView/>
             </DataTemplate>
 
-            <!-- ############# Convert ############# -->
-            <DataTemplate DataType="{x:Type cvvm:WEBPtoPNGViewModel}">
-                <vi:ConverterView/>
+            <DataTemplate DataType="{x:Type vm:ConvertViewModel}">
+                <v:ConvertView/>
             </DataTemplate>
+
 
             <!-- ############# User ############# -->
             <DataTemplate DataType="{x:Type usrvm:LoginViewModel}">

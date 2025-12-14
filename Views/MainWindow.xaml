@@ -165,9 +165,11 @@
                                          Style="{StaticResource DashboardSidebarButtonStyle}" Command="{Binding GoHomepageCommand}"
                                          Click="SidebarButton_Click"/>
 
-                            <RadioButton Content="Convert" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.Exchange}"
-                                         Style="{StaticResource DarkSidebarButton}" Command="{Binding GoHomepageCommand}"
-                                         Click="SidebarButton_Click"/>
+                        <RadioButton Content="Convert" 
+                                     GroupName="NavGroup" 
+                                     Tag="{x:Static fa:FontAwesomeIcon.Exchange}" 
+                                     Style="{StaticResource DarkSidebarButton}" 
+                                     Command="{Binding GoConvertCommand}"/>
 
                             <RadioButton Content="Compress" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.Compress}"
                                          Style="{StaticResource DarkSidebarButton}" Command="{Binding GoCompressCommand}"

@@ -50,16 +50,12 @@ public static class AppModule
         services.AddTransient<ViewModels.HomepageViewModel>();
         services.AddTransient<ViewModels.AboutUsViewModel>();
         services.AddTransient<ViewModels.HistoryViewModel>();
+
         services.AddTransient<ViewModels.SideServices.MarkdownToTextViewModel>();
         services.AddTransient<ViewModels.SideServices.RemoveBackgroundViewModel>();
-
-
-        //CompressViewModel
+        services.AddTransient<ViewModels.ConvertViewModel>();
         services.AddTransient<CompressViewModel>();
 
-        //ConvertViewModel
-
-        //UserViewModel
         services.AddTransient<ViewModels.UserViewModel.LoginViewModel>();
         services.AddTransient<ViewModels.UserViewModel.SignUpViewModel>();
         services.AddTransient<ViewModels.UserViewModel.MyAccountViewModel>();

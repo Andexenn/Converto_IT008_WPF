@@ -201,21 +201,21 @@
                                    VerticalAlignment="Center"/>
 
                         <Button HorizontalAlignment="Right"
-        Background="#33FFFFFF"
-        Width="30" Height="30"
-        BorderThickness="0"
-        Click="BtnCopy_Click"
-        Cursor="Hand"
-        ToolTip="Copy to Clipboard">
+                                Background="#33FFFFFF"
+                                Width="30" Height="30"
+                                BorderThickness="0"
+                                Click="BtnCopy_Click"
+                                Cursor="Hand"
+                                ToolTip="Copy to Clipboard">
 
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
                                     <Border Background="{TemplateBinding Background}" CornerRadius="6">
                                         <fa:FontAwesome Icon="Copy" 
-                                Foreground="White" 
-                                FontSize="14" 
-                                VerticalAlignment="Center" 
-                                HorizontalAlignment="Center"/>
+                                                        Foreground="White" 
+                                                        FontSize="14" 
+                                                        VerticalAlignment="Center" 
+                                                        HorizontalAlignment="Center"/>
                                     </Border>
 
                                     <ControlTemplate.Triggers>
@@ -238,7 +238,14 @@
                                                      Visibility="Visible"
                                                      Foreground="{StaticResource Brush.Text.Secondary}"
                                                      VerticalScrollBarVisibility="Auto"
-                                                     MarkdownStyleName="GithubLike"/>
+                                                     MarkdownStyleName="Sasabune">
+                                <md:MarkdownScrollViewer.Resources>
+                                    <Style TargetType="{x:Type Paragraph}">
+                                        <Setter Property="Foreground" Value="White"/>
+                                        <Setter Property="Margin" Value="0,5,0,5"/>
+                                    </Style>
+                                </md:MarkdownScrollViewer.Resources>
+                            </md:MarkdownScrollViewer>
 
                             <TextBox x:Name="txtOutputPlain"
                                      Visibility="Collapsed"

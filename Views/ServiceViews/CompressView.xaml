@@ -237,18 +237,10 @@
                               Visibility="{Binding NotUploaded, Converter={StaticResource BoolToVisibilityConverter}}">
 
                             <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="DragEnter">
-                                    <i:InvokeCommandAction Command="{Binding DragEnterCommand}"/>
-                                </i:EventTrigger>
-
-                                <i:EventTrigger EventName="DragLeave">
-                                    <i:InvokeCommandAction Command="{Binding DragLeaveCommand}"/>
-                                </i:EventTrigger>
-
                                 <i:EventTrigger EventName="Drop">
                                     <i:InvokeCommandAction Command="{Binding DropFileCommand}" 
-                                                       PassEventArgsToCommand="True"
-                                                       EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
+                                                           PassEventArgsToCommand="True"
+                                                           EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
                                 </i:EventTrigger>
 
                                 <i:EventTrigger EventName="MouseLeftButtonUp">
@@ -267,20 +259,19 @@
                                                     Margin="0,5,0,0"/>
                                 </Grid>
 
-                                <TextBlock Text="Click to upload or drop images here" 
+                                <TextBlock Text="Click to upload or drop files here" 
                                            Foreground="White" 
                                            FontWeight="Bold" 
                                            FontSize="16" 
                                            HorizontalAlignment="Center" 
                                            Margin="0,0,0,5"/>
 
-                                <TextBlock Text="PNG, JPG, or WEBP (max. 10MB)" 
+                                <TextBlock Text="PNG, JPG, WEBP, MP4, MP3... (max. 10MB)" 
                                            Foreground="{StaticResource Color.Text.Secondary}" 
                                            FontSize="13" 
                                            HorizontalAlignment="Center"/>
-                                
-                                
                             </StackPanel>
+
                         </Grid>
                         <Button Command="{Binding PreviousPreviewedImageCommand}"
                                 Opacity="0.7"

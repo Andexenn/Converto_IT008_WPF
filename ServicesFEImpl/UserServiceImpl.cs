@@ -18,7 +18,7 @@ public class UserServiceImpl : IUserService
         _userApi = userApi;
     }
 
-    public async Task<UserPreferences> GetUserPreferencesAsync() => await _userApi.GetUserPreferencesAsync();
+    public async Task<UserPreferencesDto> GetUserPreferencesAsync() => await _userApi.GetUserPreferencesAsync();
     
 
     public async Task<UserInfo> UpdateUserInfoAsync(UserInfo userInfo) => await _userApi.UpdateUserInfoAsync(userInfo);
@@ -28,7 +28,7 @@ public class UserServiceImpl : IUserService
     
     public async Task<UserInfo> SaveChanges(UserInfo userInfo) => await _userApi.SaveChanges(userInfo);
     public async Task<bool> ChangePassword(string newPassword) => await _userApi.ChangePassword(newPassword);
-    public async Task<bool> UpdateUserPreference(UserPreferences userPreferences) => await _userApi.UpdateUserPreference(userPreferences);
+    public async Task<bool> UpdateUserPreference(UserPreferencesDto userPreferences) => await _userApi.UpdateUserPreference(userPreferences);
     public async Task<bool> SendEmail(string emailType) => await _userApi.SendEmail(emailType);
     public async Task<bool> VerifyOTP(string otpCode) => await _userApi.VerifyOTP(otpCode);
 }

@@ -51,7 +51,7 @@ public partial class LoginViewModel : BaseViewModel
         try
         {
             IsBusy = true;
-            UserPreferences prefs = await _userService.GetUserPreferencesAsync();
+            UserPreferencesDto prefs = await _userService.GetUserPreferencesAsync();
             _sessionState.UserPreferences = prefs;
 
         }

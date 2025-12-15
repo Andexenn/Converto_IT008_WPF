@@ -18,7 +18,7 @@ public partial class SessionState : ObservableObject
     LoginResponse? loginResponse = null;
 
     [ObservableProperty]
-    UserPreferences? userPreferences = null;
+    UserPreferencesDto? userPreferences = null;
 
     public event PropertyChangedEventHandler PropertyChanged;
     protected void OnPropertyChanged([CallerMemberName] string propertyName = null)

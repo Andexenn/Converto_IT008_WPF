@@ -70,7 +70,7 @@ public static class AppModule
         services.AddSingleton<Views.Popups.Terms_ConditionsPopup>();
         services.AddTransient<Views.UserViews.LoginView>();
         services.AddTransient<Views.UserViews.SignUpView>();
-
+        services.AddSingleton<Views.ConvertView>();
 
         return services;
     }

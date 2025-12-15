@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Converto_IT008_WPF.Dto;
 
-public class UserPreferences
+public class UserPreferencesDto
 {
     public string Theme { get; set; } = "Dark";
     public string Language { get; set; } = "en-US";

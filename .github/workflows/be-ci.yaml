@@ -40,7 +40,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 👇 UPDATED: Install ALL system dependencies including LibreOffice
       - name: Install System Dependencies
         run: |
           sudo apt-get update
@@ -58,12 +57,13 @@ jobs:
             libdbus-glib-1-2 \
             libcairo2 \
             libcups2
-      # 👇 VERIFY LibreOffice is installed
+
       - name: Verify LibreOffice Installation
         run: |
           which soffice
           soffice --version
           ls -la /usr/bin/soffice
+
       - name: Setup Python & Cache
         uses: actions/setup-python@v4 
         with: 
@@ -97,20 +97,20 @@ jobs:
           cd Backend/App
           
           # Option 1: Test if app can even start
-          echo "🧪 Testing if app can import without errors..."
-          python -c "from main import app; print('✅ App imported successfully')" || (echo "❌ Failed to import app" && exit 1)
+          echo "Testing if app can import without errors..."
+          python -c "from main import app; print('App imported successfully')" || (echo "Failed to import app" && exit 1)
           
           # Option 2: Start server with timeout
-          echo "🚀 Starting FastAPI server with timeout..."
+          echo "Starting FastAPI server with timeout..."
           timeout 30s python -m uvicorn main:app --host 127.0.0.1 --port 5050 --log-level debug &
           
           SERVER_PID=$!
           
-          echo "⏳ Waiting 15s for startup..."
+          echo "Waiting 15s for startup..."
           sleep 15
           
-          echo "🔍 Testing health endpoint..."
+          echo "Testing health endpoint..."
           curl -f -v http://127.0.0.1:5050/health || exit 1
           
-          echo "✅ Success!"
+          echo "Success!"
           kill $SERVER_PID 2>/dev/null || true

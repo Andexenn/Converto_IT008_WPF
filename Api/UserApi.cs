@@ -24,7 +24,7 @@ public class UserApi : IUserApi
         _httpClient = httpClient;
         _sessionState = sessionState;
     }
-    public async Task<UserPreferences> GetUserPreferencesAsync()
+    public async Task<UserPreferencesDto> GetUserPreferencesAsync()
     {
         // Simulate an asynchronous API call
         try
@@ -34,7 +34,7 @@ public class UserApi : IUserApi
             if(response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                var userPref = System.Text.Json.JsonSerializer.Deserialize<UserPreferences>(json);
+                var userPref = System.Text.Json.JsonSerializer.Deserialize<UserPreferencesDto>(json);
 
                 return userPref;
             }
@@ -160,7 +160,7 @@ public class UserApi : IUserApi
         }
     }
 
-    public async Task<bool> UpdateUserPreference(UserPreferences userPreferences)
+    public async Task<bool> UpdateUserPreference(UserPreferencesDto userPreferences)
     {
         try
         {

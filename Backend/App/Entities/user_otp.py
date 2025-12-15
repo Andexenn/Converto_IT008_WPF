@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 class UserOTP(Base):
     __tablename__ = "USEROTP"
 
-    UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID"), primary_key=True)
+    UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID", ondelete="CASCADE"), primary_key=True)
     
     OTPCode: Mapped[Optional[str]] = mapped_column(String(30))
     OTPExpiry: Mapped[Optional[datetime]] = mapped_column(DateTime)

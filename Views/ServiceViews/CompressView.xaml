@@ -453,7 +453,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" 
-                                       Text="Type format" 
+                                       Text="Type Format" 
                                        Foreground="White" 
                                        FontWeight="SemiBold" 
                                        VerticalAlignment="Center"/>

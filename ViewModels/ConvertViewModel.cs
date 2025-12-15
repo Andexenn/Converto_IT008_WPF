@@ -19,6 +19,12 @@ public partial class ConvertViewModel : BaseViewModel
     [ObservableProperty]
     private ObservableCollection<AddedFileDto> addedFiles = new ObservableCollection<AddedFileDto>();
     [ObservableProperty]
+    private ObservableCollection<string> inputCategories = new ObservableCollection<string>
+    {
+        "Image", "Video", "Audio", "Document"
+    };
+
+    [ObservableProperty]
     private ObservableCollection<string> imageFormat = new ObservableCollection<string>()
     {
         ".JPG",
@@ -58,13 +64,56 @@ public partial class ConvertViewModel : BaseViewModel
         ".XLSX",
         ".PPTX"
     };
+
+    [ObservableProperty]
+    private string selectedInputCategory;
+
+    [ObservableProperty]
+    private ObservableCollection<string> availableOutputFormats = new ObservableCollection<string>();
+
+    [ObservableProperty]
+    private string selectedOutputFormat;
+
     [ObservableProperty]
     AddedFileDto selectedFile;
+
+    partial void OnSelectedInputCategoryChanged(string value)
+    {
+        UpdateOutputFormats(value);
+    }
+
+    private void UpdateOutputFormats(string category)
+    {
+        AvailableOutputFormats.Clear();
+        IEnumerable<string> source = null;
+
+        switch (category)
+        {
+            case "Image": source = ImageFormat; break;
+            case "Video": source = VideoFormat; break;
+            case "Audio": source = AudioFormat; break;
+            case "Document": source = DocumentFormat; break;
+            default: source = ImageFormat; break;
+        }
+
+        if (source != null)
+        {
+            foreach (var item in source) AvailableOutputFormats.Add(item);
+        }
+
+        if (AvailableOutputFormats.Count > 0)
+            SelectedOutputFormat = AvailableOutputFormats[0];
+    }
 
     private readonly IConvertService _convertService;
     public ConvertViewModel(IConvertService convertService)
     {
         _convertService = convertService;
+
+        if (InputCategories.Count > 0)
+        {
+            SelectedInputCategory = InputCategories[0];
+        }
     }
 
     [RelayCommand]

@@ -18,4 +18,5 @@ public interface IUserService
     public Task<bool> UpdateUserPreference(UserPreferencesDto userPreferences);
     public Task<bool> SendEmail(string emailType);
     public Task<bool> VerifyOTP(string otpCode);
+    public Task<bool> Logout();
 }

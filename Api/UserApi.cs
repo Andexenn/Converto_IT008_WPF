@@ -224,4 +224,27 @@ public class UserApi : IUserApi
             throw new ApplicationException("Error verifying OTP", ex);
         }
     }
+
+    public async Task<bool> Logout()
+    {
+        try
+        {
+            var payload = System.Text.Json.JsonSerializer.Serialize(new { refresh_token = Properties.Settings.Default.RefreshToken });
+            var payloadContent = new StringContent(payload, Encoding.UTF8, "application/json");
+            using HttpResponseMessage response = await _httpClient.PostAsync($"{BaseURL}/user/logout", payloadContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                throw new ApplicationException($"API Error: {response.StatusCode}, Content: {await response.Content.ReadAsStringAsync()}");
+            }
+        }
+        catch(Exception ex)
+        {
+            throw new ApplicationException("Error logging out", ex);
+        }
+    }
 }

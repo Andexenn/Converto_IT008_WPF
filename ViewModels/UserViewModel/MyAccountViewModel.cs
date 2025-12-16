@@ -86,7 +86,7 @@ public partial class MyAccountViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    void Logout()
+    private async Task Logout()
     {
         //_sessionState.IsUserLoggedIn = false;
         if (_sessionState.LoginResponse != null)
@@ -96,6 +96,8 @@ public partial class MyAccountViewModel : BaseViewModel
             _sessionState.LoginResponse.user = null!;
 
             goToLogin();
+
+            await _userService.Logout();
         }
     }
 
@@ -242,4 +244,6 @@ public partial class MyAccountViewModel : BaseViewModel
             Debug.WriteLine($"Error cancelling password change: {ex.Message}");
         }
     }
+
+    
 }

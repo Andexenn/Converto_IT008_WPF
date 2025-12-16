@@ -8,6 +8,7 @@ using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.Stores;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -88,6 +89,8 @@ public partial class LoginViewModel : BaseViewModel
 
             if(_sessionState.LoginResponse != null)
             {   
+                Properties.Settings.Default.RefreshToken = _sessionState.LoginResponse.refresh_token;
+                Properties.Settings.Default.Save();
                 await getUserPreference();
                 CloseOverlay();
                 Email = Password = string.Empty;
@@ -118,6 +121,8 @@ public partial class LoginViewModel : BaseViewModel
 
             if(_sessionState.LoginResponse != null)
             {
+                Properties.Settings.Default.RefreshToken = _sessionState.LoginResponse.refresh_token;
+                Properties.Settings.Default.Save();
                 await getUserPreference();
                 CloseOverlay();
                 Email = Password = string.Empty;
@@ -154,6 +159,9 @@ public partial class LoginViewModel : BaseViewModel
             _sessionState.LoginResponse = await _authService.SignInWithGithub();
             if (_sessionState.LoginResponse != null)
             {
+                Properties.Settings.Default.RefreshToken = _sessionState.LoginResponse.refresh_token;
+                Debug.WriteLine("GitHub login successful. Refresh Token: " + _sessionState.LoginResponse.refresh_token + "Access Token: " + _sessionState.LoginResponse.access_token);
+                Properties.Settings.Default.Save();
                 await getUserPreference();
                 CloseOverlay();
                 Email = Password = string.Empty;

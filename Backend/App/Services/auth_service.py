@@ -30,3 +30,9 @@ class IAuthService(ABC):
     @abstractmethod
     async def github_auth(self, code: str) -> dict[str, str | UserLoginResponse]:
         pass 
+
+    @abstractmethod
+    async def refresh_access_token(self, refresh_token: str) -> dict:
+        pass
+
+    

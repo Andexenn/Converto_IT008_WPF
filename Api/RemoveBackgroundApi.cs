@@ -30,8 +30,7 @@ public class RemoveBackgroundApi : IRemoveBackgroundApi
             var content = new StringContent(jsonPayload, Encoding.UTF8, "application/json");
             string token = _sessionState.LoginResponse.access_token;
 
-            _httpClient.DefaultRequestHeaders.Authorization =
-                new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
             using HttpResponseMessage response = await _httpClient.PostAsync($"{baseURL}/remove_background", content);
 
             if (response.IsSuccessStatusCode)

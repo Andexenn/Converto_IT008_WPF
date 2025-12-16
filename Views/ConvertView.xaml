@@ -279,6 +279,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Button Style="{StaticResource PrimaryBtn}" 
@@ -323,28 +324,31 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-                                            <Border Background="#333333" Width="40" Height="40" CornerRadius="5">
-                                                <fa:ImageAwesome Icon="{Binding FileIcon}" Foreground="Gray" Height="20"/>
+                                            <Border x:Name="MyInnerBorder" Background="#333333" Width="40" Height="40" CornerRadius="5">
+                                                <fa:ImageAwesome x:Name="MyIcon" Icon="{Binding FileIcon}" Foreground="Gray" Height="20"/>
                                             </Border>
-                                            <Grid Grid.Column="1" Margin="10,0" Width="155">
+                                            <Grid Grid.Column="1" Margin="10,0" Width="154">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="*"/>
                                                     <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
                                                 <TextBlock Text="{Binding FileName}" FontWeight="SemiBold" Foreground="White" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Row="1" Text="{Binding FileSizeInBytes}" Foreground="#888888" FontSize="12"/>
+                                                <TextBlock Grid.Row="1" Text="{Binding FileSizeInBytes}" Foreground="GhostWhite" FontSize="12"/>
                                             </Grid>
-                                            <Button Grid.Column="2" Style="{StaticResource FileCloseBtnStyle}" Command="{Binding DeleteSelectedFileCommand}">
-                                                <fa:ImageAwesome Icon="Close" Foreground="#666666" Height="10"/>
+                                            <Button Grid.Column="2" Style="{StaticResource FileCloseBtnStyle}" Command="{Binding DataContext.DeleteSelectedFileCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}">
+                                                <fa:ImageAwesome  Icon="Close" Foreground="#666666" Height="10"/>
                                             </Button>
                                         </Grid>
                                     </Border>
-                                    <!--<DataTemplate.Triggers>
+                                    <DataTemplate.Triggers>
                                         <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
-                                            <Setter TargetName="MyItemBorder" Property="Background" Value="#FF0000"/>
+                                            <Setter TargetName="MyItemBorder" Property="Background" Value="#4E0000"/>
                                             <Setter TargetName="MyItemBorder" Property="BorderBrush" Value="#FF0000"/>
+                                            <Setter TargetName="MyIcon" Property="Foreground" Value="#FF0000"/>
+                                            <Setter TargetName="MyInnerBorder" Property="Background" Value="#6E0000" />
+                                            <Setter TargetName="MyItemBorder" Property="BorderThickness" Value="2"/>
                                         </DataTrigger>
-                                    </DataTemplate.Triggers>-->
+                                    </DataTemplate.Triggers>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -352,10 +356,16 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <Button Grid.Row="2" Style="{StaticResource PrimaryBtn}" Height="50" Margin="0,10,0,0">
+                <Button Grid.Row="2" Style="{StaticResource PrimaryBtn}" Height="50" Margin="0,10,0,0" Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Bolt" Foreground="White" Height="16" Margin="0,0,10,0"/>
-                        <TextBlock Text="Convert All (3)" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Text="Convert All" FontSize="16" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Row="3" Style="{StaticResource TabBtn}" Height="50" Margin="0,15,0,0" Cursor="Hand" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Text="Download your files here" FontSize="16" TextAlignment="Center" FontWeight="Bold"/>
                     </StackPanel>
                 </Button>
             </Grid>
@@ -379,15 +389,12 @@
                     </StackPanel>
                 </DockPanel>
                 <Border Grid.Row="1" Background="#5A7D7C" CornerRadius="8" ClipToBounds="True" BorderThickness="1" BorderBrush="#333333">
-                    <Image x:Name="PreviewImage" Stretch="Uniform" Margin="20">
+                    <Image x:Name="PreviewImage" Stretch="Uniform" Margin="20" Source="{Binding SelectedFile.FilePath}">
                         <Image.LayoutTransform>
                             <ScaleTransform x:Name="ImageScaleTransform" 
                                             ScaleX="{Binding ZoomScale}" 
                                             ScaleY="{Binding ZoomScale}"/>
                         </Image.LayoutTransform>
-                        <Image.Source>
-                            <BitmapImage UriSource="https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg"/>
-                        </Image.Source>
                     </Image>
                 </Border>
                 <Border Grid.Row="2" Background="#1E1E1E" CornerRadius="0,0,8,8" Margin="0,-10,0,0" Panel.ZIndex="-1" Padding="15,15,15,5" BorderThickness="1" BorderBrush="#333333">
@@ -416,7 +423,7 @@
 
                     <TextBlock Text="Original Type Format" Foreground="#AAAAAA" Margin="0,0,0,8"/>
                     <ComboBox Height="40" Foreground="White" FontSize="14" SelectedIndex="0" Template="{StaticResource RoundedComboBoxTheme}" Margin="0,0,0,20">
-                        <ComboBoxItem Content="Image"/>
+                        <ComboBoxItem Content="{Binding SelectedFile.OriginalFileFormat}"/>
                         <ComboBoxItem Content="Video"/>
                         <ComboBoxItem Content="Audio"/>
                         <ComboBoxItem Content="Office (Word, Excel, PPT)"/>

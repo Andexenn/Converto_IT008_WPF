@@ -21,3 +21,5 @@ pytest
 pytest-asyncio
 pytest-dotenv
 alembic
+pyjwt
+redis

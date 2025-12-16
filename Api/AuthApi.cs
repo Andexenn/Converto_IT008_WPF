@@ -270,4 +270,29 @@ public class AuthApi : IAuthApi
             throw new Exception($"GitHub Sign-In failed: {ex.Message}");
         }
     }
+
+    public async Task<LoginResponse> RefreshAccessTokenAsync(string currentRefreshToken)
+    {
+        try
+        {
+            var payload = new { refresh_token = currentRefreshToken };
+            var json = JsonConvert.SerializeObject(payload);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+            using HttpResponseMessage response = await _httpClient.PostAsync($"{BaseURL}/auth/refresh_access_token", content);
+            if (response.IsSuccessStatusCode)
+            {
+                var responseContent = await response.Content.ReadAsStringAsync();
+                var deserializedReponse = JsonConvert.DeserializeObject<LoginResponse>(responseContent);
+                return deserializedReponse;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"Exception in RefreshAccessTokenAsync API: {ex.Message}");
+        }
+    }
 }

@@ -62,3 +62,7 @@ class IUserService(ABC):
     @abstractmethod
     async def change_password(self, user_id: int, new_password: str) -> bool:
         """Change password"""
+
+    @abstractmethod
+    async def logout(self, refresh_token: str) -> bool:
+        """Log out user"""

@@ -14,4 +14,8 @@ public class AddedFileDto
     public string FileIcon { get; set; } = string.Empty;
     public string OriginalFileFormat { get; set; } = string.Empty;
     public string ConvertedFileFormat { get; set; } = string.Empty;
+    public int Width { get; set; }
+    public int Height { get; set; }
+    public bool MaintainRatio { get; set; }
+
 }

@@ -86,3 +86,13 @@ async def github_login(
     auth_service: IAuthService = AuthRepository(db)
     return await auth_service.github_auth(code.code)
 
+@router.post("/refresh_access_token", response_model=dict)
+async def refresh_access_token(
+    refresh_token: str = Body(..., embed=True),
+    db: Session = Depends(get_db)
+):
+    """
+    Mount a function to github login
+    """
+    auth_service: IAuthService = AuthRepository(db)
+    return await auth_service.refresh_access_token(refresh_token)

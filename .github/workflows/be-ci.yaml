@@ -92,6 +92,7 @@ jobs:
           GITHUB_CLIENT_SECRET: "fake_gh_secret"
           PYTHONUNBUFFERED: "1"
           SOFFICE_PATH: "/usr/bin/soffice"
+          REDIS_PASSWORD: "hung123"
 
         run: |
           cd Backend/App

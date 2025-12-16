@@ -240,9 +240,8 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
         {
             IsBusy = true;
             var tasks = await _taskService.GetUserTasksAsync();
-            UserTasks = new ObservableCollection<UserTasksDto>(tasks);
-            Debug.WriteLine($"Fetched {UserTasks.Count} user tasks.");
-            Debug.WriteLine($"Original path: {UserTasks[0].OriginalFilePath}"); 
+            var filteredTasks = tasks.Where(t => t.ServiceTypeID == 3).ToList();
+            UserTasks = new ObservableCollection<UserTasksDto>(filteredTasks);
         }
         catch (Exception ex)
         {

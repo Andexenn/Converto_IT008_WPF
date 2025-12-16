@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using System.Windows.Media.Imaging;
 
 namespace Converto_IT008_WPF.ViewModels;
 
@@ -76,6 +78,28 @@ public partial class ConvertViewModel : BaseViewModel
 
     [ObservableProperty]
     AddedFileDto selectedFile;
+
+    [ObservableProperty]
+    private bool isResizeEnabled;
+
+    [ObservableProperty]
+    private bool maintainAspectRatio = true;
+
+    [ObservableProperty]
+    private int targetWidth;
+
+    [ObservableProperty]
+    private int targetHeight;
+
+    // Preview Image/Video
+    [ObservableProperty]
+    private bool isImagePreviewVisible;
+
+    [ObservableProperty]
+    private bool isVideoPreviewVisible;
+
+    [ObservableProperty]
+    private bool isPlaceholderVisible;
 
     partial void OnSelectedInputCategoryChanged(string value)
     {
@@ -168,12 +192,21 @@ public partial class ConvertViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private void DeleteSelectedFile()
+    private void DeleteFile(AddedFileDto file)
     {
-        if(SelectedFile != null && AddedFiles.Contains(SelectedFile))
+        if (file != null && AddedFiles.Contains(file))
         {
-            AddedFiles.Remove(SelectedFile);
-            Debug.WriteLine($"File removed: {SelectedFile.FileName}");
+            if (SelectedFile == file)
+            {
+                SelectedFile = null;
+
+                IsImagePreviewVisible = false;
+                IsVideoPreviewVisible = false;
+                IsPlaceholderVisible = false;
+            }
+
+            AddedFiles.Remove(file);
+            Debug.WriteLine($"File removed: {file.FileName}");
         }
     }
 
@@ -195,6 +228,76 @@ public partial class ConvertViewModel : BaseViewModel
         if (ZoomScale > 0.2)
         {
             ZoomScale -= 0.1;
+        }
+    }
+
+    private double _originalAspectRatio = 0;
+    private bool _isAdjustingDimensions = false;
+
+    partial void OnSelectedFileChanged(AddedFileDto value)
+    {
+        IsImagePreviewVisible = false;
+        IsVideoPreviewVisible = false;
+        IsPlaceholderVisible = false;
+
+        _originalAspectRatio = 0;
+        TargetWidth = 0;
+        TargetHeight = 0;
+        if (value == null || string.IsNullOrEmpty(value.FilePath)) return;
+
+        string ext = value.OriginalFileFormat.ToUpper();
+
+        if (ImageFormat.Contains(ext))
+        {
+            IsImagePreviewVisible = true;
+            try
+            {
+                using (var stream = new System.IO.FileStream(value.FilePath, System.IO.FileMode.Open, System.IO.FileAccess.Read))
+                {
+                    var decoder = System.Windows.Media.Imaging.BitmapDecoder.Create(stream, System.Windows.Media.Imaging.BitmapCreateOptions.DelayCreation, System.Windows.Media.Imaging.BitmapCacheOption.None);
+                    var frame = decoder.Frames[0];
+                    _originalAspectRatio = (double)frame.PixelWidth / frame.PixelHeight;
+                    _isAdjustingDimensions = true;
+                    TargetWidth = frame.PixelWidth;
+                    TargetHeight = frame.PixelHeight;
+                    _isAdjustingDimensions = false;
+                }
+            }
+            catch (System.Exception ex) { System.Diagnostics.Debug.WriteLine(ex.Message); }
+        }
+        else if (VideoFormat.Contains(ext))
+        {
+            IsVideoPreviewVisible = true;
+        }
+        else
+        {
+            IsPlaceholderVisible = true;
+        }
+    }
+
+    partial void OnTargetWidthChanged(int value)
+    {
+        if (_isAdjustingDimensions || !MaintainAspectRatio || _originalAspectRatio == 0) return;
+
+        _isAdjustingDimensions = true;
+        TargetHeight = (int)(value / _originalAspectRatio);
+        _isAdjustingDimensions = false;
+    }
+
+    partial void OnTargetHeightChanged(int value)
+    {
+        if (_isAdjustingDimensions || !MaintainAspectRatio || _originalAspectRatio == 0) return;
+
+        _isAdjustingDimensions = true;
+        TargetWidth = (int)(value * _originalAspectRatio);
+        _isAdjustingDimensions = false;
+    }
+
+    partial void OnMaintainAspectRatioChanged(bool value)
+    {
+        if (value)
+        {
+            OnTargetWidthChanged(TargetWidth);
         }
     }
 }

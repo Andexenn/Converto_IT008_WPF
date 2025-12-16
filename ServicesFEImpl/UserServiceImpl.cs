@@ -31,4 +31,5 @@ public class UserServiceImpl : IUserService
     public async Task<bool> UpdateUserPreference(UserPreferencesDto userPreferences) => await _userApi.UpdateUserPreference(userPreferences);
     public async Task<bool> SendEmail(string emailType) => await _userApi.SendEmail(emailType);
     public async Task<bool> VerifyOTP(string otpCode) => await _userApi.VerifyOTP(otpCode);
+    public async Task<bool> Logout() => await _userApi.Logout();
 }

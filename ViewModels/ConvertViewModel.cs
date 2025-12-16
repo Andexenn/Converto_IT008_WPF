@@ -160,9 +160,11 @@ public partial class ConvertViewModel : BaseViewModel
                         addedFile.OriginalFileFormat = System.IO.Path.GetExtension(file).ToLower();
 
                         if(ImageFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
+                        {
                             addedFile.FileIcon = "Image";
+                        }
                         else if(VideoFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
-                            addedFile.FileIcon = "Video";
+                            addedFile.FileIcon = "VideoCamera";
                         else if(AudioFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
                             addedFile.FileIcon = "Music";
                         else if(DocumentFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))

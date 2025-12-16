@@ -1,11 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Converto_IT008_WPF.Dto;
+using Converto_IT008_WPF.Dto.LoginDto;
 using Converto_IT008_WPF.ServicesFE;
 using Converto_IT008_WPF.Stores;
 using Converto_IT008_WPF.ViewModels.SideServices;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +23,7 @@ namespace Converto_IT008_WPF.ViewModels
 
         private readonly NavigationStore _navigationStore;
         private readonly INetworkMonitorService _networkMonitorService;
+        private readonly IAuthService _authService;
         public SessionState _sessionState { get; }
         public BaseViewModel CurrentViewModel => _navigationStore.CurrentViewModel;
         public ICommand GoHomepageCommand { get; }
@@ -37,12 +40,14 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand ShowSignUpOverlayCommand { get; set; }
         public ICommand HideSignUpOverlayCommand { get; set; }
 
-        public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService, SessionState sessionState)
+        public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService, SessionState sessionState, IAuthService authService)
         {
             _navigationStore = navigationStore;
             _networkMonitorService = networkMonitorService;
             _sessionState = sessionState;
-            IsLoginVisible = true;
+            _authService = authService;
+            _ = AutoLogin();
+            Debug.WriteLine("MainwindowViewModel initialized.");
             _navigationStore.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
@@ -92,15 +97,6 @@ namespace Converto_IT008_WPF.ViewModels
             _networkMonitorService.Start();
         }
 
-        [RelayCommand]
-        private void CloseApp()
-        {
-            MessageBoxResult msg = MessageBox.Show("Are you sure you want to exit?", "Confirmation", MessageBoxButton.YesNo, MessageBoxImage.Question);
-            if(msg == MessageBoxResult.Yes)
-            {
-                Application.Current.Shutdown();
-            }
-        }
 
         public bool IsLoginVisible
         {
@@ -116,6 +112,32 @@ namespace Converto_IT008_WPF.ViewModels
         {
             get { return _isSignUpVisible; }
             set { _isSignUpVisible = value; OnPropertyChanged(); }
+        }
+
+        private async Task AutoLogin()
+        {
+            try
+            {
+                IsBusy = true;
+                Debug.WriteLine($"refresh token: {Properties.Settings.Default.RefreshToken}");
+                LoginResponse response = await _authService.RefreshAccessTokenAsync(Properties.Settings.Default.RefreshToken);
+                if (response == null)
+                    IsLoginVisible = true;
+                else
+                {
+                    _sessionState.LoginResponse = response;
+                    _sessionState.UserPreferences = response.user_preferences;
+                    IsLoginVisible = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"AutoLogin failed: {ex.Message}");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
 
         ~MainWindowViewModel()

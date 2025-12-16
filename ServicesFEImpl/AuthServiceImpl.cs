@@ -32,5 +32,6 @@ public class AuthServiceImpl : IAuthService
 
     public async Task<LoginResponse> SignInWithGoolge() => await _authApi.SignInWithGoolge();
     public async Task<LoginResponse> SignInWithGithub() => await _authApi.SignInWithGithub();
+    public async Task<LoginResponse> RefreshAccessTokenAsync(string currentRefreshToken) => await _authApi.RefreshAccessTokenAsync(currentRefreshToken);
 
 }

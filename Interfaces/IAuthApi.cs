@@ -15,4 +15,5 @@ public interface IAuthApi
     public Task<LoginResponse> Login(LoginRequest loginRequest);
     public Task<LoginResponse> SignInWithGoolge();
     public Task<LoginResponse> SignInWithGithub();
+    public Task<LoginResponse> RefreshAccessTokenAsync(string currentRefreshToken);
 }

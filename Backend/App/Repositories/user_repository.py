@@ -1,13 +1,15 @@
 """User repository"""
-from typing import List, Optional
 from datetime import datetime, timedelta
 import secrets
 import string
+import jwt
+import time
 
 from sqlalchemy import desc, update
 from sqlalchemy.orm import Session, joinedload
 from fastapi import HTTPException, status, BackgroundTasks
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
+from Database.connection import r 
 
 from Schemas.user import UserData, UserPref
 from Services.user_service import IUserService
@@ -17,6 +19,7 @@ from Entities.user_preferences import UserPreferences
 from config import settings
 from Helpers.email_template import get_email_template
 from Core.security import verify_password, hash_password
+
 
 class UserRepository(IUserService):
     """User repository class"""
@@ -371,3 +374,32 @@ class UserRepository(IUserService):
                 detail=f"Failed to change password: {str(e)}"
             ) from e
         
+    async def logout(self, refresh_token: str) -> bool:
+        try:
+            payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+
+            jti = payload.get("jti")
+            exp = payload.get("exp")
+
+            current_time = time.time()
+            ttl = exp - current_time
+
+            if ttl > 0:
+                r.setex(
+                    name=f"blacklist:refresh:{jti}",
+                    time=int(ttl),
+                    value="revoked"
+                )
+
+            return {"message": "Logout successfully"}
+        except jwt.PyJWTError:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Wrong token"
+            )
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Failed to log out {str(e)}"
+            ) from e 
+            

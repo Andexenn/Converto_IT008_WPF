@@ -7,6 +7,7 @@ from pydantic import SecretStr
 
 BASE_DIR = Path(__file__).resolve().parents[1]
 ENV_FILE = BASE_DIR / ".env"
+
 class Settings(BaseSettings):
     """
     Load value from the .env file
@@ -37,5 +38,7 @@ class Settings(BaseSettings):
 
     GITHUB_CLIENT_ID: str 
     GITHUB_CLIENT_SECRET: str
+
+    REDIS_PASSWORD: str
 
 settings = Settings() # type: ignore

@@ -411,6 +411,7 @@
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
                 <Button Style="{StaticResource PrimaryBtn}" 
@@ -480,9 +481,8 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
-
-                                            <Border Background="#333333" Width="40" Height="40" CornerRadius="5">
-                                                <fa:ImageAwesome Icon="{Binding FileIcon}" Foreground="Gray" Height="20"/>
+                                            <Border x:Name="MyInnerBorder" Background="#333333" Width="40" Height="40" CornerRadius="5">
+                                                <fa:ImageAwesome x:Name="MyIcon" Icon="{Binding FileIcon}" Foreground="Gray" Height="20"/>
                                             </Border>
 
                                             <Grid Grid.Column="1" Margin="10,0" Width="155">
@@ -491,7 +491,7 @@
                                                     <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
                                                 <TextBlock Text="{Binding FileName}" FontWeight="SemiBold" Foreground="White" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Row="1" Text="{Binding FileSizeInBytes}" Foreground="#888888" FontSize="12"/>
+                                                <TextBlock Grid.Row="1" Text="{Binding FileSizeInBytes}" Foreground="GhostWhite" FontSize="12"/>
                                             </Grid>
 
                                             <Button Grid.Column="2" 
@@ -502,6 +502,15 @@
                                             </Button>
                                         </Grid>
                                     </Border>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
+                                            <Setter TargetName="MyItemBorder" Property="Background" Value="#4E0000"/>
+                                            <Setter TargetName="MyItemBorder" Property="BorderBrush" Value="#FF0000"/>
+                                            <Setter TargetName="MyIcon" Property="Foreground" Value="#FF0000"/>
+                                            <Setter TargetName="MyInnerBorder" Property="Background" Value="#6E0000" />
+                                            <Setter TargetName="MyItemBorder" Property="BorderThickness" Value="2"/>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -509,10 +518,16 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <Button Grid.Row="2" Style="{StaticResource PrimaryBtn}" Height="50" Margin="0,10,0,0">
+                <Button Grid.Row="2" Style="{StaticResource PrimaryBtn}" Height="50" Margin="0,10,0,0" Cursor="Hand">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Bolt" Foreground="White" Height="16" Margin="0,0,10,0"/>
                         <TextBlock Text="Convert All" FontSize="16" FontWeight="Bold"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Row="3" Style="{StaticResource TabBtn}" Height="50" Margin="0,15,0,0" Cursor="Hand" HorizontalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" >
+                        <TextBlock Text="Download your files here" FontSize="16" TextAlignment="Center" FontWeight="Bold"/>
                     </StackPanel>
                 </Button>
             </Grid>

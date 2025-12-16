@@ -365,3 +365,4 @@ TODO.txt
 .env
 .venv
 launch.json
+redis_data

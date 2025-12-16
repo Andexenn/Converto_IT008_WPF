@@ -22,8 +22,6 @@ public class ConvertApi : IConvertApi
         _sessionState = sessionState;
     }
 
-    
-
     public async Task<byte[]> ConvertFileAsync(string[] filepaths, string toFormat, string originalTypeFormat)
     {
         try

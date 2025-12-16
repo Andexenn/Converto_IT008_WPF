@@ -2,23 +2,55 @@
 from typing import Optional
 from datetime import timedelta
 import httpx
+import uuid
 
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException, status
+import jwt
 
 from Services.auth_service import IAuthService
-from Schemas.user import GoogleUserData, UserCreate, UserResponse, UserLogin, UserLoginResponse
+from Schemas.user import GoogleUserData, UserCreate, UserResponse, UserLogin, UserLoginResponse, UserPref
 from Entities.user import User
 from Entities.user_otp import UserOTP
 from Entities.user_preferences import UserPreferences
-from Core.security import hash_password, verify_password, create_access_token
+from Core.security import hash_password, verify_password, create_token
 from config import settings
 from Repositories.user_repository import UserRepository
+from Database.connection import r 
+
 class AuthRepository(IAuthService):
     """Auth repository class"""
     def __init__(self, db: Session):
         self.db = db
+
+    @staticmethod
+    def create_access_token(user_id: int, email: str):
+        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+        return create_token(
+                data={
+                    "sub": email,      # "sub" = subject (standard JWT claim)
+                    "user_id": user_id, # Custom claim
+                    "email": email     # Custom claim
+                },
+                expires_delta=access_token_expires
+            )
+    
+    @staticmethod
+    def create_refresh_token(email: str):
+        refresh_jti = str(uuid.uuid4())
+        refresh_token_expires = timedelta(days=7)
+        refresh_token = create_token(
+            data={
+                "sub": email,
+                "type": "refresh",
+                "jti": refresh_jti
+            },
+            expires_delta=refresh_token_expires
+        )
+
+        return refresh_token
+
 
     async def sign_up(self, user_data: UserCreate) -> UserResponse:
         try:
@@ -98,18 +130,14 @@ class AuthRepository(IAuthService):
                     detail="Incorrect email or password"
                 )
 
-            access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-            access_token = create_access_token(
-                data={
-                    "sub": user.Email,      # "sub" = subject (standard JWT claim)
-                    "user_id": user.UserID, # Custom claim
-                    "email": user.Email     # Custom claim
-                },
-                expires_delta=access_token_expires
-            )
+            access_token = self.create_access_token(user.UserID, user.Email)
+
+            refresh_token = self.create_refresh_token(user.Email)
+            
 
             return{
                 "access_token": access_token,
+                "refresh_token": refresh_token,
                 "token_type": "bearer",
                 "user": UserLoginResponse.model_validate(user)
             }
@@ -220,18 +248,13 @@ class AuthRepository(IAuthService):
                 self.db.commit()
                 self.db.refresh(user)
 
-            access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-            access_token = create_access_token(
-                data={
-                    "sub": user.Email,
-                    "user_id": user.UserID,
-                    "email": user.Email
-                },
-                expires_delta=access_token_expires
-            )
+            access_token = self.create_access_token(user.UserID, user.Email)
 
-            return {
+            refresh_token = self.create_refresh_token(user.Email)
+
+            return{
                 "access_token": access_token,
+                "refresh_token": refresh_token,
                 "token_type": "bearer",
                 "user": UserLoginResponse.model_validate(user)
             }
@@ -355,18 +378,13 @@ class AuthRepository(IAuthService):
                     self.db.commit()
                     self.db.refresh(user)
 
-                access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
-                access_token = create_access_token(
-                    data={
-                        "sub": user.Email,
-                        "user_id": user.UserID,
-                        "email": user.Email
-                    },
-                    expires_delta=access_token_expires
-                )
+                access_token = self.create_access_token(user.UserID, user.Email)
 
-                return {
+                refresh_token = self.create_refresh_token(user.Email)
+
+                return{
                     "access_token": access_token,
+                    "refresh_token": refresh_token,
                     "token_type": "bearer",
                     "user": UserLoginResponse.model_validate(user)
                 }
@@ -377,3 +395,53 @@ class AuthRepository(IAuthService):
                     detail=f"Failed to process Google login: {str(e)}"
                 ) from e
             
+    async def refresh_access_token(self, refresh_token: str) -> dict:
+        try:
+            payload = jwt.decode(refresh_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+
+            if payload.get("type") != "refresh":
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="Invalid refresh token"
+                )
+            
+            jti = payload.get("jti")
+            email = payload.get("sub")
+
+            is_revoked = r.get(f"blacklist:refresh:{jti}")
+
+            if is_revoked:
+                raise HTTPException(
+                    status_code=status.HTTP_401_UNAUTHORIZED,
+                    detail="Refresh token was revoked"
+                )
+            
+            user = self.db.query(User).filter(User.Email == email).first()
+            
+            if not user:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=f"User with email {email} not found"
+                )
+
+            new_access_token = self.create_access_token(user.UserID, email)
+
+            user_pref = self.db.query(UserPreferences).filter(UserPreferences.UserID == user.UserID).first()
+
+            return {
+                "access_token": new_access_token,
+                "type": "bearer",
+                "user": UserLoginResponse.model_validate(user),
+                "user_preferences": UserPref.model_validate(user_pref)
+            }
+
+        except jwt.ExpiredSignatureError:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Refresh token expired"
+            )
+        except Exception as e:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail=f"Fail to refresh access token: {str(e)}"
+            ) from e 

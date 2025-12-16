@@ -10,6 +10,8 @@
              Background="#050505" Foreground="White">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+        
         <SolidColorBrush x:Key="Color.Bg" Color="#050505"/>
         <SolidColorBrush x:Key="Color.Card" Color="#121212"/>
         <SolidColorBrush x:Key="Color.Border" Color="#333333"/>
@@ -446,16 +448,43 @@
                             </ListBox.ItemContainerStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate DataType="Border">
-                                    <Border x:Name="MyItemBorder" BorderBrush="#333333" Cursor="Hand" BorderThickness="1" Background="#252525" CornerRadius="8" Padding="10" Margin="0,0,0,10">
+                                    <Border x:Name="MyItemBorder" 
+                                            Cursor="Hand" 
+                                            BorderThickness="1" 
+                                            CornerRadius="8" 
+                                            Padding="10" 
+                                            Margin="0,0,0,10">
+
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Background" Value="#252525"/>
+                                                <Setter Property="BorderBrush" Value="#333333"/>
+
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#3A3A3A"/>
+                                                        <Setter Property="BorderBrush" Value="#555555"/>
+                                                    </Trigger>
+
+                                                    <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                        <Setter Property="BorderBrush" Value="{StaticResource Color.Brand}"/>
+                                                        <Setter Property="Background" Value="#2A2A2A"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="Auto"/>
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
+
                                             <Border Background="#333333" Width="40" Height="40" CornerRadius="5">
                                                 <fa:ImageAwesome Icon="{Binding FileIcon}" Foreground="Gray" Height="20"/>
                                             </Border>
+
                                             <Grid Grid.Column="1" Margin="10,0" Width="155">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="*"/>
@@ -464,17 +493,15 @@
                                                 <TextBlock Text="{Binding FileName}" FontWeight="SemiBold" Foreground="White" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
                                                 <TextBlock Grid.Row="1" Text="{Binding FileSizeInBytes}" Foreground="#888888" FontSize="12"/>
                                             </Grid>
-                                            <Button Grid.Column="2" Style="{StaticResource FileCloseBtnStyle}" Command="{Binding DeleteSelectedFileCommand}">
+
+                                            <Button Grid.Column="2" 
+                                                    Style="{StaticResource FileCloseBtnStyle}" 
+                                                    Command="{Binding DataContext.DeleteFileCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                    CommandParameter="{Binding}">
                                                 <fa:ImageAwesome Icon="Close" Foreground="#666666" Height="10"/>
                                             </Button>
                                         </Grid>
                                     </Border>
-                                    <!--<DataTemplate.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type ListBoxItem}}, Path=IsSelected}" Value="True">
-                                            <Setter TargetName="MyItemBorder" Property="Background" Value="#FF0000"/>
-                                            <Setter TargetName="MyItemBorder" Property="BorderBrush" Value="#FF0000"/>
-                                        </DataTrigger>
-                                    </DataTemplate.Triggers>-->
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -522,19 +549,40 @@
                                   PanningMode="Both"
                                   Background="Transparent">
 
-                        <Image x:Name="PreviewImage" 
-                               Stretch="Uniform" 
-                               Margin="20" Width="428">
+                        <Grid Margin="20">
 
-                            <Image.LayoutTransform>
-                                <ScaleTransform ScaleX="{Binding ZoomScale}" 
-                                                ScaleY="{Binding ZoomScale}"/>
-                            </Image.LayoutTransform>
+                            <Image x:Name="PreviewImage" 
+                                    Stretch="Uniform"
+                                    Visibility="{Binding IsImagePreviewVisible, Converter={StaticResource BoolToVisConverter}}"
+                                    Source="{Binding SelectedFile.FilePath}">
 
-                            <Image.Source>
-                                <BitmapImage UriSource="https://upload.wikimedia.org/wikipedia/commons/e/e7/Everest_North_Face_toward_Base_Camp_Tibet_Luca_Galuzzi_2006.jpg"/>
-                            </Image.Source>
-                        </Image>
+                                <Image.LayoutTransform>
+                                    <ScaleTransform ScaleX="{Binding ZoomScale}" 
+                                                    ScaleY="{Binding ZoomScale}"/>
+                                </Image.LayoutTransform>
+
+                            </Image>
+
+                            <MediaElement x:Name="PreviewVideo"
+                                          Stretch="None"
+                                          Visibility="{Binding IsVideoPreviewVisible, Converter={StaticResource BoolToVisConverter}}"
+                                          Source="{Binding SelectedFile.FilePath}"
+                                          LoadedBehavior="Play"
+                                          UnloadedBehavior="Stop"
+                                          ScrubbingEnabled="True"
+                                          Volume="0.5">
+                                <MediaElement.LayoutTransform>
+                                    <ScaleTransform ScaleX="{Binding ZoomScale}" 
+                                                    ScaleY="{Binding ZoomScale}"/>
+                                </MediaElement.LayoutTransform>
+                            </MediaElement>
+
+                            <TextBlock Text="Preview not available for this file type."
+                                       Visibility="{Binding IsPlaceholderVisible, Converter={StaticResource BoolToVisConverter}}"
+                                       Foreground="#AAAAAA"
+                                       HorizontalAlignment="Center" 
+                                       VerticalAlignment="Center"/>
+                        </Grid>
                     </ScrollViewer>
                 </Border>
                 
@@ -596,10 +644,12 @@
 
                     <Grid Margin="0,25,0,15">
                         <TextBlock Text="Resize Image" VerticalAlignment="Center" Foreground="#AAAAAA"/>
-                        <ToggleButton Style="{StaticResource SwitchStyle}" HorizontalAlignment="Right"/>
+                        <ToggleButton Style="{StaticResource SwitchStyle}" 
+                                      HorizontalAlignment="Right"
+                                      IsChecked="{Binding IsResizeEnabled}"/>
                     </Grid>
 
-                    <Grid>
+                    <Grid IsEnabled="{Binding IsResizeEnabled}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="30"/>
@@ -613,7 +663,14 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <fa:ImageAwesome Icon="ArrowsH" Foreground="#666666" Height="5" Margin="5,0,5,0" VerticalAlignment="Center"/>
-                                <TextBox Grid.Column="1" Text="1920" Background="Transparent" BorderThickness="0" Foreground="White" VerticalContentAlignment="Center" Padding="5,0"/>
+
+                                <TextBox Grid.Column="1" 
+                                         Text="{Binding TargetWidth, UpdateSourceTrigger=PropertyChanged}" 
+                                         Background="Transparent" 
+                                         BorderThickness="0" 
+                                         Foreground="White" 
+                                         VerticalContentAlignment="Center" 
+                                         Padding="5,0"/>
                             </Grid>
                         </Border>
 
@@ -624,12 +681,25 @@
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <fa:ImageAwesome Icon="ArrowsV" Foreground="#666666" Height="12" Margin="5,0,5,0" VerticalAlignment="Center"/>
-                                <TextBox Grid.Column="1" Text="1080" Background="Transparent" BorderThickness="0" Foreground="White" VerticalContentAlignment="Center" Padding="5,0"/>
+
+                                <TextBox Grid.Column="1" 
+                                         Text="{Binding TargetHeight, UpdateSourceTrigger=PropertyChanged}" 
+                                         Background="Transparent" 
+                                         BorderThickness="0" 
+                                         Foreground="White" 
+                                         VerticalContentAlignment="Center" 
+                                         Padding="5,0"/>
                             </Grid>
                         </Border>
                     </Grid>
 
-                    <CheckBox Margin="0,20,0,0" Content="Maintain aspect ratio" Foreground="#AAAAAA" IsChecked="True" Background="#FF0000" BorderBrush="#FF0000"/>
+                    <CheckBox Margin="0,20,0,0" 
+                              Content="Maintain aspect ratio" 
+                              Foreground="#AAAAAA" 
+                              IsChecked="{Binding MaintainAspectRatio}"
+                              IsEnabled="{Binding IsResizeEnabled}" 
+                              Background="#FF0000" 
+                              BorderBrush="#FF0000"/>
 
                 </StackPanel>
             </Grid>

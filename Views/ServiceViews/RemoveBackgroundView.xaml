@@ -11,6 +11,8 @@
              Background="{StaticResource Brush.MainBG}">
 
     <UserControl.Resources>
+        <SolidColorBrush x:Key="Color.Text.Secondary" Color="#888888"/>
+        
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <local:DropEventArgsConverter x:Key="DropEventArgsConverter"/> 
     </UserControl.Resources>
@@ -40,7 +42,7 @@
                     <StackPanel Grid.Column="0">
                         <Grid Height="300">
                             <Border x:Name="UploadZoneBackground" 
-                                            Background="{StaticResource Brush.BG.Shape}" 
+                                            Background="#222222" 
                                             CornerRadius="12" 
                                             Opacity="0.5"/>
                             

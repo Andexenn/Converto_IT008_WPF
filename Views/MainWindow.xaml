@@ -38,13 +38,21 @@
                                     RenderTransformOrigin="0.5, 0.5">
                                 <StackPanel Orientation="Horizontal">
                                     <fa:FontAwesome Icon="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" 
-                                                    Width="25" VerticalAlignment="Center" FontSize="16" 
-                                                    Foreground="{TemplateBinding Foreground}"/>
+                                        Width="25" VerticalAlignment="Center" FontSize="16" 
+                                        Foreground="{TemplateBinding Foreground}"/>
                                     <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0"/>
                                 </StackPanel>
                             </Border>
 
                             <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+
                                 <MultiTrigger>
                                     <MultiTrigger.Conditions>
                                         <Condition Property="IsMouseOver" Value="True"/>
@@ -83,7 +91,11 @@
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type RadioButton}">
-                            <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="15,10,15,10">
+                            <Border x:Name="border" 
+                                    Background="{TemplateBinding Background}" 
+                                    CornerRadius="8" 
+                                    Padding="15,10,15,10"
+                                    RenderTransformOrigin="0.5, 0.5">
                                 <StackPanel Orientation="Horizontal">
                                     <Image x:Name="IconImage" Source="/Resources/dashboardv1.png" Width="25" VerticalAlignment="Center"/>
                                     <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0"/>
@@ -91,6 +103,14 @@
                             </Border>
 
                             <ControlTemplate.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+
                                 <MultiTrigger>
                                     <MultiTrigger.Conditions>
                                         <Condition Property="IsMouseOver" Value="True"/>

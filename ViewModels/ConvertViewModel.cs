@@ -176,4 +176,25 @@ public partial class ConvertViewModel : BaseViewModel
             Debug.WriteLine($"File removed: {SelectedFile.FileName}");
         }
     }
+
+    [ObservableProperty]
+    private double zoomScale = 1.0;
+
+    [RelayCommand]
+    private void ZoomIn()
+    {
+        if (ZoomScale < 5.0)
+        {
+            ZoomScale += 0.1;
+        }
+    }
+
+    [RelayCommand]
+    private void ZoomOut()
+    {
+        if (ZoomScale > 0.2)
+        {
+            ZoomScale -= 0.1;
+        }
+    }
 }

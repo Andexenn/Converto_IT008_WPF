@@ -37,7 +37,12 @@ namespace Converto_IT008_WPF.ViewModels
         }
 
         public SeriesCollection TaskBreakdownSeries { get; set; }
-        public string[] ActivityLabels { get; set; }
+        private string[] _activityLabels;
+        public string[] ActivityLabels
+        {
+            get => _activityLabels;
+            set => SetProperty(ref _activityLabels, value);
+        }
         public Func<double, string> YFormatter { get; set; }
 
         // Formatter cho Tooltip của Pie Chart

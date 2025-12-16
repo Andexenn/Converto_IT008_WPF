@@ -16,4 +16,14 @@ public class UserTasksDto
     public bool TaskStatus { get; set; }
     public float TaskTime { get; set; }
     public DateTime CreatedAt { get; set; }
+
+    //Temp
+    public string Status { get; set; }
+    public bool IsSuccess
+    {
+        get
+        {
+            return !string.IsNullOrEmpty(Status) && Status.Equals("Completed", System.StringComparison.OrdinalIgnoreCase);
+        }
+    }
 }

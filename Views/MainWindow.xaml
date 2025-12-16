@@ -223,7 +223,7 @@
 
                     <ContentControl Grid.Row="0"
                                     x:Name="MainContentControl"
-                                    Margin="20"
+                                    Margin="0"
                                     Content="{Binding CurrentViewModel}"/>
                 </Grid>
             </Border>

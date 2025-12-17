@@ -21,7 +21,9 @@
 
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <local:DropEventArgsConverter x:Key="DropEventArgsConverter"/>
-        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/> 
+        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        <local:BytesToMegabytesConverter x:Key="BytesToMegabytesConverter"/>
+        <local:RelativeTimeConverter x:Key="RelativeTimeConverter"/>
 
         <Style x:Key="ModernSliderStyle" TargetType="Slider">
             <Setter Property="Template">
@@ -575,7 +577,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="FILENAME" Grid.Column="0" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" Margin="25,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="DATE" Grid.Column="1" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center"/>
+                            <TextBlock Text="DATE" Grid.Column="1" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="STATUS" Grid.Column="2" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="FILESIZE" Grid.Column="3" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="OUTPUTSIZE" Grid.Column="4" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
@@ -584,41 +586,11 @@
                         <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                                          Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
                         
-                        <!--<Border BorderBrush="#222222" BorderThickness="0,1,0,0" Height="55">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
-
-                                <TextBlock Text="profile-picture.png" 
-                                           Grid.Column="0" 
-                                           Foreground="White" 
-                                           Margin="25,0" 
-                                           VerticalAlignment="Center" 
-                                           FontWeight="SemiBold"
-                                           TextTrimming="CharacterEllipsis" 
-                                           TextWrapping="NoWrap"
-                                           ToolTip="profile-picture.png"/>
-                                <TextBlock Text="5 hours ago" Grid.Column="1" Foreground="#888888" VerticalAlignment="Center"/>
-
-                                <Border Grid.Column="2" Background="#103820" CornerRadius="15" Padding="15,5" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="Completed" Foreground="#4ADE80" FontSize="12" FontWeight="SemiBold"/>
-                                </Border>
-
-                                <TextBlock Text="1 MB" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <TextBlock Text="0.2 MB" Grid.Column="4" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>-->
-
                         <ScrollViewer  VerticalScrollBarVisibility="Auto">
                             <ItemsControl ItemsSource="{Binding UserTasks}" Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
-                                        <Border BorderBrush="#33FFFFFF" BorderThickness="0,1,0,0" Padding="20,12">
+                                        <Border BorderBrush="#33FFFFFF" BorderThickness="0,1,0,0" Padding="20,12,7,15">
                                             <Grid>
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="2*"/>
@@ -628,17 +600,17 @@
                                                     <ColumnDefinition Width="1*"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Grid.Column="0" Text="{Binding OriginalFilePath}" Width="350" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" Foreground="White" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="0" Text="{Binding OriginalFilePath}" TextTrimming="CharacterEllipsis" Foreground="White" VerticalAlignment="Center"/>
 
-                                                <TextBlock Grid.Column="1" Text="{Binding CreatedAt}" HorizontalAlignment="Center" Foreground="#888888" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding CreatedAt, Converter={StaticResource RelativeTimeConverter}}" HorizontalAlignment="Center" Foreground="#888888" VerticalAlignment="Center"/>
 
                                                 <Border Grid.Column="2" Background="#103820" CornerRadius="12" HorizontalAlignment="Center" Padding="15,4">
 
                                                     <TextBlock Text="Completed" Foreground="#4ADE80" FontWeight="SemiBold" FontSize="12"/>
                                                 </Border>
 
-                                                <TextBlock Grid.Column="3" Text="{Binding InputFileSize}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right"/>
-                                                <TextBlock Text="{Binding OutputFileSize}" Grid.Column="4" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding OriginalFileSize, Converter={StaticResource BytesToMegabytesConverter}}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding OutputFileSize, Converter={StaticResource BytesToMegabytesConverter}}" Grid.Column="4" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>

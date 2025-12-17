@@ -28,4 +28,87 @@ public partial class ConvertView : UserControl
         InitializeComponent();
         DataContext = App.ServiceProvider?.GetRequiredService<ConvertViewModel>();
     }
+
+    private void FileDrop(object sender, DragEventArgs e)
+    {
+        ResetUploadZoneVisual();
+    }
+
+    private void File_DragEnter(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            if (UploadZoneBackground != null)
+            {
+                UploadZoneBackground.Background = (Brush)FindResource("Brush.BG.Card");
+            }
+
+            //if (UploadZoneBorder != null)
+            //{
+            //    UploadZoneBorder.Stroke = Brushes.White;
+            //    UploadZoneBorder.Opacity = 1.0;
+            //}
+        }
+    }
+
+    private void File_DragLeave(object sender, DragEventArgs e)
+    {
+        ResetUploadZoneVisual();
+    }
+
+    private void ResetUploadZoneVisual()
+    {
+        if (UploadZoneBackground != null)
+        {
+            UploadZoneBackground.Background = (Brush)FindResource("Color.Bg");
+        }
+
+        //if (UploadZoneBorder != null)
+        //{
+        //    UploadZoneBorder.Stroke = (Brush)FindResource("Brush.Text.Secondary");
+        //    UploadZoneBorder.Opacity = 0.5;
+        //}
+    }
+
+    private void File_DragOver(object sender, DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent(DataFormats.FileDrop))
+        {
+            if (AllowDrop((string[])e.Data.GetData(DataFormats.FileDrop)))
+                e.Effects = DragDropEffects.Copy;
+            else
+                e.Effects = DragDropEffects.None;
+        }
+        else
+        {
+            e.Effects = DragDropEffects.None;
+        }
+        e.Handled = true;
+    }
+
+    private bool AllowDrop(string[] filepaths)
+    {
+        string[] imgAllowExt = { ".jpg", ".png", ".webp", ".jpeg", ".tiff", ".bmp" };
+        string[] videoAllowExt = { ".mp4", ".webm", ".mov", ".avi", ".mkv", ".aac" };
+        string[] audioAllowExt = { ".mp3", ".wav", ".flac", ".aac", ".ogg", ".m4a" };
+        string[] documentAllowExt = { ".docx", ".xlxs", ".pptx" };
+
+        string[] allowExt = imgAllowExt.Concat(videoAllowExt).Concat(audioAllowExt).ToArray();
+
+        if (ComboboxTypeFormat != null && ComboboxTypeFormat.SelectedItem != null)
+        {
+            string type = ComboboxTypeFormat.SelectedItem.ToString();
+            if (type.Contains("Image")) allowExt = imgAllowExt;
+            else if (type.Contains("Video")) allowExt = videoAllowExt;
+            else if (type.Contains("Audio")) allowExt = audioAllowExt;
+            else if (type.Contains("Document")) allowExt = documentAllowExt;
+        }
+
+        foreach (var filepath in filepaths)
+        {
+            string ext = System.IO.Path.GetExtension(filepath).ToLower();
+            if (!allowExt.Contains(ext)) return false;
+        }
+        return true;
+    }
 }

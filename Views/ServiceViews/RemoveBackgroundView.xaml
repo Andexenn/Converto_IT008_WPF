@@ -14,7 +14,9 @@
         <SolidColorBrush x:Key="Color.Text.Secondary" Color="#888888"/>
         
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <local:DropEventArgsConverter x:Key="DropEventArgsConverter"/> 
+        <local:DropEventArgsConverter x:Key="DropEventArgsConverter"/>
+        <local:BytesToMegabytesConverter x:Key="BytesToMegabytesConverter"/>
+        <local:RelativeTimeConverter x:Key="RelativeTimeConverter"/>
     </UserControl.Resources>
 
     <Grid Background="{StaticResource Brush.MainBG}">
@@ -409,14 +411,14 @@
 
                 <TextBlock Text="Recently Processed" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,15"/>
 
-                <Border Background="{StaticResource Brush.BG.Shape}" CornerRadius="12" Padding="1">
-                    <Grid>
+                <Border Background="#121212" CornerRadius="10" BorderBrush="#222222" Padding="1">
+                    <Grid >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
 
-                        <Grid Grid.Row="0" Margin="20,0">
+                        <Grid Grid.Row="0" Margin="20,0" Background="#1A1A1A">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="1.5*"/>
@@ -475,7 +477,7 @@
 
                                                 <TextBlock Grid.Column="0" Text="{Binding OriginalFilePath}" Width="350" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" Foreground="White" VerticalAlignment="Center"/>
 
-                                                <TextBlock Grid.Column="1" Text="{Binding CreatedAt}" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding CreatedAt, Converter={StaticResource RelativeTimeConverter}}" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center"/>
 
                                                 <Border Grid.Column="2" CornerRadius="12" HorizontalAlignment="Center" Padding="15,4">
                                                     <Border.Effect>
@@ -511,7 +513,7 @@
                                                     </TextBlock>
                                                 </Border>
 
-                                                <TextBlock Grid.Column="3" Text="{Binding OutputFileSize}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding OutputFileSize, Converter={StaticResource BytesToMegabytesConverter}}" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Right"/>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>

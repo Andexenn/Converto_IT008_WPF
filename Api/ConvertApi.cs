@@ -27,7 +27,7 @@ public class ConvertApi : IConvertApi
         try
         {
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
-            object payload = null;
+            object payload = null!;
             string endpoint = "";
 
             switch (originalTypeFormat.ToLower())

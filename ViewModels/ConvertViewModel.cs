@@ -2,16 +2,18 @@
 using CommunityToolkit.Mvvm.Input;
 using Converto_IT008_WPF.Dto;
 using Converto_IT008_WPF.ServicesFE;
+using Converto_IT008_WPF.ViewModels.SideServices;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 using System.Windows.Media.Imaging;
+using static System.Net.WebRequestMethods;
 
 namespace Converto_IT008_WPF.ViewModels;
 
@@ -29,42 +31,42 @@ public partial class ConvertViewModel : BaseViewModel
     [ObservableProperty]
     private ObservableCollection<string> imageFormat = new ObservableCollection<string>()
     {
-        ".JPG",
-        ".JPEG",
-        ".PNG",
-        ".BMP",
-        ".GIF",
-        ".TIFF",
-        ".WEBP"
+        "JPG",
+        "JPEG",
+        "PNG",
+        "BMP",
+        "GIF",
+        "TIFF",
+        "WEBP"
     };
     [ObservableProperty]
     private ObservableCollection<string> videoFormat = new ObservableCollection<string>()
     {
-        ".MP4",
-        ".AVI",
-        ".MOV",
-        ".WMV",
-        ".FLV",
-        ".MKV",
-        ".GIF"
+        "MP4",
+        "AVI",
+        "MOV",
+        "WMV",
+        "FLV",
+        "MKV",
+        "GIF"
     };
 
     [ObservableProperty]
     private ObservableCollection<string> audioFormat = new ObservableCollection<string>()
     {
-        ".MP3",
-        ".WAV",
-        ".AAC",
-        ".FLAC",
-        ".OGG",
-        ".WMA"
+        "MP3",
+        "WAV",
+        "AAC",
+        "FLAC",
+        "OGG",
+        "WMA"
     };
     [ObservableProperty]
     private ObservableCollection<string> documentFormat = new ObservableCollection<string>()
     {
-        ".DOCX",
-        ".XLSX",
-        ".PPTX"
+        "DOCX",
+        "XLSX",
+        "PPTX"
     };
 
     [ObservableProperty]
@@ -77,7 +79,7 @@ public partial class ConvertViewModel : BaseViewModel
     private string selectedOutputFormat;
 
     [ObservableProperty]
-    AddedFileDto selectedFile;
+    private AddedFileDto selectedFile;
 
     [ObservableProperty]
     private bool isResizeEnabled;
@@ -145,43 +147,49 @@ public partial class ConvertViewModel : BaseViewModel
     {
         try
         {
+            var filter = "";
+            if (SelectedInputCategory == "Image") filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.webp;*.tiff|All Files|*.*";
+            else if (SelectedInputCategory == "Video") filter = "Video Files|*.mp4;*.webm;*.mov;*.avi;*.mkv;*.aac|All Files|*.*";
+            else if (SelectedInputCategory == "Audio") filter = "Audio Files|*.mp3;*.wav;*.flac;*.aac;*.ogg;*.m4a|All Files|*.*";
+            else if (SelectedInputCategory == "Document") filter = "Office Files|*.docx;*.xlxs;*.pptx";
+
+
             using (var openFileDiaglog = new OpenFileDialog())
             {
+                openFileDiaglog.Filter = filter;
                 openFileDiaglog.Multiselect = true;
                 var result = openFileDiaglog.ShowDialog();
                 if (result == DialogResult.OK)
                 {
-                    foreach(string file in openFileDiaglog.FileNames)
+                    foreach (string file in openFileDiaglog.FileNames)
                     {
                         AddedFileDto addedFile = new AddedFileDto();
                         addedFile.FilePath = file;
                         addedFile.FileName = System.IO.Path.GetFileName(file);
                         addedFile.FileSizeInBytes = new System.IO.FileInfo(file).Length;
-                        addedFile.OriginalFileFormat = System.IO.Path.GetExtension(file).ToLower();
+                        addedFile.OriginalFileFormat = System.IO.Path.GetExtension(file).ToUpper().TrimStart('.');
 
-                        if(ImageFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
+                        if (ImageFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
                         {
                             addedFile.FileIcon = "Image";
                         }
-                        else if(VideoFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
+                        else if (VideoFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
                             addedFile.FileIcon = "VideoCamera";
-                        else if(AudioFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
+                        else if (AudioFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
                             addedFile.FileIcon = "Music";
-                        else if(DocumentFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
+                        else if (DocumentFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
                         {
-                            if(addedFile.OriginalFileFormat.ToUpper() == ".DOCX")
+                            if (addedFile.OriginalFileFormat.ToUpper() == "DOCX")
                                 addedFile.FileIcon = "FileWordOutline";
-                            else if(addedFile.OriginalFileFormat.ToUpper() == ".XLSX")
+                            else if (addedFile.OriginalFileFormat.ToUpper() == "XLSX")
                                 addedFile.FileIcon = "FileExcelOutline";
-                            else if(addedFile.OriginalFileFormat.ToUpper() == ".PPTX")
+                            else if (addedFile.OriginalFileFormat.ToUpper() == "PPTX")
                                 addedFile.FileIcon = "FilePowerpointOutline";
                         }
 
                         addedFile.ConvertedFileFormat = addedFile.OriginalFileFormat;
 
                         AddedFiles.Add(addedFile);
-
-                        Debug.WriteLine($"1 file added: {addedFile.FileName}-{addedFile.OriginalFileFormat}-{addedFile.FileIcon}-{addedFile.FileSizeInBytes}");
 
                     }
                 }
@@ -190,6 +198,56 @@ public partial class ConvertViewModel : BaseViewModel
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error picking file: {ex.Message}");
+        }
+    }
+
+    [RelayCommand]
+    void DropFile(object data)
+    {
+        try
+        {
+            string[] files = data as string[];
+            if (files != null && files.Length > 0)
+            {
+                foreach (var file in files)
+                {
+                    AddedFileDto addedFile = new AddedFileDto();
+                    addedFile.FilePath = file;
+                    addedFile.FileName = System.IO.Path.GetFileName(file);
+                    addedFile.FileSizeInBytes = new System.IO.FileInfo(file).Length;
+                    addedFile.OriginalFileFormat = System.IO.Path.GetExtension(file).ToUpper().TrimStart('.');
+
+                    if (ImageFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
+                    {
+                        addedFile.FileIcon = "Image";
+                    }
+                    else if (VideoFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
+                        addedFile.FileIcon = "VideoCamera";
+                    else if (AudioFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
+                        addedFile.FileIcon = "Music";
+                    else if (DocumentFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
+                    {
+                        if (addedFile.OriginalFileFormat.ToUpper() == "DOCX")
+                            addedFile.FileIcon = "FileWordOutline";
+                        else if (addedFile.OriginalFileFormat.ToUpper() == "XLSX")
+                            addedFile.FileIcon = "FileExcelOutline";
+                        else if (addedFile.OriginalFileFormat.ToUpper() == "PPTX")
+                            addedFile.FileIcon = "FilePowerpointOutline";
+                    }
+
+                    addedFile.ConvertedFileFormat = addedFile.OriginalFileFormat;
+
+                    AddedFiles.Add(addedFile);
+
+                }
+                Debug.WriteLine($"So luong file hien tai: {AddedFiles.Count}");
+
+                
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error dropping file: {ex.Message}");
         }
     }
 
@@ -301,5 +359,18 @@ public partial class ConvertViewModel : BaseViewModel
         {
             OnTargetWidthChanged(TargetWidth);
         }
+    }
+
+    [RelayCommand]
+    private async Task ConvertFiles()
+    {
+        if (AddedFiles.Count == 0)
+            return;
+
+        foreach (var item in AddedFiles)
+        {
+            
+        }
+
     }
 }

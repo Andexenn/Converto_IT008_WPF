@@ -5,12 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Converto_IT008_WPF.Views.ServiceViews"
              xmlns:fa="clr-namespace:FontAwesome.WPF;assembly=FontAwesome.WPF"
+             xmlns:converters="clr-namespace:Converto_IT008_WPF.Converters"
              mc:Ignorable="d" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              d:DesignHeight="750" d:DesignWidth="1100"
              Background="#050505" Foreground="White">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+        <converters:BytesToMegabytesConverter x:Key="BytesToMegabytesConverter"/>
+        <converters:DropEventArgsConverter x:Key="DropEventArgsConverter"/> 
         
         <SolidColorBrush x:Key="Color.Bg" Color="#050505"/>
         <SolidColorBrush x:Key="Color.Card" Color="#121212"/>
@@ -422,7 +426,20 @@
                         Margin="0,0,0,20" 
                         Command="{Binding PickFileCommand}"/>
 
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Hidden">
+                <ScrollViewer Name="UploadZoneBackground"
+                              Grid.Row="1" VerticalScrollBarVisibility="Hidden"
+                              AllowDrop="True"
+                              Drop="FileDrop"
+                              DragOver="File_DragOver"
+                              DragEnter="File_DragEnter"
+                              DragLeave="File_DragLeave">
+                    <i:Interaction.Triggers>
+                        <i:EventTrigger EventName="Drop">
+                            <i:InvokeCommandAction Command="{Binding DropFileCommand}" 
+                       PassEventArgsToCommand="True"
+                       EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
+                        </i:EventTrigger>
+                    </i:Interaction.Triggers>
                     <StackPanel>
                         <ListBox ItemsSource="{Binding AddedFiles}"
                                  SelectedItem="{Binding SelectedFile}"
@@ -485,13 +502,13 @@
                                                 <fa:ImageAwesome x:Name="MyIcon" Icon="{Binding FileIcon}" Foreground="Gray" Height="20"/>
                                             </Border>
 
-                                            <Grid Grid.Column="1" Margin="10,0" Width="155">
+                                            <Grid Grid.Column="1" Margin="10,0" Width="153">
                                                 <Grid.RowDefinitions>
                                                     <RowDefinition Height="*"/>
                                                     <RowDefinition Height="*"/>
                                                 </Grid.RowDefinitions>
                                                 <TextBlock Text="{Binding FileName}" FontWeight="SemiBold" Foreground="White" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
-                                                <TextBlock Grid.Row="1" Text="{Binding FileSizeInBytes}" Foreground="GhostWhite" FontSize="12"/>
+                                                <TextBlock Grid.Row="1" Text="{Binding FileSizeInBytes, Converter={StaticResource BytesToMegabytesConverter}}" Foreground="GhostWhite" FontSize="12"/>
                                             </Grid>
 
                                             <Button Grid.Column="2" 
@@ -518,7 +535,8 @@
                     </StackPanel>
                 </ScrollViewer>
 
-                <Button Grid.Row="2" Style="{StaticResource PrimaryBtn}" Height="50" Margin="0,10,0,0" Cursor="Hand">
+                <Button Grid.Row="2" Style="{StaticResource PrimaryBtn}" Height="50" Margin="0,10,0,0" Cursor="Hand"
+                        Command="{Binding ConvertFileCommand}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Bolt" Foreground="White" Height="16" Margin="0,0,10,0"/>
                         <TextBlock Text="Convert All" FontSize="16" FontWeight="Bold"/>
@@ -624,8 +642,9 @@
             <Grid Grid.Column="2" Margin="20,0,0,0">
                 <StackPanel>
                     <TextBlock Text="Conversion Settings" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
-                    <TextBlock Text="Original File Format" Foreground="#AAAAAA" Margin="0,0,0,8"/>
-                    <ComboBox Style="{StaticResource DarkComboBoxStyle}"
+                    <TextBlock Text="Original Type Format" Foreground="#AAAAAA" Margin="0,0,0,8"/>
+                    <ComboBox Name="ComboboxTypeFormat"
+                              Style="{StaticResource DarkComboBoxStyle}"
                               Margin="0,0,0,20"
                               ItemsSource="{Binding InputCategories}"
                               SelectedItem="{Binding SelectedInputCategory}">
@@ -634,7 +653,7 @@
                     <TextBlock Text="Convert To" Foreground="#AAAAAA" Margin="0,0,0,8"/>
                     <ComboBox Style="{StaticResource DarkComboBoxStyle}"
                               ItemsSource="{Binding AvailableOutputFormats}"
-                              SelectedItem="{Binding SelectedOutputFormat}">
+                              SelectedItem="{Binding SelectedFile.OriginalFileFormat, Mode=TwoWay}">
                     </ComboBox>
 
                     <!--<Grid Margin="0,30,0,15">

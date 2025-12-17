@@ -300,7 +300,7 @@ public partial class CompressViewModel : BaseViewModel
             IsBusy = true;
             var tasks = await _taskService.GetUserTasksAsync();
             var filteredTasks = tasks.Where(t => t.ServiceTypeID == 2).ToList();
-            UserTasks = new ObservableCollection<UserTasksDto>(tasks);
+            UserTasks = new ObservableCollection<UserTasksDto>(filteredTasks);
         }
         catch (Exception ex)
         {

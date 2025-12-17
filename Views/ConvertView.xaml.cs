@@ -91,7 +91,7 @@ public partial class ConvertView : UserControl
         string[] imgAllowExt = { ".jpg", ".png", ".webp", ".jpeg", ".tiff", ".bmp" };
         string[] videoAllowExt = { ".mp4", ".webm", ".mov", ".avi", ".mkv", ".aac" };
         string[] audioAllowExt = { ".mp3", ".wav", ".flac", ".aac", ".ogg", ".m4a" };
-        string[] documentAllowExt = { ".docx", ".xlxs", ".pptx" };
+        string[] documentAllowExt = { ".docx", ".xlsx", ".pptx" };
 
         string[] allowExt = imgAllowExt.Concat(videoAllowExt).Concat(audioAllowExt).ToArray();
 

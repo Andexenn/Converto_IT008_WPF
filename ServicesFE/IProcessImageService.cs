@@ -14,6 +14,6 @@ public interface IProcessImageService
     public void ProcessZipResponse(ObservableCollection<ProcessedFileResultDto> targetList, byte[] response);
     public void ProcessSingleImageResponse(ObservableCollection<ProcessedFileResultDto> targetList, byte[] response, string fileName, string ext, string typeService);
     public BitmapImage BytesToBitmap(byte[] data);
-    public Task DownloadImages(ObservableCollection<ProcessedFileResultDto> processedImageResults, string customOutputPath = "");
+    public Task DownloadImages(List<ProcessedFileResultDto> processedImageResults, string customOutputPath = "");
 }
 

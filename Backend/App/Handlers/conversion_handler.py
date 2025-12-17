@@ -33,7 +33,7 @@ def cleanup_temp_files(filepaths: List[str]):
         cleanup_temp_file(filepath)
 
 
-@router.post("/convert_to/image/")
+@router.post("/convert_to/image")
 async def convert_image_handler(
     input_paths: List[str] = Body(..., alias="input_paths"),
     output_format: str = Body(..., alias="output_format"),

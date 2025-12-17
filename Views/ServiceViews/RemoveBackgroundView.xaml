@@ -473,7 +473,7 @@
                                                     <ColumnDefinition Width="*"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Grid.Column="0" Text="{Binding OriginalFilePath}" Width="350" HorizontalAlignment="Left" TextTrimming="CharacterEllipsis" Foreground="White" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="0" Text="{Binding OriginalFilePath}" TextTrimming="CharacterEllipsis" Foreground="White" VerticalAlignment="Center"/>
 
                                                 <TextBlock Grid.Column="1" Text="{Binding CreatedAt, Converter={StaticResource RelativeTimeConverter}}" HorizontalAlignment="Center" Foreground="White" VerticalAlignment="Center"/>
 

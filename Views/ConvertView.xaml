@@ -12,7 +12,7 @@
              Background="#050505" Foreground="White">
 
     <UserControl.Resources>
-        <BooleanToVisibilityConverter x:Key="BoolToVisConverter"/>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:BytesToMegabytesConverter x:Key="BytesToMegabytesConverter"/>
         <converters:DropEventArgsConverter x:Key="DropEventArgsConverter"/> 
         
@@ -536,14 +536,19 @@
                 </ScrollViewer>
 
                 <Button Grid.Row="2" Style="{StaticResource PrimaryBtn}" Height="50" Margin="0,10,0,0" Cursor="Hand"
-                        Command="{Binding ConvertFileCommand}">
+                        Command="{Binding ConvertFilesCommand}"
+                        Visibility="{Binding IsNotConverting, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Bolt" Foreground="White" Height="16" Margin="0,0,10,0"/>
                         <TextBlock Text="Convert All" FontSize="16" FontWeight="Bold"/>
                     </StackPanel>
                 </Button>
 
-                <Button Grid.Row="3" Style="{StaticResource TabBtn}" Height="50" Margin="0,15,0,0" Cursor="Hand" HorizontalAlignment="Center">
+                <fa:ImageAwesome Visibility="{Binding IsConverting, Converter={StaticResource BooleanToVisibilityConverter}}"
+                Icon="Refresh" Grid.Row="2" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
+
+                <Button Grid.Row="3" Style="{StaticResource TabBtn}" Height="50" Margin="0,15,0,0" Cursor="Hand" HorizontalAlignment="Center"
+                        Command="{Binding DownloadFilesCommand}">
                     <StackPanel Orientation="Horizontal" >
                         <TextBlock Text="Download your files here" FontSize="16" TextAlignment="Center" FontWeight="Bold"/>
                     </StackPanel>
@@ -653,7 +658,7 @@
                     <TextBlock Text="Convert To" Foreground="#AAAAAA" Margin="0,0,0,8"/>
                     <ComboBox Style="{StaticResource DarkComboBoxStyle}"
                               ItemsSource="{Binding AvailableOutputFormats}"
-                              SelectedItem="{Binding SelectedFile.OriginalFileFormat, Mode=TwoWay}">
+                              SelectedItem="{Binding SelectedFile.ConvertedFileFormat, Mode=TwoWay}">
                     </ComboBox>
 
                     <!--<Grid Margin="0,30,0,15">

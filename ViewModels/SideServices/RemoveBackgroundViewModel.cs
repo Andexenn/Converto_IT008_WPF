@@ -221,7 +221,7 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
         try
         {
             IsDownloading = true;
-            await _processImageService.DownloadImages(ProcessedImages);
+            await _processImageService.DownloadImages(ProcessedImages.ToList());
         }
         catch (Exception ex)
         {

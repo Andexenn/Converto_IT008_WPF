@@ -77,6 +77,7 @@ public partial class CompressViewModel : BaseViewModel
         _compressService = compressService;
         _processImageService = processImageService;
         _taskService = taskService;
+        PreviewImage = new BitmapImage();
 
         _ = GetUserTasks();
     }
@@ -272,10 +273,10 @@ public partial class CompressViewModel : BaseViewModel
             IsDownloading = true;
             if (SelectedOutputFolderMode == OutputFolderMode.Custom && !string.IsNullOrEmpty(CustomOutputFolderPath))
             {
-                await _processImageService.DownloadImages(ProcessedFiles, CustomOutputFolderPath);
+                await _processImageService.DownloadImages(ProcessedFiles.ToList(), CustomOutputFolderPath);
             }
             else
-                await _processImageService.DownloadImages(ProcessedFiles);
+                await _processImageService.DownloadImages(ProcessedFiles.ToList());
         }
         catch (Exception e)
         {
@@ -344,6 +345,11 @@ public partial class CompressViewModel : BaseViewModel
             return null;
         }
         return bitmap;
+    }
+
+    partial void OnSelectedTypeFormatChanged(string? oldValue, string newValue)
+    {
+        ClearUploadFiles();
     }
 }
 

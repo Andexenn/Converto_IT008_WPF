@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Converto_IT008_WPF.Dto;
 using Converto_IT008_WPF.ServicesFE;
+using Converto_IT008_WPF.Stores;
 using Converto_IT008_WPF.ViewModels.SideServices;
 using System;
 using System.Collections.Generic;
@@ -19,7 +20,6 @@ namespace Converto_IT008_WPF.ViewModels;
 
 public partial class ConvertViewModel : BaseViewModel
 {
-    private string[] filepaths = { };
     [ObservableProperty]
     private ObservableCollection<AddedFileDto> addedFiles = new ObservableCollection<AddedFileDto>();
     [ObservableProperty]
@@ -64,9 +64,7 @@ public partial class ConvertViewModel : BaseViewModel
     [ObservableProperty]
     private ObservableCollection<string> documentFormat = new ObservableCollection<string>()
     {
-        "DOCX",
-        "XLSX",
-        "PPTX"
+        "PDF"
     };
 
     [ObservableProperty]
@@ -102,7 +100,32 @@ public partial class ConvertViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool isPlaceholderVisible;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(IsNotConverting))]
+    private bool isConverting;
+    public bool IsNotConverting => !IsConverting;
+    [ObservableProperty]
+    private bool isDownloading;
+    public bool IsNotDownloading => !IsDownloading;
+    [ObservableProperty]
+    private ObservableCollection<ProcessedFileResultDto> processedFiles = new ObservableCollection<ProcessedFileResultDto>();
 
+    private readonly IConvertService _convertService;
+    private readonly SessionState _sessionState;
+    private readonly IProcessImageService _processImageService;
+
+
+    public ConvertViewModel(IConvertService convertService, SessionState sessionState, IProcessImageService processImageService)
+    {
+        _convertService = convertService;
+        _sessionState = sessionState;
+        _processImageService = processImageService;
+
+        if (InputCategories.Count > 0)
+        {
+            SelectedInputCategory = InputCategories[0];
+        }
+    }
     partial void OnSelectedInputCategoryChanged(string value)
     {
         UpdateOutputFormats(value);
@@ -116,7 +139,7 @@ public partial class ConvertViewModel : BaseViewModel
         switch (category)
         {
             case "Image": source = ImageFormat; break;
-            case "Video": source = VideoFormat; break;
+            case "Video": source = VideoFormat.Concat(AudioFormat); break;
             case "Audio": source = AudioFormat; break;
             case "Document": source = DocumentFormat; break;
             default: source = ImageFormat; break;
@@ -131,16 +154,6 @@ public partial class ConvertViewModel : BaseViewModel
             SelectedOutputFormat = AvailableOutputFormats[0];
     }
 
-    private readonly IConvertService _convertService;
-    public ConvertViewModel(IConvertService convertService)
-    {
-        _convertService = convertService;
-
-        if (InputCategories.Count > 0)
-        {
-            SelectedInputCategory = InputCategories[0];
-        }
-    }
 
     [RelayCommand]
     private void PickFile()
@@ -149,9 +162,9 @@ public partial class ConvertViewModel : BaseViewModel
         {
             var filter = "";
             if (SelectedInputCategory == "Image") filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.webp;*.tiff|All Files|*.*";
-            else if (SelectedInputCategory == "Video") filter = "Video Files|*.mp4;*.webm;*.mov;*.avi;*.mkv;*.aac|All Files|*.*";
+            else if (SelectedInputCategory == "Video") filter = "Video Files|*.mp4;*.webm;*.mov;*.avi;*.mkv;*.aac;*.gif|All Files|*.*";
             else if (SelectedInputCategory == "Audio") filter = "Audio Files|*.mp3;*.wav;*.flac;*.aac;*.ogg;*.m4a|All Files|*.*";
-            else if (SelectedInputCategory == "Document") filter = "Office Files|*.docx;*.xlxs;*.pptx";
+            else if (SelectedInputCategory == "Document") filter = "Office Files|*.docx;*.xlsx;*.pptx|All Files|*.*";
 
 
             using (var openFileDiaglog = new OpenFileDialog())
@@ -177,17 +190,18 @@ public partial class ConvertViewModel : BaseViewModel
                             addedFile.FileIcon = "VideoCamera";
                         else if (AudioFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
                             addedFile.FileIcon = "Music";
-                        else if (DocumentFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
-                        {
-                            if (addedFile.OriginalFileFormat.ToUpper() == "DOCX")
-                                addedFile.FileIcon = "FileWordOutline";
-                            else if (addedFile.OriginalFileFormat.ToUpper() == "XLSX")
-                                addedFile.FileIcon = "FileExcelOutline";
-                            else if (addedFile.OriginalFileFormat.ToUpper() == "PPTX")
-                                addedFile.FileIcon = "FilePowerpointOutline";
-                        }
+                        else if (addedFile.OriginalFileFormat.ToUpper() == "DOCX")
+                            addedFile.FileIcon = "FileWordOutline";
+                        else if (addedFile.OriginalFileFormat.ToUpper() == "XLSX")
+                            addedFile.FileIcon = "FileExcelOutline";
+                        else if (addedFile.OriginalFileFormat.ToUpper() == "PPTX")
+                            addedFile.FileIcon = "FilePowerpointOutline";
 
-                        addedFile.ConvertedFileFormat = addedFile.OriginalFileFormat;
+
+                        if (!(addedFile.FileIcon == "FileWordOutline" || addedFile.FileIcon == "FileExcelOutline" || addedFile.FileIcon == "FilePowerpointOutline"))
+                            addedFile.ConvertedFileFormat = addedFile.OriginalFileFormat;
+                        else
+                            addedFile.ConvertedFileFormat = DocumentFormat[0];
 
                         AddedFiles.Add(addedFile);
 
@@ -225,17 +239,17 @@ public partial class ConvertViewModel : BaseViewModel
                         addedFile.FileIcon = "VideoCamera";
                     else if (AudioFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
                         addedFile.FileIcon = "Music";
-                    else if (DocumentFormat.Contains(addedFile.OriginalFileFormat.ToUpper()))
-                    {
-                        if (addedFile.OriginalFileFormat.ToUpper() == "DOCX")
-                            addedFile.FileIcon = "FileWordOutline";
-                        else if (addedFile.OriginalFileFormat.ToUpper() == "XLSX")
-                            addedFile.FileIcon = "FileExcelOutline";
-                        else if (addedFile.OriginalFileFormat.ToUpper() == "PPTX")
-                            addedFile.FileIcon = "FilePowerpointOutline";
-                    }
+                    else if (addedFile.OriginalFileFormat.ToUpper() == "DOCX")
+                        addedFile.FileIcon = "FileWordOutline";
+                    else if (addedFile.OriginalFileFormat.ToUpper() == "XLSX")
+                        addedFile.FileIcon = "FileExcelOutline";
+                    else if (addedFile.OriginalFileFormat.ToUpper() == "PPTX")
+                        addedFile.FileIcon = "FilePowerpointOutline";
 
-                    addedFile.ConvertedFileFormat = addedFile.OriginalFileFormat;
+                    if(!(addedFile.FileIcon == "FileWordOutline" || addedFile.FileIcon == "FileExcelOutline" || addedFile.FileIcon == "FilePowerpointOutline"))
+                        addedFile.ConvertedFileFormat = addedFile.OriginalFileFormat;
+                    else
+                        addedFile.ConvertedFileFormat = DocumentFormat[0];
 
                     AddedFiles.Add(addedFile);
 
@@ -367,10 +381,76 @@ public partial class ConvertViewModel : BaseViewModel
         if (AddedFiles.Count == 0)
             return;
 
-        foreach (var item in AddedFiles)
+        foreach(var file in AddedFiles)
+            Debug.WriteLine($"{file.FileName}: {file.ConvertedFileFormat}");
+
+        try
         {
-            
+            Debug.WriteLine("Starting file conversion...");
+            IsConverting = true;
+
+            byte[] response = await _convertService.ConvertFileAsync(AddedFiles.ToList());
+
+            ProcessedFiles.Clear();
+            Debug.WriteLine($"Convert successfully");
+
+            //if(AddedFiles.Count == 1)
+            //    _processImageService.ProcessSingleImageResponse(ProcessedFiles, response, Path.GetFileNameWithoutExtension(AddedFiles[0].FilePath), Path.GetExtension(AddedFiles[0].FilePath), "convert");
+            //else
+            _processImageService.ProcessZipResponse(ProcessedFiles, response);
+            Debug.WriteLine($"Converted {ProcessedFiles.Count} files.");
+            CorrectFileExtension();
+            Debug.WriteLine($"Converted {ProcessedFiles.Count} files.");
+
+        }
+        catch(Exception ex)
+        {
+            Debug.WriteLine($"Error converting files: {ex.Message}");
+        }
+        finally
+        {
+            IsConverting = false;
         }
 
+    }
+
+    [RelayCommand]
+    private async Task DownloadFiles()
+    {
+        Debug.WriteLine($"{ProcessedFiles.Count}");
+        try
+        {
+            IsDownloading = true;
+            await _processImageService.DownloadImages(ProcessedFiles.ToList());
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error downloading files: {ex.Message}");
+        }
+        finally
+        {
+            IsDownloading = false;
+        }
+    }
+
+    partial void OnSelectedInputCategoryChanged(string? oldValue, string newValue)
+    {
+        AddedFiles.Clear();
+    }
+
+    private void CorrectFileExtension()
+    {
+        foreach(var processedFile in ProcessedFiles)
+        {
+            var nameWithoutExt = Path.GetFileNameWithoutExtension(processedFile.FileName);
+
+            var originalFile = AddedFiles.FirstOrDefault(f => f.FileName == processedFile.FileName);
+
+            if (originalFile != null)
+            {
+                var newExt = "." + originalFile.ConvertedFileFormat.ToLower();
+                processedFile.FileName = nameWithoutExt + newExt;
+            }
+        }
     }
 }

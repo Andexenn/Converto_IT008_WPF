@@ -97,9 +97,9 @@ public class ProcessImageServiceImpl : IProcessImageService
         }
     }
 
-    public async Task DownloadImages(ObservableCollection<ProcessedFileResultDto> processedImageResults, string customOutputPath = "")
+    public async Task DownloadImages(List<ProcessedFileResultDto> processedFileResults, string customOutputPath = "")
     {
-        if(processedImageResults == null || processedImageResults.Count == 0)
+        if(processedFileResults == null || processedFileResults.Count == 0)
         {
             MessageBox.Show("No images to download.");
             return;
@@ -139,7 +139,7 @@ public class ProcessImageServiceImpl : IProcessImageService
 
             await Task.Run(async () =>
             {
-               foreach (var item in processedImageResults)
+               foreach (var item in processedFileResults)
                 {
                     if (item.RawData == null || item.RawData.Length == 0)
                         continue;

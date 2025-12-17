@@ -1,4 +1,5 @@
-﻿using Converto_IT008_WPF.Interfaces;
+﻿using Converto_IT008_WPF.Dto;
+using Converto_IT008_WPF.Interfaces;
 using Converto_IT008_WPF.ServicesFE;
 using System;
 using System.Collections.Generic;
@@ -16,5 +17,5 @@ public class ConvertServiceImpl : IConvertService
         _convertApi = convertApi;
     }
 
-    public async Task<byte[]> ConvertFileAsync(string[] filepaths, string toFormat, string originalTypeFormat) => await _convertApi.ConvertFileAsync(filepaths, toFormat, originalTypeFormat);
+    public async Task<byte[]> ConvertFileAsync(List<AddedFileDto> addedFiles) => await _convertApi.ConvertFileAsync(addedFiles);
 }

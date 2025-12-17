@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Converto_IT008_WPF.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,5 @@ namespace Converto_IT008_WPF.Interfaces;
 
 public interface IConvertApi
 {
-    public Task<byte[]> ConvertFileAsync(string[] filepaths, string toFormat, string originalTypeFormat);
+    public Task<byte[]> ConvertFileAsync(List<AddedFileDto> addedFiles);
 }

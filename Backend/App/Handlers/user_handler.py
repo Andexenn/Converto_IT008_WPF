@@ -109,3 +109,11 @@ async def change_password(
     
     user_service: IUserService = UserRepository(db)
     return await user_service.change_password(current_user.UserID, new_password)
+
+@router.post('/user/logout')
+async def logout(
+    refresh_token: str = Body(..., embed=True),
+    db: Session = Depends(get_db)
+):
+    user_service: IUserService = UserRepository(db)
+    return await user_service.logout(refresh_token)

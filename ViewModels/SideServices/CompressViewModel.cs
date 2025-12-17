@@ -5,7 +5,9 @@ using Converto_IT008_WPF.ServicesFE;
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Printing;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 
@@ -13,22 +15,20 @@ namespace Converto_IT008_WPF.ViewModels.SideServices;
 
 public partial class CompressViewModel : BaseViewModel
 {
-    private string[] _filepaths = { };
-    private int NextIndex;
-    private int PreviousIndex;
+    [ObservableProperty]
+    private ObservableCollection<UploadedFileModel> inputFiles = new ObservableCollection<UploadedFileModel>();
+
+    private int CurrentIndex = 0;
+
     private readonly ICompressService _compressService;
     private readonly IProcessImageService _processImageService;
     private readonly ITaskService _taskService;
-    public enum OutputFolderMode
-    {
-        Default,
-        Custom
-    };
+
+    public enum OutputFolderMode { Default, Custom };
 
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(NotUploaded))]
     private bool uploaded;
-
     public bool NotUploaded => !Uploaded;
 
     [ObservableProperty]
@@ -36,6 +36,7 @@ public partial class CompressViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool isDragging;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotCompressing))]
     private bool isCompressing;
@@ -43,32 +44,32 @@ public partial class CompressViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool isCompressed;
+
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(IsNotDownloading))]
     private bool isDownloading;
     public bool IsNotDownloading => !IsDownloading;
+
     [ObservableProperty]
     ObservableCollection<UserTasksDto> userTasks = new ObservableCollection<UserTasksDto>();
 
     [ObservableProperty]
-    ObservableCollection<string> typeFormats = new ObservableCollection<string>
-    {
-        "Image",
-        "Video",
-        "Audio",
-    };
+    ObservableCollection<string> typeFormats = new ObservableCollection<string> { "Image", "Video", "Audio" };
+
     [ObservableProperty]
     private string selectedTypeFormat;
 
     [ObservableProperty]
     private OutputFolderMode selectedOutputFolderMode = OutputFolderMode.Default;
+
     [ObservableProperty]
     private string customOutputFolderPath = string.Empty;
+
     [ObservableProperty]
     private double sliderValue = 50;
+
     [ObservableProperty]
     private ObservableCollection<ProcessedFileResultDto> processedFiles = new ObservableCollection<ProcessedFileResultDto>();
-
 
     public CompressViewModel(ICompressService compressService, IProcessImageService processImageService, ITaskService taskService)
     {
@@ -76,21 +77,17 @@ public partial class CompressViewModel : BaseViewModel
         _compressService = compressService;
         _processImageService = processImageService;
         _taskService = taskService;
+        PreviewImage = new BitmapImage();
 
         _ = GetUserTasks();
     }
-    [RelayCommand]
-    void OnDragEnter()
-    {
-        IsDragging = true;
-    }
+
 
     [RelayCommand]
-    void OnDragLeave()
-    {
-        IsDragging = false;
-    }
+    void DragEnter() { IsDragging = true; }
 
+    [RelayCommand]
+    void DragLeave() { IsDragging = false; }
 
     [RelayCommand]
     void DropFile(object data)
@@ -101,10 +98,24 @@ public partial class CompressViewModel : BaseViewModel
             string[] files = data as string[];
             if (files != null && files.Length > 0)
             {
-                _filepaths = files;
-                Debug.WriteLine($"So luong file drop: {_filepaths.Length}");
-                Uploaded = true;
-                PreviewImage = LoadBitmapImage(_filepaths[0]);
+                foreach (var file in files)
+                {
+                    if (!InputFiles.Any(f => f.FilePath == file))
+                    {
+                        InputFiles.Add(new UploadedFileModel
+                        {
+                            FileName = Path.GetFileName(file),
+                            FilePath = file
+                        });
+                    }
+                }
+                Debug.WriteLine($"So luong file hien tai: {InputFiles.Count}");
+
+                if (InputFiles.Count > 0)
+                {
+                    Uploaded = true;
+                    if (PreviewImage == null) UpdatePreviewImage(0);
+                }
             }
         }
         catch (Exception ex)
@@ -118,21 +129,40 @@ public partial class CompressViewModel : BaseViewModel
     {
         try
         {
+            var filter = "";
+            if (SelectedTypeFormat == "Image") filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.webp;*.tiff|All Files|*.*";
+            else if (SelectedTypeFormat == "Video") filter = "Video Files|*.mp4;*.webm;*.mov;*.avi;*.mkv;*.aac|All Files|*.*";
+            else if (SelectedTypeFormat == "Audio") filter = "Audio Files|*.mp3;*.wav;*.flac;*.aac;*.ogg;*.m4a|All Files|*.*";
+
             var openFileDialog = new OpenFileDialog
             {
                 Multiselect = true,
-                Filter = "Image Files|*.jpg;*.jpeg;*.png;*.bmp;*.webp|All Files|*.*",
+                Filter = filter,
                 Title = "Choose images to compress"
             };
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                _filepaths = openFileDialog.FileNames;
-                Debug.WriteLine($"File picked: {_filepaths[0]}");
-                Debug.WriteLine($"So luong file drop: {_filepaths.Length}");
+                foreach (var file in openFileDialog.FileNames)
+                {
+                    if (!InputFiles.Any(f => f.FilePath == file))
+                    {
+                        InputFiles.Add(new UploadedFileModel
+                        {
+                            FileName = Path.GetFileName(file),
+                            FilePath = file
+                        });
+                    }
+                }
 
-                Uploaded = true;
-                PreviewImage = LoadBitmapImage(_filepaths[0]);
+                Debug.WriteLine($"So luong file hien tai: {InputFiles.Count}");
+
+                if (InputFiles.Count > 0)
+                {
+                    Uploaded = true;
+                    if (PreviewImage == null) UpdatePreviewImage(InputFiles.Count - 1);
+                    else UpdatePreviewImage(CurrentIndex);
+                }
             }
         }
         catch (Exception ex)
@@ -144,48 +174,43 @@ public partial class CompressViewModel : BaseViewModel
     [RelayCommand]
     void ClearUploadFiles()
     {
-        _filepaths = Array.Empty<string>();
+        InputFiles.Clear();
         Uploaded = false;
         PreviewImage = null;
+        CurrentIndex = 0;
         Debug.WriteLine("Upload files cleared.");
     }
 
-    private BitmapImage LoadBitmapImage(string path)
+    [RelayCommand]
+    private void DeleteCurrentPreviewedFile()
     {
-        var bitmap = new BitmapImage();
+        if (InputFiles.Count == 0) return;
 
-        try
-        {
-            bitmap.BeginInit();
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
-            bitmap.EndInit();
-            bitmap.Freeze();
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Error loading bitmap: {ex.Message}");
-            return null;
-        }
+        InputFiles.RemoveAt(CurrentIndex);
 
-        return bitmap;
+        if (InputFiles.Count == 0)
+        {
+            ClearUploadFiles();
+        }
+        else
+        {
+            if (CurrentIndex >= InputFiles.Count) CurrentIndex = InputFiles.Count - 1;
+            UpdatePreviewImage(CurrentIndex);
+        }
     }
-
 
     [RelayCommand]
     private void NextPreviewedImage()
     {
-        NextIndex = (NextIndex + 1) % _filepaths.Length;
-        Debug.WriteLine($"{NextIndex}");
-        PreviewImage = LoadBitmapImage(_filepaths[NextIndex]);
+        if (InputFiles.Count == 0) return;
+        UpdatePreviewImage(CurrentIndex + 1);
     }
 
     [RelayCommand]
     private void PreviousPreviewedImage()
     {
-        PreviousIndex = (PreviousIndex - 1 + _filepaths.Length) % _filepaths.Length;
-        Debug.WriteLine($"{PreviousIndex}");
-        PreviewImage = LoadBitmapImage(_filepaths[PreviousIndex]);
+        if (InputFiles.Count == 0) return;
+        UpdatePreviewImage(CurrentIndex - 1);
     }
 
     [RelayCommand]
@@ -210,18 +235,26 @@ public partial class CompressViewModel : BaseViewModel
         try
         {
             IsCompressing = true;
-            Debug.WriteLine($"Starting compressing {_filepaths.Length} files");
-            byte[] response = await _compressService.CompressAsync(_filepaths, SelectedTypeFormat, SliderValue.ToString(), SliderValue.ToString());
+            var filePathsArray = InputFiles.Select(f => f.FilePath).ToArray();
+
+            Debug.WriteLine($"Starting compressing {filePathsArray.Length} files");
+
+            string quality = "";
+            if (SelectedTypeFormat == "Image") { quality = SliderValue == 0 ? "25" : (SliderValue == 50 ? "50" : "75"); }
+            else if (SelectedTypeFormat == "Video") { quality = SliderValue == 0 ? "low" : (SliderValue == 50 ? "medium" : "high"); }
+            else if (SelectedTypeFormat == "Audio") { quality = SliderValue == 0 ? "32k" : (SliderValue == 50 ? "64k" : "128k"); }
+
+            byte[] response = await _compressService.CompressAsync(filePathsArray, SelectedTypeFormat, quality, quality);
 
             ProcessedFiles.Clear();
 
-            if(IsZipFile(response))
+            if (IsZipFile(response))
                 _processImageService.ProcessZipResponse(ProcessedFiles, response);
             else
-                _processImageService.ProcessSingleImageResponse(ProcessedFiles, response);
+                _processImageService.ProcessSingleImageResponse(ProcessedFiles, response, Path.GetFileNameWithoutExtension(InputFiles[0].FilePath), Path.GetExtension(InputFiles[0].FilePath), "compressed");
 
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.WriteLine($"Bug at compress file {e}");
         }
@@ -230,13 +263,6 @@ public partial class CompressViewModel : BaseViewModel
             IsCompressing = false;
             IsCompressed = true;
         }
-
-    }
-
-    private bool IsZipFile(byte[] data)
-    {
-        if (data.Length < 2) return false;
-        return data[0] == 0x50 && data[1] == 0x4B;
     }
 
     [RelayCommand]
@@ -245,9 +271,14 @@ public partial class CompressViewModel : BaseViewModel
         try
         {
             IsDownloading = true;
-            await _processImageService.DownloadImages(ProcessedFiles);
+            if (SelectedOutputFolderMode == OutputFolderMode.Custom && !string.IsNullOrEmpty(CustomOutputFolderPath))
+            {
+                await _processImageService.DownloadImages(ProcessedFiles.ToList(), CustomOutputFolderPath);
+            }
+            else
+                await _processImageService.DownloadImages(ProcessedFiles.ToList());
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Debug.WriteLine($"Bug at download file {e}");
         }
@@ -255,19 +286,22 @@ public partial class CompressViewModel : BaseViewModel
         {
             IsDownloading = false;
         }
+    }
 
+    private bool IsZipFile(byte[] data)
+    {
+        if (data.Length < 2) return false;
+        return data[0] == 0x50 && data[1] == 0x4B;
     }
 
     private async Task GetUserTasks()
     {
-
         try
         {
             IsBusy = true;
             var tasks = await _taskService.GetUserTasksAsync();
-            UserTasks = new ObservableCollection<UserTasksDto>(tasks);
-            Debug.WriteLine($"Fetched {UserTasks.Count} user tasks.");
-            Debug.WriteLine($"Original path: {UserTasks[0].OriginalFilePath}");
+            var filteredTasks = tasks.Where(t => t.ServiceTypeID == 2).ToList();
+            UserTasks = new ObservableCollection<UserTasksDto>(filteredTasks);
         }
         catch (Exception ex)
         {
@@ -275,8 +309,52 @@ public partial class CompressViewModel : BaseViewModel
         }
         finally
         {
-            Debug.WriteLine($"User tasks fetched: {UserTasks.Count}");
             IsBusy = false;
         }
     }
+
+    private void UpdatePreviewImage(int index)
+    {
+        if (InputFiles.Count == 0)
+        {
+            PreviewImage = null;
+            return;
+        }
+
+        if (index >= InputFiles.Count) index = 0;
+        if (index < 0) index = InputFiles.Count - 1;
+
+        CurrentIndex = index;
+        PreviewImage = LoadBitmapImage(InputFiles[CurrentIndex].FilePath);
+    }
+
+    private BitmapImage LoadBitmapImage(string path)
+    {
+        var bitmap = new BitmapImage();
+        try
+        {
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.UriSource = new Uri(path, UriKind.RelativeOrAbsolute);
+            bitmap.EndInit();
+            bitmap.Freeze();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Error loading bitmap: {ex.Message}");
+            return null;
+        }
+        return bitmap;
+    }
+
+    partial void OnSelectedTypeFormatChanged(string? oldValue, string newValue)
+    {
+        ClearUploadFiles();
+    }
+}
+
+public class UploadedFileModel
+{
+    public string FileName { get; set; }
+    public string FilePath { get; set; }
 }

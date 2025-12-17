@@ -19,7 +19,7 @@ class Tasks(Base):
 
     TaskID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID"), nullable=False)
-    ServiceTypeID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICETYPES.ServiceTypeID"), nullable=False)
+    ServiceTypeID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICETYPES.ServiceTypeID", ondelete="CASCADE") , nullable=False)
 
     OriginalFileName: Mapped[str] = mapped_column(String(255))
     OriginalFileSize: Mapped[int] = mapped_column(BigInteger)

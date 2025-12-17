@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
 
@@ -87,3 +87,5 @@ class UserPref(BaseModel):
     DefaultOutputFolder: Optional[str] = None 
     Language: Optional[str] = None 
     Theme: Optional[str] = None
+
+    model_config = ConfigDict(from_attributes=True)

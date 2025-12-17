@@ -24,7 +24,7 @@ public class UserApi : IUserApi
         _httpClient = httpClient;
         _sessionState = sessionState;
     }
-    public async Task<UserPreferences> GetUserPreferencesAsync()
+    public async Task<UserPreferencesDto> GetUserPreferencesAsync()
     {
         // Simulate an asynchronous API call
         try
@@ -34,7 +34,7 @@ public class UserApi : IUserApi
             if(response.IsSuccessStatusCode)
             {
                 var json = await response.Content.ReadAsStringAsync();
-                var userPref = System.Text.Json.JsonSerializer.Deserialize<UserPreferences>(json);
+                var userPref = System.Text.Json.JsonSerializer.Deserialize<UserPreferencesDto>(json);
 
                 return userPref;
             }
@@ -160,7 +160,7 @@ public class UserApi : IUserApi
         }
     }
 
-    public async Task<bool> UpdateUserPreference(UserPreferences userPreferences)
+    public async Task<bool> UpdateUserPreference(UserPreferencesDto userPreferences)
     {
         try
         {
@@ -183,12 +183,12 @@ public class UserApi : IUserApi
         }
     }
 
-    public async Task<bool> SendEmail(string email_type)
+    public async Task<bool> SendEmail(string emailType)
     {
         try
         {
             _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
-            using HttpResponseMessage response = await _httpClient.GetAsync($"{BaseURL}/user/send_email/{email_type}");
+            using HttpResponseMessage response = await _httpClient.GetAsync($"{BaseURL}/user/send_email/{emailType}");
             if (response.IsSuccessStatusCode)
             {
                 return true;
@@ -201,6 +201,50 @@ public class UserApi : IUserApi
         catch (Exception ex)
         {
             throw new ApplicationException("Error sending email", ex);
+        }
+    }
+
+    public async Task<bool> VerifyOTP(string otpCode)
+    {
+        try
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _sessionState.LoginResponse.access_token);
+            var response = await _httpClient.GetAsync($"{BaseURL}/user/verify_otp/{otpCode}");
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new ApplicationException("Error verifying OTP", ex);
+        }
+    }
+
+    public async Task<bool> Logout()
+    {
+        try
+        {
+            var payload = System.Text.Json.JsonSerializer.Serialize(new { refresh_token = Properties.Settings.Default.RefreshToken });
+            var payloadContent = new StringContent(payload, Encoding.UTF8, "application/json");
+            using HttpResponseMessage response = await _httpClient.PostAsync($"{BaseURL}/user/logout", payloadContent);
+
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            else
+            {
+                throw new ApplicationException($"API Error: {response.StatusCode}, Content: {await response.Content.ReadAsStringAsync()}");
+            }
+        }
+        catch(Exception ex)
+        {
+            throw new ApplicationException("Error logging out", ex);
         }
     }
 }

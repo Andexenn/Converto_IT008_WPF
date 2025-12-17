@@ -58,12 +58,12 @@ public class ProcessImageServiceImpl : IProcessImageService
         }
     }
 
-    public void ProcessSingleImageResponse(ObservableCollection<ProcessedFileResultDto> targetList, byte[] response)
+    public void ProcessSingleImageResponse(ObservableCollection<ProcessedFileResultDto> targetList, byte[] response, string fileName, string ext, string typeService)
     {
         var bitmap = BytesToBitmap(response);
         var item = new ProcessedFileResultDto
         {
-            FileName = "ProcessedImage.png", // Hoặc tên file phù hợp
+            FileName = $"{fileName}_{typeService}{ext}", 
             RawData = response,
             DisplayImage = bitmap
         };
@@ -97,15 +97,21 @@ public class ProcessImageServiceImpl : IProcessImageService
         }
     }
 
-    public async Task DownloadImages(ObservableCollection<ProcessedFileResultDto> processedImageResults)
+    public async Task DownloadImages(List<ProcessedFileResultDto> processedFileResults, string customOutputPath = "")
     {
-        if(processedImageResults == null || processedImageResults.Count == 0)
+        if(processedFileResults == null || processedFileResults.Count == 0)
         {
             MessageBox.Show("No images to download.");
             return;
         }
 
         string savePath = _sessionState.UserPreferences.DefaultOutputFolder;
+
+        if(!string.IsNullOrEmpty(customOutputPath))
+        {
+            savePath = customOutputPath;
+        }
+
         Debug.WriteLine($"Default output folder: {savePath}");
 
         if (string.IsNullOrEmpty(savePath) || !Directory.Exists(savePath))
@@ -133,7 +139,7 @@ public class ProcessImageServiceImpl : IProcessImageService
 
             await Task.Run(async () =>
             {
-               foreach (var item in processedImageResults)
+               foreach (var item in processedFileResults)
                 {
                     if (item.RawData == null || item.RawData.Length == 0)
                         continue;

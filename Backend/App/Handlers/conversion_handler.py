@@ -33,7 +33,7 @@ def cleanup_temp_files(filepaths: List[str]):
         cleanup_temp_file(filepath)
 
 
-@router.post("/convert_to/image/")
+@router.post("/convert_to/image")
 async def convert_image_handler(
     input_paths: List[str] = Body(..., alias="input_paths"),
     output_format: str = Body(..., alias="output_format"),
@@ -43,7 +43,7 @@ async def convert_image_handler(
     """
     Convert image(s) - works for single or multiple files
 
-    Parameters:     
+    Parameters:
     ----------
     - input_paths(List[str]): list of input file paths (can be 1 or many)
     - output_format(str): desired output format (e.g., "png", "jpg")
@@ -590,6 +590,3 @@ async def convert_pdf(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Conversion failed: {str(e)}"
         ) from e
-
-
-

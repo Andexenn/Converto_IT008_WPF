@@ -78,7 +78,7 @@ async def remove_background_handler(
         if is_single_file and successful_results:
             input_path, output_path, converted_size, _ = successful_results[0]
             original_name = Path(input_path).stem
-            download_filename = f"{original_name}.{output_format.lower()}"
+            download_filename = f"{original_name}_removedbg.{output_format.lower()}"
             
             response = FileResponse(
                 path=output_path,
@@ -103,7 +103,7 @@ async def remove_background_handler(
                 with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
                     for input_path, output_path, converted_size, success in successful_results:
                         original_filename = Path(input_path).stem
-                        converted_filename = f"{original_filename}.{output_format.lower()}"
+                        converted_filename = f"{original_filename}_removedbg.{output_format.lower()}"
                         zipf.write(output_path, converted_filename)
                 
                 response = FileResponse(

@@ -8,7 +8,8 @@
              xmlns:local="clr-namespace:Converto_IT008_WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="900" d:DesignWidth="1200"
-             FontFamily="Segoe UI" FontSize="14">
+             FontFamily="Segoe UI" FontSize="14"
+             Background="{StaticResource Brush.MainBG}">
 
     <UserControl.Resources>
         <SolidColorBrush x:Key="Color.Bg" Color="#050505"/>
@@ -20,7 +21,9 @@
 
         <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <local:DropEventArgsConverter x:Key="DropEventArgsConverter"/>
-        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/> 
+        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        <local:BytesToMegabytesConverter x:Key="BytesToMegabytesConverter"/>
+        <local:RelativeTimeConverter x:Key="RelativeTimeConverter"/>
 
         <Style x:Key="ModernSliderStyle" TargetType="Slider">
             <Setter Property="Template">
@@ -135,15 +138,15 @@
                                       HorizontalAlignment="Left" />
 
                             <Popup Name="Popup"
-                           Placement="Bottom"
-                           IsOpen="{TemplateBinding IsDropDownOpen}"
-                           AllowsTransparency="True" 
-                           Focusable="False"
-                           PopupAnimation="Slide">
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   AllowsTransparency="True" 
+                                   Focusable="False"
+                                   PopupAnimation="Slide">
                                 <Grid Name="DropDown"
-                              SnapsToDevicePixels="True"
-                              MinWidth="{TemplateBinding ActualWidth}"
-                              MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                      SnapsToDevicePixels="True"
+                                      MinWidth="{TemplateBinding ActualWidth}"
+                                      MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
                                     Background="#1A1A1A"
                                     BorderThickness="1"
@@ -188,7 +191,7 @@
         </Style>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled">
+    <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Disabled" Background="{StaticResource Color.Bg}">
         <Grid Background="{StaticResource Color.Bg}">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -199,7 +202,7 @@
             <StackPanel Grid.Row="0" Margin="40,40,40,20">
                 <TextBlock Text="Compress" FontSize="36" FontWeight="Bold" Foreground="{StaticResource Color.Text.Primary}"/>
                 <TextBlock Text="Reduce the size of your files without compromising quality" 
-                           FontSize="14" Foreground="{StaticResource Color.Text.Secondary}" Margin="0,5,0,0"/>
+                           FontSize="14" Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,5,0,0"/>
             </StackPanel>
 
             <Grid Grid.Row="1" Margin="40,0">
@@ -227,23 +230,19 @@
                                    Opacity="0.5"/>
 
                         <Grid AllowDrop="True" 
+                              DragOver="File_DragOver"
+                              DragEnter="File_DragEnter"
+                              DragLeave="File_DragLeave"
+                              Drop="File_Drop"
                               Background="Transparent"
                               Cursor="Hand"
                               Visibility="{Binding NotUploaded, Converter={StaticResource BoolToVisibilityConverter}}">
 
                             <i:Interaction.Triggers>
-                                <i:EventTrigger EventName="DragEnter">
-                                    <i:InvokeCommandAction Command="{Binding OnDragEnterCommand}"/>
-                                </i:EventTrigger>
-
-                                <i:EventTrigger EventName="DragLeave">
-                                    <i:InvokeCommandAction Command="{Binding OnDragLeaveCommand}"/>
-                                </i:EventTrigger>
-
                                 <i:EventTrigger EventName="Drop">
                                     <i:InvokeCommandAction Command="{Binding DropFileCommand}" 
-                                                       PassEventArgsToCommand="True"
-                                                       EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
+                                                           PassEventArgsToCommand="True"
+                                                           EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
                                 </i:EventTrigger>
 
                                 <i:EventTrigger EventName="MouseLeftButtonUp">
@@ -262,20 +261,19 @@
                                                     Margin="0,5,0,0"/>
                                 </Grid>
 
-                                <TextBlock Text="Click to upload or drop images here" 
+                                <TextBlock Text="Click to upload or drop files here" 
                                            Foreground="White" 
                                            FontWeight="Bold" 
                                            FontSize="16" 
                                            HorizontalAlignment="Center" 
                                            Margin="0,0,0,5"/>
 
-                                <TextBlock Text="PNG, JPG, or WEBP (max. 10MB)" 
+                                <TextBlock Text="PNG, JPG, WEBP, MP4, MP3... (max. 10MB)" 
                                            Foreground="{StaticResource Color.Text.Secondary}" 
                                            FontSize="13" 
                                            HorizontalAlignment="Center"/>
-                                
-                                
                             </StackPanel>
+
                         </Grid>
                         <Button Command="{Binding PreviousPreviewedImageCommand}"
                                 Opacity="0.7"
@@ -303,7 +301,7 @@
                             </StackPanel>
 
                             <!--co the cho phep xoa 1 so anh-->
-                            <Button Command="{Binding ClearUploadFilesCommand}" 
+                            <Button Command="{Binding DeleteCurrentPreviewedFileCommand}" 
                                     HorizontalAlignment="Right" VerticalAlignment="Top" Margin="10"
                                     Width="30" Height="30" Background="#88000000" BorderThickness="0" Foreground="White" Cursor="Hand">
                                 <Button.Template>
@@ -457,7 +455,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" 
-                                       Text="Type format" 
+                                       Text="Type Format" 
                                        Foreground="White" 
                                        FontWeight="SemiBold" 
                                        VerticalAlignment="Center"/>
@@ -465,6 +463,7 @@
                             <ComboBox Grid.Column="1" 
                                       Style="{StaticResource DarkComboBoxStyle}"
                                       Width="180"
+                                      Name="ComboBoxTypeFormat"
                                       SelectedIndex="0"
                                       ItemsSource="{Binding TypeFormats}"
                                       SelectedItem="{Binding SelectedTypeFormat}">
@@ -578,71 +577,48 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Text="FILENAME" Grid.Column="0" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" Margin="25,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="DATE" Grid.Column="1" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" VerticalAlignment="Center"/>
+                            <TextBlock Text="DATE" Grid.Column="1" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="STATUS" Grid.Column="2" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="FILESIZE" Grid.Column="3" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <TextBlock Text="OUTPUTSIZE" Grid.Column="4" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
                         </Grid>
 
-                        <Border BorderBrush="#222222" BorderThickness="0,1,0,0" Height="55">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
+                        <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                                         Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
+                        
+                        <ScrollViewer  VerticalScrollBarVisibility="Auto">
+                            <ItemsControl ItemsSource="{Binding UserTasks}" Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="#33FFFFFF" BorderThickness="0,1,0,0" Padding="20,12,7,15">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="2*"/>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <ColumnDefinition Width="1.5*"/>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="1*"/>
+                                                </Grid.ColumnDefinitions>
 
-                                <TextBlock Text="profile-picture.png" 
-                                           Grid.Column="0" 
-                                           Foreground="White" 
-                                           Margin="25,0" 
-                                           VerticalAlignment="Center" 
-                                           FontWeight="SemiBold"
-                                           TextTrimming="CharacterEllipsis" 
-                                           TextWrapping="NoWrap"
-                                           ToolTip="profile-picture.png"/>
-                                <TextBlock Text="5 hours ago" Grid.Column="1" Foreground="#888888" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="0" Text="{Binding OriginalFilePath}" TextTrimming="CharacterEllipsis" Foreground="White" VerticalAlignment="Center"/>
 
-                                <Border Grid.Column="2" Background="#103820" CornerRadius="15" Padding="15,5" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="Completed" Foreground="#4ADE80" FontSize="12" FontWeight="SemiBold"/>
-                                </Border>
+                                                <TextBlock Grid.Column="1" Text="{Binding CreatedAt, Converter={StaticResource RelativeTimeConverter}}" HorizontalAlignment="Center" Foreground="#888888" VerticalAlignment="Center"/>
 
-                                <TextBlock Text="1 MB" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <TextBlock Text="0.2 MB" Grid.Column="4" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
+                                                <Border Grid.Column="2" Background="#103820" CornerRadius="12" HorizontalAlignment="Center" Padding="15,4">
 
-                        <Border BorderBrush="#222222" BorderThickness="0,1,0,0" Height="55">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="1.5*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                    <ColumnDefinition Width="1*"/>
-                                </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="Completed" Foreground="#4ADE80" FontWeight="SemiBold" FontSize="12"/>
+                                                </Border>
 
-                                <TextBlock Text="Dog-picture.jpg" 
-                                           Grid.Column="0" 
-                                           Foreground="White" 
-                                           Margin="25,0" 
-                                           VerticalAlignment="Center" 
-                                           FontWeight="SemiBold"
-                                           TextTrimming="CharacterEllipsis" 
-                                           TextWrapping="NoWrap"
-                                           ToolTip="Dog-picture.jpg"/>
-                                <TextBlock Text="6 hours ago" Grid.Column="1" Foreground="#888888" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding OriginalFileSize, Converter={StaticResource BytesToMegabytesConverter}}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding OutputFileSize, Converter={StaticResource BytesToMegabytesConverter}}" Grid.Column="4" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
 
-                                <Border Grid.Column="2" Background="#3A1515" CornerRadius="15" Padding="25,5" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <TextBlock Text="Failed" Foreground="#F87171" FontSize="12" FontWeight="SemiBold"/>
-                                </Border>
+                        </ScrollViewer>
 
-                                <TextBlock Text="0.5 MB" Grid.Column="3" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                <TextBlock Text="-" Grid.Column="4" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
-                            </Grid>
-                        </Border>
                     </StackPanel>
                 </Border>
             </StackPanel>

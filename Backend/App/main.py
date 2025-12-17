@@ -12,7 +12,7 @@ from Handlers import auth_handler, conversion_handler, compression_handler,\
 
 from config import settings
 
-init_db()
+# init_db()
 
 app = FastAPI(
     title=settings.APP_NAME,

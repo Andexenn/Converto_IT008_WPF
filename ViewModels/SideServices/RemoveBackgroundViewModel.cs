@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using Converto_IT008_WPF.Dto;
 using Converto_IT008_WPF.ServicesFE;
-using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -147,7 +147,7 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
             if (isZipFile(response))
                 _processImageService.ProcessZipResponse(ProcessedImages ,response);
             else
-                _processImageService.ProcessSingleImageResponse(ProcessedImages, response);
+                _processImageService.ProcessSingleImageResponse(ProcessedImages, response, Path.GetFileNameWithoutExtension(filepaths[0]), Path.GetExtension(filepaths[0]), "removedbg");
 
             
 
@@ -163,6 +163,23 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
             IsRemoving = false;
             _ = GetUserTasks();
         }
+    }
+
+    [RelayCommand]
+    private void DeleteCurrentPreviewedFile()
+    {
+        if (filepaths.Length == 0)
+            return;
+        if (filepaths.Length == 1)
+        {
+            ClearUploadFiles();
+            filepaths = Array.Empty<string>();
+            Uploaded = false;
+            return;
+        }
+        filepaths = filepaths.Where((source, index) => index != beforeIndex).ToArray();
+
+        NextBeforeImage();
     }
 
     [RelayCommand]
@@ -204,7 +221,7 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
         try
         {
             IsDownloading = true;
-            await _processImageService.DownloadImages(ProcessedImages);
+            await _processImageService.DownloadImages(ProcessedImages.ToList());
         }
         catch (Exception ex)
         {
@@ -223,9 +240,8 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
         {
             IsBusy = true;
             var tasks = await _taskService.GetUserTasksAsync();
-            UserTasks = new ObservableCollection<UserTasksDto>(tasks);
-            Debug.WriteLine($"Fetched {UserTasks.Count} user tasks.");
-            Debug.WriteLine($"Original path: {UserTasks[0].OriginalFilePath}"); 
+            var filteredTasks = tasks.Where(t => t.ServiceTypeID == 3).ToList();
+            UserTasks = new ObservableCollection<UserTasksDto>(filteredTasks);
         }
         catch (Exception ex)
         {

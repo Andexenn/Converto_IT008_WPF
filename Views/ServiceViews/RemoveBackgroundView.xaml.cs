@@ -67,7 +67,7 @@ namespace Converto_IT008_WPF.Views.ServiceViews
 
         bool AllowDrop(string[] filepaths)
         {
-            string[] allowExt = { ".jpg", ".png", ".webp", ".jpeg" };
+            string[] allowExt = { ".jpg", ".png", ".webp", ".jpeg", ".bmp", "tiff" };
 
             foreach (var filepath in filepaths)
             {

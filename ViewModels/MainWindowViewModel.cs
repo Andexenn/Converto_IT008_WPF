@@ -46,7 +46,7 @@ namespace Converto_IT008_WPF.ViewModels
             _networkMonitorService = networkMonitorService;
             _sessionState = sessionState;
             _authService = authService;
-            _ = AutoLogin();
+            AutoLogin();
             Debug.WriteLine("MainwindowViewModel initialized.");
             _navigationStore.PropertyChanged += (_, e) =>
             {
@@ -125,6 +125,7 @@ namespace Converto_IT008_WPF.ViewModels
                     IsLoginVisible = true;
                 else
                 {
+                    Debug.WriteLine($"User {response.user.FirstName} log in");
                     _sessionState.LoginResponse = response;
                     _sessionState.UserPreferences = response.user_preferences;
                     IsLoginVisible = false;

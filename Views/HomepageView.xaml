@@ -222,10 +222,11 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <TextBlock Text="Welcome back, Alex!" FontSize="32" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="{Binding WelcomeMessage}" FontSize="32" FontWeight="Bold" Foreground="White"/>
                     <TextBlock Text="Here's a detailed overview of your activity." FontSize="16" Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,5,0,0"/>
                 </StackPanel>
-                <Button Grid.Column="1" Command="{Binding StartNewTaskCommand}" Style="{StaticResource PrimaryButtonStyle}" Margin="0,15,0,16">
+                <Button Grid.Column="1" Command="{Binding DataContext.GoConvertCommand, 
+                  RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Style="{StaticResource PrimaryButtonStyle}" Margin="0,15,0,16">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Plus" Width="12" Height="12" Foreground="White" Margin="0,0,8,0"/>
                         <TextBlock Text="Start New Task" FontWeight="SemiBold"/>
@@ -250,7 +251,8 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Button Grid.Column="0" Grid.Row="0" Command="{Binding ConvertFileCommand}" Style="{StaticResource FeatureCardButtonStyle}">
+                    <Button Grid.Column="0" Grid.Row="0" Command="{Binding DataContext.GoConvertCommand, 
+                  RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Style="{StaticResource FeatureCardButtonStyle}">
                         <StackPanel>
                             <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
                                 <fa:ImageAwesome Icon="Exchange" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -259,7 +261,8 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource FeatureCardButtonStyle}">
+                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource FeatureCardButtonStyle}" Command="{Binding DataContext.GoCompressCommand, 
+                  RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
                         <StackPanel>
                             <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
                                 <fa:ImageAwesome Icon="Compress" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -268,7 +271,8 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource FeatureCardButtonStyle}">
+                    <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource FeatureCardButtonStyle}" Command="{Binding DataContext.GoRemoveBackgroundCommand, 
+                  RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
                         <StackPanel>
                             <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
                                 <fa:ImageAwesome Icon="Image" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
@@ -277,7 +281,8 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Grid.Column="0" Grid.Row="1" Style="{StaticResource FeatureCardButtonStyle}">
+                    <Button Grid.Column="0" Grid.Row="1" Style="{StaticResource FeatureCardButtonStyle}" Command="{Binding DataContext.GoMarkdownToTextCommand, 
+                  RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
                         <StackPanel>
                             <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
                                 <fa:ImageAwesome Icon="FileTextOutline" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>

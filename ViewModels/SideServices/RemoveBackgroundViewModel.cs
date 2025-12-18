@@ -241,7 +241,8 @@ public partial class RemoveBackgroundViewModel : BaseViewModel
             IsBusy = true;
             var tasks = await _taskService.GetUserTasksAsync();
             var filteredTasks = tasks.Where(t => t.ServiceTypeID == 3).ToList();
-            UserTasks = new ObservableCollection<UserTasksDto>(filteredTasks);
+            filteredTasks.Reverse();
+            UserTasks = new ObservableCollection<UserTasksDto>(filteredTasks.Take(5));
         }
         catch (Exception ex)
         {

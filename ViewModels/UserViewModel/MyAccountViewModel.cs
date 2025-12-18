@@ -85,21 +85,6 @@ public partial class MyAccountViewModel : BaseViewModel
             new CloseOverlayMessageDto { CloseLogin = false, CloseSignUp = true });
     }
 
-    [RelayCommand]
-    private async Task Logout()
-    {
-        //_sessionState.IsUserLoggedIn = false;
-        if (_sessionState.LoginResponse != null)
-        {
-            _sessionState.LoginResponse.access_token = string.Empty;
-
-            _sessionState.LoginResponse.user = null!;
-
-            goToLogin();
-
-            await _userService.Logout();
-        }
-    }
 
     [RelayCommand]
     private async Task ChangeAvatarUrl()

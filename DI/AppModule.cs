@@ -35,6 +35,7 @@ public static class AppModule
         services.AddScoped<ITaskService, TaskServiceImpl>();
         services.AddScoped<ICompressService, CompressServiceImpl>();
         services.AddScoped<IConvertService, ConvertServiceImpl>();
+        services.AddScoped<IQuoteService, QuoteServiceImpl>();
 
         //------------------ APIs ------------------
 

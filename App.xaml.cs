@@ -1,10 +1,14 @@
-﻿using System.Configuration;
-using System.Data;
-using System.Windows;
+﻿using Converto_IT008_WPF.Config;
 using Converto_IT008_WPF.DI;
-using Microsoft.Extensions.DependencyInjection;
+using Converto_IT008_WPF.Dto.LoginDto;
+using Converto_IT008_WPF.ServicesFE;
+using Converto_IT008_WPF.Stores;
 using DotNetEnv;
-using Converto_IT008_WPF.Config;
+using Microsoft.Extensions.DependencyInjection;
+using System.Configuration;
+using System.Data;
+using System.Diagnostics;
+using System.Windows;
 
 namespace Converto_IT008_WPF;
 
@@ -32,6 +36,8 @@ public partial class App : Application
 
         services.RegisterDependency();
         ServiceProvider = services.BuildServiceProvider();
+
+
         var mainWindow = ServiceProvider.GetRequiredService<Views.MainWindow>();
         mainWindow.Show();
 

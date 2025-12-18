@@ -184,7 +184,7 @@
                             <TextBlock Text="MENU" Foreground="{StaticResource Brush.Line}" FontSize="11" FontWeight="Bold" Margin="5,0,0,10"/>
 
                             <RadioButton x:Name="BtnDashboard" Content="Dashboard" GroupName="NavGroup" IsChecked="True"
-                                         Style="{StaticResource DashboardSidebarButtonStyle}" Command="{Binding GoHomepageCommand}"
+                                         Style="{StaticResource DarkSidebarButton}" Tag="{x:Static fa:FontAwesomeIcon.Dashboard}" Command="{Binding GoHomepageCommand}"
                                          Click="SidebarButton_Click"/>
 
                             <RadioButton Content="Convert" 
@@ -218,7 +218,8 @@
                                          GroupName="NavGroup"
                                          Tag="{x:Static fa:FontAwesomeIcon.SignOut}"
                                          Style="{StaticResource DarkSidebarButton}"
-                                         Click="SidebarButton_Click"/>
+                                         Click="SidebarButton_Click"
+                                         Command="{Binding LogoutCommand}"/>
                         </StackPanel>
                     </Grid>
                 </Border>

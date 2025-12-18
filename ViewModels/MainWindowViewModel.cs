@@ -22,8 +22,11 @@ namespace Converto_IT008_WPF.ViewModels
         private bool _isSignUpVisible;
 
         private readonly NavigationStore _navigationStore;
+        private readonly INavigationService _nav;
         private readonly INetworkMonitorService _networkMonitorService;
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
+        private readonly IQuoteService _quoteService;
         public SessionState _sessionState { get; }
         public BaseViewModel CurrentViewModel => _navigationStore.CurrentViewModel;
         public ICommand GoHomepageCommand { get; }
@@ -40,14 +43,21 @@ namespace Converto_IT008_WPF.ViewModels
         public ICommand ShowSignUpOverlayCommand { get; set; }
         public ICommand HideSignUpOverlayCommand { get; set; }
 
-        public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService, SessionState sessionState, IAuthService authService)
+        public MainWindowViewModel(NavigationStore navigationStore, INavigationService nav, INetworkMonitorService networkMonitorService, SessionState sessionState, IAuthService authService, IUserService userService,
+                                    IQuoteService quoteService)
         {
             _navigationStore = navigationStore;
             _networkMonitorService = networkMonitorService;
             _sessionState = sessionState;
             _authService = authService;
-            AutoLogin();
-            Debug.WriteLine("MainwindowViewModel initialized.");
+            _userService = userService;
+            _quoteService = quoteService;
+            _nav = nav;
+
+            _sessionState.DailyQuote = _quoteService.GetQuoteofTheDay();
+
+            _ = AutoLogin();
+
             _navigationStore.PropertyChanged += (_, e) =>
             {
                 if (e.PropertyName == nameof(_navigationStore.CurrentViewModel))
@@ -55,16 +65,16 @@ namespace Converto_IT008_WPF.ViewModels
                     OnPropertyChanged(nameof(CurrentViewModel));
                 }
             };
-            
+
             WeakReferenceMessenger.Default.Register<CloseOverlayMessageDto>(this, (r, m) =>
             {
-                if(m.CloseLogin)
+                if (m.CloseLogin)
                     IsLoginVisible = false;
                 if (!m.CloseLogin)
                     IsLoginVisible = true;
                 if (!m.CloseSignUp)
                     IsSignUpVisible = true;
-                if(m.CloseSignUp)
+                if (m.CloseSignUp)
                     IsSignUpVisible = false;
             });
 
@@ -76,7 +86,7 @@ namespace Converto_IT008_WPF.ViewModels
             GoMarkdownToTextCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.MarkdownToTextViewModel>(); });
             GoRemoveBackgroundCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<SideServices.RemoveBackgroundViewModel>(); });
             GoConvertCommand = new RelayCommand(() => { if (_networkMonitorService.checkIsOnline()) nav.Navigate<ConvertViewModel>(); });
-            nav.Navigate<HomepageViewModel>();
+            
 
             ShowLoginOverlayCommand = new RelayCommand(() =>
             {
@@ -95,6 +105,7 @@ namespace Converto_IT008_WPF.ViewModels
 
             //ktra mang
             _networkMonitorService.Start();
+            
         }
 
 
@@ -125,10 +136,10 @@ namespace Converto_IT008_WPF.ViewModels
                     IsLoginVisible = true;
                 else
                 {
-                    Debug.WriteLine($"User {response.user.FirstName} log in");
                     _sessionState.LoginResponse = response;
                     _sessionState.UserPreferences = response.user_preferences;
                     IsLoginVisible = false;
+                    _nav.Navigate<HomepageViewModel>();
                 }
             }
             catch (Exception ex)
@@ -138,6 +149,22 @@ namespace Converto_IT008_WPF.ViewModels
             finally
             {
                 IsBusy = false;
+            }
+        }
+
+        [RelayCommand]
+        private async Task Logout()
+        {
+            //_sessionState.IsUserLoggedIn = false;
+            if (_sessionState.LoginResponse != null)
+            {
+                _sessionState.LoginResponse.access_token = string.Empty;
+
+                _sessionState.LoginResponse.user = null!;
+
+                IsLoginVisible = true;
+
+                await _userService.Logout();
             }
         }
 

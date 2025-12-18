@@ -16,4 +16,5 @@ public interface IAuthService
     public Task<LoginResponse> SignInWithGoolge();
     public Task<LoginResponse> SignInWithGithub();
     public Task<LoginResponse> RefreshAccessTokenAsync(string currentRefreshToken);
+
 }

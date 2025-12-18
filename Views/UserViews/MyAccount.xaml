@@ -751,37 +751,7 @@
                                 </Button>
                             </StackPanel>
                         </Border>
-                        <Button Command="{Binding LogoutCommand}"
-                                Content="Log Out" 
-                                HorizontalAlignment="Right"
-                                Foreground="White"
-                                FontSize="16"
-                                FontWeight="SemiBold"
-                                Padding="20,10"
-                                Margin="0, 30, 0, 0"
-                                BorderThickness="0"
-                                Cursor="Hand" 
-                                Height="35" 
-                                Width="159">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Background" Value="{StaticResource Brush.Brand}" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#D90404"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </Button.Style>
-
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" CornerRadius="6">
-                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
+                        
                     </StackPanel>
                 </Grid>
             </Grid>

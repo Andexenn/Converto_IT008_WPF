@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Converto_IT008_WPF.Dto;
 
-public class ApiErrorResponseDto
+public class QuoteDto
 {
-    [JsonPropertyName("detail")]
-    public string? Detail { get; set; }
+    public string Text { get; set; } = string.Empty;
+    public string Author { get; set; } = string.Empty;
 }

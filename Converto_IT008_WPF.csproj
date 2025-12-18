@@ -37,9 +37,16 @@
     <None Remove="Resources\MONTSERRAT-SEMIBOLD.TTF" />
     <None Remove="Resources\no-connection.png" />
     <None Remove="Resources\NoConnection.png" />
+    <None Remove="Resources\quotes.json" />
     <None Remove="Resources\SignUpBackground.png" />
     <None Remove="Resources\TransparentBackground.jpg" />
     <None Remove="Resources\user %282%29.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\quotes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

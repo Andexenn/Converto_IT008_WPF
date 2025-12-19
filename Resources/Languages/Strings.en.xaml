@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+                        <!-- MyAccount.xaml -->
+    <!-- Header -->
+    <sys:String x:Key="MyAccount.Lang_Header_Title">UserProfile</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Header_Subtitle">Manage your personal information, account details, and preferences.</sys:String>
+    <sys:String x:Key="MyAccount.Lang_MemberSince">Member Since:</sys:String>
+
+    <!-- Personal Information -->
+    <sys:String x:Key="MyAccount.Lang_Section_PersonalInfo">Personal Information</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_Edit">Edit</sys:String>
+    <sys:String x:Key="MyAccount.Lang_FirstName">First Name</sys:String>
+    <sys:String x:Key="MyAccount.Lang_LastName">Last Name</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Label_Email">Email Address</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Placeholder_Email">Email</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Label_Phone">Phone Number</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Placeholder_Phone">Phone</sys:String>
+    <sys:String x:Key="MyAccount.Lang_City">City</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Birthday">Birthday</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_Cancel">Cancel</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_SaveChanges">Save changes</sys:String>
+
+    <!-- Password -->
+    <sys:String x:Key="MyAccount.Lang_Section_Password">Password</sys:String>
+    <sys:String x:Key="MyAccount.Lang_NewPassword">New Password</sys:String>
+    <sys:String x:Key="MyAccount.Lang_ConfirmPassword">Confirm New Password</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_ChangePassword">Change Password</sys:String>
+
+    <!-- Preferences -->
+    <sys:String x:Key="MyAccount.Lang_Section_Preferences">Preferences</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Label_OutputFolder">Default Output Folder</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_Change">Change</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Label_Languages">Languages</sys:String>
+
+    <!-- Delete Account -->
+    <sys:String x:Key="MyAccount.Lang_Section_DeleteAccount">Delete Account</sys:String>
+    <sys:String x:Key="MyAccount.Lang_DeleteAccount_Desc">Permanently delete your account and all associated data.</sys:String>
+    <sys:String x:Key="MyAccount.Lang_DeleteAccount_Warn">This action can not be undone</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_DeleteAccount">Delete My Account</sys:String>
+    
+    
+    
+                        <!-- LoginView.xaml -->
+    
+    
+    
+                        <!-- SignUpView.xaml -->
+
+
+
+                        <!-- ExitConfirmationDialog.xaml -->
+
+
+
+                        <!-- Terms_ConditionsPopup.xaml -->
+
+
+
+                        <!-- CompressView.xaml -->
+</ResourceDictionary>

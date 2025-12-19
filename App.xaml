@@ -17,6 +17,7 @@
                 <ResourceDictionary Source="/Themes/TextTheme.xaml"/>
                 <ResourceDictionary Source="/Themes/TextBoxTheme.xaml"/>
                 <ResourceDictionary Source="/Resources/Colors.xaml"/>
+                <ResourceDictionary Source="/Converto_IT008_WPF;component/Resources/Languages/Strings.en.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <!-- ############# General ############# -->

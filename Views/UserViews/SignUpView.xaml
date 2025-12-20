@@ -142,14 +142,14 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="0,0,0,25">
-                    <TextBlock Text="Get Started Now" 
+                    <TextBlock Text="{DynamicResource Lang.SignUpView.Title}" 
                                Foreground="White" 
                                FontSize="28" 
                                FontWeight="Bold" 
                                HorizontalAlignment="Center"
                                Margin="0,0,0,5"/>
-                    
-                    <TextBlock Text="Simplify your workflow." 
+
+                    <TextBlock Text="{DynamicResource Lang.SignUpView.Subtitle}" 
                                Foreground="{StaticResource Brush.Text.Secondary}" 
                                FontSize="14" 
                                HorizontalAlignment="Center"/>
@@ -184,7 +184,7 @@
 
                         <Button x:Name="btnSignUp"
                                 Grid.Column="0"
-                                Content="Sign Up"
+                                Content="{DynamicResource Lang.SignUpView.Toggle_SignUp}"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 FontWeight="Bold"
@@ -204,7 +204,7 @@
 
                         <Button x:Name="btnLogin"
                                 Grid.Column="1"
-                                Content="Log In"
+                                Content="{DynamicResource Lang.SignUpView.Toggle_LogIn}"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 FontWeight="SemiBold"
@@ -281,20 +281,20 @@
                         </Grid.ColumnDefinitions>
 
                         <Border Grid.Column="0" Style="{StaticResource InputContainerStyle}">
-                            <custom:PlaceholderTextBox Placeholder="First Name"
+                            <custom:PlaceholderTextBox Placeholder="{DynamicResource Lang.SignUpView.Placeholder_FirstName}"
                                                        Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        TabIndex="0"/>
                         </Border>
 
                         <Border Grid.Column="2" Style="{StaticResource InputContainerStyle}">
-                            <custom:PlaceholderTextBox Placeholder="Last Name"
+                            <custom:PlaceholderTextBox Placeholder="{DynamicResource Lang.SignUpView.Placeholder_LastName}"
                                                        Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        TabIndex="1"/>
                         </Border>
                     </Grid>
 
                     <Border Style="{StaticResource InputContainerStyle}">
-                        <custom:PlaceholderTextBox Placeholder="Email Address"
+                        <custom:PlaceholderTextBox Placeholder="{DynamicResource Lang.SignUpView.Placeholder_Email}"
                                                    Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                    TabIndex="2"/>
                     </Border>
@@ -306,7 +306,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <custom:PlaceholderTextBox Grid.Column="0"
-                                                       Placeholder="Password"
+                                                       Placeholder="{DynamicResource Lang.SignUpView.Placeholder_Password}"
                                                        Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        TabIndex="3"/>
                             <fa:ImageAwesome Grid.Column="1" 
@@ -326,7 +326,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <custom:PlaceholderTextBox Grid.Column="0"
-                                                       Placeholder="Confirm password"
+                                                       Placeholder="{DynamicResource Lang.SignUpView.Placeholder_ConfirmPassword}"
                                                        Text="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        TabIndex="4"/>
                             
@@ -352,17 +352,17 @@
                         </CheckBox>
 
                         <TextBlock VerticalAlignment="Center" Margin="8,0,0,0" FontSize="13">
-                    <Run Text="I agree to the " Foreground="{StaticResource Brush.Text.Secondary}"/>
+                    <Run Text="{DynamicResource Lang.SignUpView.Terms_Agree}" Foreground="{StaticResource Brush.Text.Secondary}"/>
                     <Hyperlink Command="{Binding GoTermsAndConditionsCommand}" 
                                TextDecorations="None"
                                Foreground="{StaticResource Brush.Brand}">
-                        <Run Text="Terms of Service"/>
+                        <Run Text="{DynamicResource Lang.SignUpView.Terms_Link}"/>
                     </Hyperlink>
                         </TextBlock>
                     </StackPanel>
 
                     <Button Command="{Binding SignUpCommand}"
-                            Content="Create Account"
+                            Content="{DynamicResource Lang.SignUpView.Btn_Submit}"
                             Height="50"
                             Margin="0,10,0,0"
                             FontSize="16"
@@ -412,7 +412,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Rectangle Grid.Column="0" Height="1" Fill="{StaticResource Brush.Line}" Opacity="0.3" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" Text="Or continue with" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="12" Margin="15,0"/>
+                        <TextBlock Grid.Column="1" Text="{DynamicResource Lang.SignUpView.Divider}" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="12" Margin="15,0"/>
                         <Rectangle Grid.Column="2" Height="1" Fill="{StaticResource Brush.Line}" Opacity="0.3" VerticalAlignment="Center"/>
                     </Grid>
 

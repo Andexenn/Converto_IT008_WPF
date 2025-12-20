@@ -3,60 +3,270 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
                         <!-- MyAccount.xaml -->
-    <!-- Header -->
-    <sys:String x:Key="MyAccount.Lang_Header_Title">UserProfile</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Header_Subtitle">Manage your personal information, account details, and preferences.</sys:String>
-    <sys:String x:Key="MyAccount.Lang_MemberSince">Member Since:</sys:String>
-
-    <!-- Personal Information -->
-    <sys:String x:Key="MyAccount.Lang_Section_PersonalInfo">Personal Information</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_Edit">Edit</sys:String>
-    <sys:String x:Key="MyAccount.Lang_FirstName">First Name</sys:String>
-    <sys:String x:Key="MyAccount.Lang_LastName">Last Name</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Label_Email">Email Address</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Placeholder_Email">Email</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Label_Phone">Phone Number</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Placeholder_Phone">Phone</sys:String>
-    <sys:String x:Key="MyAccount.Lang_City">City</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Birthday">Birthday</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_Cancel">Cancel</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_SaveChanges">Save changes</sys:String>
-
-    <!-- Password -->
-    <sys:String x:Key="MyAccount.Lang_Section_Password">Password</sys:String>
-    <sys:String x:Key="MyAccount.Lang_NewPassword">New Password</sys:String>
-    <sys:String x:Key="MyAccount.Lang_ConfirmPassword">Confirm New Password</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_ChangePassword">Change Password</sys:String>
-
-    <!-- Preferences -->
-    <sys:String x:Key="MyAccount.Lang_Section_Preferences">Preferences</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Label_OutputFolder">Default Output Folder</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_Change">Change</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Label_Languages">Languages</sys:String>
-
-    <!-- Delete Account -->
-    <sys:String x:Key="MyAccount.Lang_Section_DeleteAccount">Delete Account</sys:String>
-    <sys:String x:Key="MyAccount.Lang_DeleteAccount_Desc">Permanently delete your account and all associated data.</sys:String>
-    <sys:String x:Key="MyAccount.Lang_DeleteAccount_Warn">This action can not be undone</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_DeleteAccount">Delete My Account</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Header_Title">UserProfile</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Header_Subtitle">Manage your personal information, account details, and preferences.</sys:String>
+    <sys:String x:Key="Lang.MyAccount.MemberSince">Member Since:</sys:String>
+    
+    <sys:String x:Key="Lang.MyAccount.Section_PersonalInfo">Personal Information</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_Edit">Edit</sys:String>
+    <sys:String x:Key="Lang.MyAccount.FirstName">First Name</sys:String>
+    <sys:String x:Key="Lang.MyAccount.LastName">Last Name</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Label_Email">Email Address</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Placeholder_Email">Email</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Label_Phone">Phone Number</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Placeholder_Phone">Phone</sys:String>
+    <sys:String x:Key="Lang.MyAccount.City">City</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Birthday">Birthday</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_Cancel">Cancel</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_SaveChanges">Save changes</sys:String>
+    
+    <sys:String x:Key="Lang.MyAccount.Section_Password">Password</sys:String>
+    <sys:String x:Key="Lang.MyAccount.NewPassword">New Password</sys:String>
+    <sys:String x:Key="Lang.MyAccount.ConfirmPassword">Confirm New Password</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_ChangePassword">Change Password</sys:String>
+    
+    <sys:String x:Key="Lang.MyAccount.Section_Preferences">Preferences</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Label_OutputFolder">Default Output Folder</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_Change">Change</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Label_Languages">Languages</sys:String>
+    
+    <sys:String x:Key="Lang.MyAccount.Section_DeleteAccount">Delete Account</sys:String>
+    <sys:String x:Key="Lang.MyAccount.DeleteAccount_Desc">Permanently delete your account and all associated data.</sys:String>
+    <sys:String x:Key="Lang.MyAccount.DeleteAccount_Warn">This action can not be undone</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_DeleteAccount">Delete My Account</sys:String>
     
     
     
                         <!-- LoginView.xaml -->
+    <sys:String x:Key="Lang.LoginView.Title">Join now</sys:String>
+    <sys:String x:Key="Lang.LoginView.Subtitle">Increase your productivity</sys:String>
     
+    <sys:String x:Key="Lang.LoginView.Toggle_SignUp">Sign Up</sys:String>
+    <sys:String x:Key="Lang.LoginView.Toggle_LogIn">Log In</sys:String>
     
+    <sys:String x:Key="Lang.LoginView.Placeholder_Email">Email Address</sys:String>
+    <sys:String x:Key="Lang.LoginView.Placeholder_Password">Password</sys:String>
     
+    <sys:String x:Key="Lang.LoginView.Btn_Submit">Log In</sys:String>
+    <sys:String x:Key="Lang.LoginView.Divider">Or continue with</sys:String>
+
+
+
+
                         <!-- SignUpView.xaml -->
+    <sys:String x:Key="Lang.SignUpView.Title">Get Started Now</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Subtitle">Simplify your workflow.</sys:String>
+    
+    <sys:String x:Key="Lang.SignUpView.Toggle_SignUp">Sign Up</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Toggle_LogIn">Log In</sys:String>
+    
+    <sys:String x:Key="Lang.SignUpView.Placeholder_FirstName">First Name</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Placeholder_LastName">Last Name</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Placeholder_Email">Email Address</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Placeholder_Password">Password</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Placeholder_ConfirmPassword">Confirm password</sys:String>
+    
+    <sys:String x:Key="Lang.SignUpView.Terms_Agree">I agree to the</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Terms_Link">Terms of Service</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Btn_Submit">Create Account</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Divider">Or continue with</sys:String>
 
 
 
                         <!-- ExitConfirmationDialog.xaml -->
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Title">Confirmation</sys:String>
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Header">Exit Application?</sys:String>
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Message">Are you sure you want to close Converto?</sys:String>
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Btn_Cancel">Cancel</sys:String>
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Btn_Confirm">Yes, Exit</sys:String>
 
 
 
                         <!-- Terms_ConditionsPopup.xaml -->
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Title">Terms of Service</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.LastUpdated">Last updated: Dec 2025</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_1">1. Introduction</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_1">Welcome to Converto. By accessing or using our application, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the service.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_2">2. User Obligations</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_2">You agree to provide accurate and complete information during the registration process. You are responsible for safeguarding the password that you use to access the service.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_3">3. Privacy Policy</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_3">Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and share information about you.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_4">4. Termination</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_4">We may terminate or suspend access to our service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_5">5. Changes</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_5">We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Btn_Agree">I Agree &amp; Continue</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Btn_Decline">Decline</sys:String>
 
 
 
                         <!-- CompressView.xaml -->
+    <sys:String x:Key="Lang.CompressView.Title">Compress</sys:String>
+    <sys:String x:Key="Lang.CompressView.Subtitle">Reduce the size of your files without compromising quality</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.UploadPrompt">Click to upload or drop files here</sys:String>
+    <sys:String x:Key="Lang.CompressView.UploadInfo">PNG, JPG, WEBP, MP4, MP3... (max. 10MB)</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Prev">Prev</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Next">Next</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Upload">Upload Image</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Clear">Clear</sys:String>
+    <sys:String x:Key="Lang.CompressView.DownloadLink">Download your files here</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.Settings_Title">Settings</sys:String>
+    <sys:String x:Key="Lang.CompressView.Label_Format">Type Format</sys:String>
+    <sys:String x:Key="Lang.CompressView.Label_OutputFolder">Output folder</sys:String>
+    <sys:String x:Key="Lang.CompressView.Radio_Default">Default output folder</sys:String>
+    <sys:String x:Key="Lang.CompressView.Radio_Custom">Customized folder</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Change">Change</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.Label_Quality">Quality</sys:String>
+    <sys:String x:Key="Lang.CompressView.Quality_Low">Low</sys:String>
+    <sys:String x:Key="Lang.CompressView.Quality_Medium">Medium</sys:String>
+    <sys:String x:Key="Lang.CompressView.Quality_High">High</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.Btn_Start">Compress files</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.Recent_Title">Recently Processed</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_Filename">FILENAME</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_Date">DATE</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_Status">STATUS</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_Filesize">FILESIZE</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_OutputSize">OUTPUTSIZE</sys:String>
+    <sys:String x:Key="Lang.CompressView.Status_Completed">Completed</sys:String>
+    <sys:String x:Key="Lang.CompressView.Status_Failed">Failed</sys:String>
+
+
+
+                        <!-- MarkdownToTextView.xaml -->
+    <sys:String x:Key="Lang.MarkdownToTextView.Title">Markdown to Text Converter</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Subtitle">Paste your Markdown content below to convert it to plain text.</sys:String>
+    
+    <sys:String x:Key="Lang.MarkdownToTextView.Options_Title">Options</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Option_PlainText">Plain Text</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Option_RichText">Rich Text</sys:String>
+    
+    <sys:String x:Key="Lang.MarkdownToTextView.Input_Header">Markdown Input</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Input_Placeholder">Write your markdown here</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Btn_Clear_Tooltip">Clear Input</sys:String>
+    
+    <sys:String x:Key="Lang.MarkdownToTextView.Output_Header">Text Output</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Btn_Copy_Tooltip">Copy to Clipboard</sys:String>
+    
+    <sys:String x:Key="Lang.MarkdownToTextView.Toast_Copied">Copied to clipboard!</sys:String>
+
+
+
+                        <!-- RemoveBackgroundView.xaml -->
+    <sys:String x:Key="Lang.RemoveBackgroundView.Title">Remove background</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Subtitle">Remove your image background with high quality</sys:String>
+    
+    <sys:String x:Key="Lang.RemoveBackgroundView.UploadPrompt">Click to upload or drop images here</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.UploadInfo">PNG, JPG, or WEBP (max. 10MB)</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.PreviewPlaceholder">Preview will appear here.</sys:String>
+    
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Prev">Prev</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Next">Next</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Upload">Upload Image</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Start">Remove background</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Clear">Clear</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Download">Download Image</sys:String>
+    
+    <sys:String x:Key="Lang.RemoveBackgroundView.Recent_Title">Recently Processed</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Col_Filename">FILENAME</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Col_Date">DATE</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Col_Status">STATUS</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Col_Filesize">FILESIZE</sys:String>
+
+
+
+                        <!-- ConvertView.xaml -->
+    <sys:String x:Key="Lang.ConvertView.Title">Convert</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Subtitle">Convert your file format to another file format</sys:String>
+
+    <sys:String x:Key="Lang.ConvertView.Btn_AddFiles">+ Add Files</sys:String>
+
+    <sys:String x:Key="Lang.ConvertView.Btn_ConvertAll">Convert All</sys:String>
+    <sys:String x:Key="Lang.ConvertView.DownloadLink">Download your files here</sys:String>
+    
+    <sys:String x:Key="Lang.ConvertView.Preview_Dimensions">Dimensions: 1920x1080</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Preview_Unavailable">Preview not available for this file type.</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_OriginalPlaceholder">Original: mountain-scenery.jpg</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_OutputPlaceholder">Output: mountain-scenery.png</sys:String>
+    
+    <sys:String x:Key="Lang.ConvertView.Settings_Title">Conversion Settings</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_InputFormat">Original Type Format</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_OutputFormat">Convert To</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_Resize">Resize Image</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Check_AspectRatio">Maintain aspect ratio</sys:String>
+
+
+
+                        <!-- DisconnectView.xaml -->
+    <sys:String x:Key="Lang.DisconnectView.Title">Network Connection Lost</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Message">It seems you are not connected to the internet. Please check your connection and try again.</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Btn_Retry">Retry connection</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Status_Connecting">Connecting...</sys:String>
+    
+    <sys:String x:Key="Lang.DisconnectView.Checks_Title">Quick Checks</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Check_1">Ensure your Wi-fi or Ethernet cable is properly connected.</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Check_2">Restart your router or modem.</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Check_3">Check if other websites are loading on your device.</sys:String>
+
+
+
+                        <!-- HomepageView.xaml -->
+    <sys:String x:Key="Lang.HomepageView.Subtitle">Here's a detailed overview of your activity.</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Btn.StartNew">Start New Task</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Feat.Convert">Convert Files</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Feat.Compress">Compress Files</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Feat.RemoveBG">Remove BG</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Feat.Markdown">Markdown</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.QuoteTitle">Quote of the day ✨</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Activity.Title">Activity Overview</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Activity.Weekly">Weekly</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Activity.Monthly">Monthly</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Activity.Desc">Operations performed in the last 7 days.</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Stats.TotalTasks">Total Tasks</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Stats.StorageSaved">Storage Saved</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Stats.AvgTime">Avg. Time</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Stats.SuccessRate">Success Rate</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Breakdown.Title">Task Breakdown</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Breakdown.Desc">Distribution of tasks by type.</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Chart.Convert">Convert</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Chart.Compress">Compress</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Chart.RemoveBG">Remove BG</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Recent.Title">Recently Processed</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Header.Filename">FILENAME</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Header.Task">TASK</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Header.Date">DATE</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Header.Status">STATUS</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Status.Completed">Completed</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Status_Failed">Failed</sys:String>
+
+
+
+                        <!-- MainWindow.xaml -->
+    <sys:String x:Key="Lang.MainWindow.Title">Converto</sys:String>
+    <sys:String x:Key="Lang.MainWindow.MenuTitle">MENU</sys:String>
+    
+    <sys:String x:Key="Lang.MainWindow.Dashboard">Dashboard</sys:String>
+    <sys:String x:Key="Lang.MainWindow.Convert">Convert</sys:String>
+    <sys:String x:Key="Lang.MainWindow.Compress">Compress</sys:String>
+    <sys:String x:Key="Lang.MainWindow.RemoveBG">Remove Background</sys:String>
+    <sys:String x:Key="Lang.MainWindow.Markdown">Markdown to Text</sys:String>
+    
+    <sys:String x:Key="Lang.MainWindow.Profile">Profile</sys:String>
+    <sys:String x:Key="Lang.MainWindow.Logout">Logout</sys:String>
 </ResourceDictionary>

@@ -384,8 +384,8 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0">
-                <TextBlock Text="Convert" FontSize="36" FontWeight="Bold" VerticalAlignment="Center"/>
-                <TextBlock Text="Convert your file format to another file format" FontSize="14" Foreground="{StaticResource Brush.Text.Secondary}" />
+                <TextBlock Text="{DynamicResource Lang.ConvertView.Title}" FontSize="36" FontWeight="Bold" VerticalAlignment="Center"/>
+                <TextBlock Text="{DynamicResource Lang.ConvertView.Subtitle}" FontSize="14" Foreground="{StaticResource Brush.Text.Secondary}" />
             </StackPanel>
 
             <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
@@ -419,7 +419,7 @@
                 </Grid.RowDefinitions>
 
                 <Button Style="{StaticResource PrimaryBtn}" 
-                        Content="+ Add Files" 
+                        Content="{DynamicResource Lang.ConvertView.Btn_AddFiles}" 
                         Height="45" 
                         FontSize="16" 
                         Cursor="Hand"
@@ -436,8 +436,8 @@
                     <i:Interaction.Triggers>
                         <i:EventTrigger EventName="Drop">
                             <i:InvokeCommandAction Command="{Binding DropFileCommand}" 
-                       PassEventArgsToCommand="True"
-                       EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
+                                                   PassEventArgsToCommand="True"
+                                                   EventArgsConverter="{StaticResource DropEventArgsConverter}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                     <StackPanel>
@@ -540,7 +540,7 @@
                         Visibility="{Binding IsNotConverting, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <StackPanel Orientation="Horizontal">
                         <fa:ImageAwesome Icon="Bolt" Foreground="White" Height="16" Margin="0,0,10,0"/>
-                        <TextBlock Text="Convert All" FontSize="16" FontWeight="Bold"/>
+                        <TextBlock Text="{DynamicResource Lang.ConvertView.Btn_ConvertAll}" FontSize="16" FontWeight="Bold"/>
                     </StackPanel>
                 </Button>
 
@@ -550,7 +550,7 @@
                 <Button Grid.Row="3" Style="{StaticResource TabBtn}" Height="50" Margin="0,15,0,0" Cursor="Hand" HorizontalAlignment="Center"
                         Command="{Binding DownloadFilesCommand}">
                     <StackPanel Orientation="Horizontal" >
-                        <TextBlock Text="Download your files here" FontSize="16" TextAlignment="Center" FontWeight="Bold"/>
+                        <TextBlock Text="{DynamicResource Lang.ConvertView.DownloadLink}" FontSize="16" TextAlignment="Center" FontWeight="Bold"/>
                     </StackPanel>
                 </Button>
             </Grid>
@@ -562,7 +562,7 @@
                     <RowDefinition Height="60"/>
                 </Grid.RowDefinitions>
                 <DockPanel LastChildFill="False">
-                    <TextBlock Text="Dimensions: 1920x1080" VerticalAlignment="Center" Foreground="#AAAAAA"/>
+                    <TextBlock Text="{DynamicResource Lang.ConvertView.Preview_Dimensions}" VerticalAlignment="Center" Foreground="#AAAAAA"/>
 
                     <StackPanel DockPanel.Dock="Right" Orientation="Horizontal">
                         <Button Style="{StaticResource ZoomBtnStyle}" 
@@ -615,7 +615,7 @@
                                 </MediaElement.LayoutTransform>
                             </MediaElement>
 
-                            <TextBlock Text="Preview not available for this file type."
+                            <TextBlock Text="{DynamicResource Lang.ConvertView.Preview_Unavailable}"
                                        Visibility="{Binding IsPlaceholderVisible, Converter={StaticResource BoolToVisConverter}}"
                                        Foreground="#AAAAAA"
                                        HorizontalAlignment="Center" 
@@ -632,12 +632,12 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0" HorizontalAlignment="Left">
-                            <TextBlock Text="Original: mountain-scenery.jpg" FontSize="12" Foreground="#DDDDDD"/>
+                            <TextBlock Text="{DynamicResource Lang.ConvertView.Label_OriginalPlaceholder}" FontSize="12" Foreground="#DDDDDD"/>
                             <TextBlock Text="(2.4 MB)" FontSize="11" Foreground="#888888"/>
                         </StackPanel>
                         <fa:ImageAwesome Grid.Column="1" Icon="ArrowRight" Foreground="#FF0000" Height="10" Margin="15,0"/>
                         <StackPanel Grid.Column="2" HorizontalAlignment="Left">
-                            <TextBlock Text="Output: mountain-scenery.png" FontSize="12" Foreground="#DDDDDD"/>
+                            <TextBlock Text="{DynamicResource Lang.ConvertView.Label_OutputPlaceholder}" FontSize="12" Foreground="#DDDDDD"/>
                             <TextBlock Text="(~1.8 MB)" FontSize="11" Foreground="#888888"/>
                         </StackPanel>
                     </Grid>
@@ -646,8 +646,8 @@
 
             <Grid Grid.Column="2" Margin="20,0,0,0">
                 <StackPanel>
-                    <TextBlock Text="Conversion Settings" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
-                    <TextBlock Text="Original Type Format" Foreground="#AAAAAA" Margin="0,0,0,8"/>
+                    <TextBlock Text="{DynamicResource Lang.ConvertView.Settings_Title}" FontSize="18" FontWeight="Bold" Margin="0,0,0,20"/>
+                    <TextBlock Text="{DynamicResource Lang.ConvertView.Label_InputFormat}" Foreground="#AAAAAA" Margin="0,0,0,8"/>
                     <ComboBox Name="ComboboxTypeFormat"
                               Style="{StaticResource DarkComboBoxStyle}"
                               Margin="0,0,0,20"
@@ -655,7 +655,7 @@
                               SelectedItem="{Binding SelectedInputCategory}">
                     </ComboBox>
 
-                    <TextBlock Text="Convert To" Foreground="#AAAAAA" Margin="0,0,0,8"/>
+                    <TextBlock Text="{DynamicResource Lang.ConvertView.Label_OutputFormat}" Foreground="#AAAAAA" Margin="0,0,0,8"/>
                     <ComboBox Style="{StaticResource DarkComboBoxStyle}"
                               ItemsSource="{Binding AvailableOutputFormats}"
                               SelectedItem="{Binding SelectedFile.ConvertedFileFormat, Mode=TwoWay}">
@@ -682,7 +682,7 @@
                             TickFrequency="1"/>-->
 
                     <Grid Margin="0,25,0,15">
-                        <TextBlock Text="Resize Image" VerticalAlignment="Center" Foreground="#AAAAAA"/>
+                        <TextBlock Text="{DynamicResource Lang.ConvertView.Label_Resize}" VerticalAlignment="Center" Foreground="#AAAAAA"/>
                         <ToggleButton Style="{StaticResource SwitchStyle}" 
                                       HorizontalAlignment="Right"
                                       IsChecked="{Binding IsResizeEnabled}"/>
@@ -733,7 +733,7 @@
                     </Grid>
 
                     <CheckBox Margin="0,20,0,0" 
-                              Content="Maintain aspect ratio" 
+                              Content="{DynamicResource Lang.ConvertView.Check_AspectRatio}" 
                               Foreground="#AAAAAA" 
                               IsChecked="{Binding MaintainAspectRatio}"
                               IsEnabled="{Binding IsResizeEnabled}" 

@@ -3,44 +3,269 @@
                     xmlns:sys="clr-namespace:System;assembly=mscorlib">
 
                         <!-- MyAccount.xaml -->
-    <!-- Header -->
-    <sys:String x:Key="MyAccount.Lang_Header_Title">Hồ sơ người dùng</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Header_Subtitle">Quản lý thông tin cá nhân, chi tiết tài khoản và tùy chọn.</sys:String>
-    <sys:String x:Key="MyAccount.Lang_MemberSince">Thành viên từ:</sys:String>
-
-    <!-- Personal Information -->
-    <sys:String x:Key="MyAccount.Lang_Section_PersonalInfo">Thông tin cá nhân</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_Edit">Sửa</sys:String>
-    <sys:String x:Key="MyAccount.Lang_FirstName">Tên</sys:String>
-    <sys:String x:Key="MyAccount.Lang_LastName">Họ</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Label_Email">Địa chỉ Email</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Placeholder_Email">Nhập email</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Label_Phone">Số điện thoại</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Placeholder_Phone">Nhập SĐT</sys:String>
-    <sys:String x:Key="MyAccount.Lang_City">Thành phố</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Birthday">Ngày sinh</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_Cancel">Hủy</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_SaveChanges">Lưu thay đổi</sys:String>
-
-    <!-- Password -->
-    <sys:String x:Key="MyAccount.Lang_Section_Password">Mật khẩu</sys:String>
-    <sys:String x:Key="MyAccount.Lang_NewPassword">Mật khẩu mới</sys:String>
-    <sys:String x:Key="MyAccount.Lang_ConfirmPassword">Xác nhận mật khẩu</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_ChangePassword">Đổi mật khẩu</sys:String>
-
-    <!-- Preferences -->
-    <sys:String x:Key="MyAccount.Lang_Section_Preferences">Tùy chọn</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Label_OutputFolder">Thư mục xuất mặc định</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_Change">Thay đổi</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Label_Languages">Ngôn ngữ</sys:String>
-
-    <!-- Delete Account -->
-    <sys:String x:Key="MyAccount.Lang_Section_DeleteAccount">Xóa tài khoản</sys:String>
-    <sys:String x:Key="MyAccount.Lang_DeleteAccount_Desc">Xóa vĩnh viễn tài khoản và toàn bộ dữ liệu liên quan.</sys:String>
-    <sys:String x:Key="MyAccount.Lang_DeleteAccount_Warn">Hành động này không thể hoàn tác</sys:String>
-    <sys:String x:Key="MyAccount.Lang_Btn_DeleteAccount">Xóa tài khoản của tôi</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Header_Title">Hồ sơ người dùng</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Header_Subtitle">Quản lý thông tin cá nhân, chi tiết tài khoản và tùy chọn.</sys:String>
+    <sys:String x:Key="Lang.MyAccount.MemberSince">Thành viên từ:</sys:String>
+    
+    <sys:String x:Key="Lang.MyAccount.Section_PersonalInfo">Thông tin cá nhân</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_Edit">Sửa</sys:String>
+    <sys:String x:Key="Lang.MyAccount.FirstName">Tên</sys:String>
+    <sys:String x:Key="Lang.MyAccount.LastName">Họ</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Label_Email">Địa chỉ Email</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Placeholder_Email">Nhập email</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Label_Phone">Số điện thoại</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Placeholder_Phone">Nhập SĐT</sys:String>
+    <sys:String x:Key="Lang.MyAccount.City">Thành phố</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Birthday">Ngày sinh</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_Cancel">Hủy</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_SaveChanges">Lưu thay đổi</sys:String>
+    
+    <sys:String x:Key="Lang.MyAccount.Section_Password">Mật khẩu</sys:String>
+    <sys:String x:Key="Lang.MyAccount.NewPassword">Mật khẩu mới</sys:String>
+    <sys:String x:Key="Lang.MyAccount.ConfirmPassword">Xác nhận mật khẩu</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_ChangePassword">Đổi mật khẩu</sys:String>
+    
+    <sys:String x:Key="Lang.MyAccount.Section_Preferences">Tùy chọn</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Label_OutputFolder">Thư mục xuất mặc định</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_Change">Thay đổi</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Label_Languages">Ngôn ngữ</sys:String>
+    
+    <sys:String x:Key="Lang.MyAccount.Section_DeleteAccount">Xóa tài khoản</sys:String>
+    <sys:String x:Key="Lang.MyAccount.DeleteAccount_Desc">Xóa vĩnh viễn tài khoản và toàn bộ dữ liệu liên quan.</sys:String>
+    <sys:String x:Key="Lang.MyAccount.DeleteAccount_Warn">Hành động này không thể hoàn tác</sys:String>
+    <sys:String x:Key="Lang.MyAccount.Btn_DeleteAccount">Xóa tài khoản của tôi</sys:String>
 
 
 
                         <!-- LoginView.xaml -->
+    <sys:String x:Key="Lang.LoginView.Title">Tham gia ngay</sys:String>
+    <sys:String x:Key="Lang.LoginView.Subtitle">Nâng cao hiệu suất làm việc của bạn</sys:String>
+    
+    <sys:String x:Key="Lang.LoginView.Toggle_SignUp">Đăng ký</sys:String>
+    <sys:String x:Key="Lang.LoginView.Toggle_LogIn">Đăng nhập</sys:String>
+    
+    <sys:String x:Key="Lang.LoginView.Placeholder_Email">Địa chỉ Email</sys:String>
+    <sys:String x:Key="Lang.LoginView.Placeholder_Password">Mật khẩu</sys:String>
+    
+    <sys:String x:Key="Lang.LoginView.Btn_Submit">Đăng nhập</sys:String>
+    <sys:String x:Key="Lang.LoginView.Divider">Hoặc tiếp tục với</sys:String>
+
+
+
+                        <!-- SignUpView.xaml -->
+    <sys:String x:Key="Lang.SignUpView.Title">Bắt đầu ngay</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Subtitle">Đơn giản hóa quy trình làm việc của bạn.</sys:String>
+    
+    <sys:String x:Key="Lang.SignUpView.Toggle_SignUp">Đăng ký</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Toggle_LogIn">Đăng nhập</sys:String>
+    
+    <sys:String x:Key="Lang.SignUpView.Placeholder_FirstName">Tên</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Placeholder_LastName">Họ</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Placeholder_Email">Địa chỉ Email</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Placeholder_Password">Mật khẩu</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Placeholder_ConfirmPassword">Xác nhận mật khẩu</sys:String>
+    
+    <sys:String x:Key="Lang.SignUpView.Terms_Agree">Tôi đồng ý với</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Terms_Link">Điều khoản dịch vụ</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Btn_Submit">Tạo tài khoản</sys:String>
+    <sys:String x:Key="Lang.SignUpView.Divider">Hoặc tiếp tục với</sys:String>
+
+
+
+                        <!-- ExitConfirmationDialog.xaml -->
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Title">Xác nhận</sys:String>
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Header">Thoát ứng dụng?</sys:String>
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Message">Bạn có chắc chắn muốn đóng Converto không?</sys:String>
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Btn_Cancel">Hủy</sys:String>
+    <sys:String x:Key="Lang.ExitConfirmationDialog.Btn_Confirm">Đồng ý</sys:String>
+
+
+
+                        <!-- Terms_ConditionsPopup.xaml -->
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Title">Điều khoản Dịch vụ</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.LastUpdated">Cập nhật lần cuối: 12/2025</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_1">1. Giới thiệu</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_1">Chào mừng đến với Converto. Bằng cách truy cập hoặc sử dụng ứng dụng, bạn đồng ý tuân thủ các Điều khoản này. Nếu bạn không đồng ý với bất kỳ phần nào, bạn không được phép truy cập dịch vụ.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_2">2. Nghĩa vụ người dùng</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_2">Bạn đồng ý cung cấp thông tin chính xác và đầy đủ trong quá trình đăng ký. Bạn chịu trách nhiệm bảo vệ mật khẩu sử dụng để truy cập dịch vụ.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_3">3. Chính sách quyền riêng tư</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_3">Quyền riêng tư của bạn rất quan trọng với chúng tôi. Vui lòng xem lại Chính sách quyền riêng tư để hiểu cách chúng tôi thu thập, sử dụng và chia sẻ thông tin của bạn.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_4">4. Chấm dứt</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_4">Chúng tôi có thể chấm dứt hoặc đình chỉ quyền truy cập dịch vụ ngay lập tức, không cần báo trước, vì bất kỳ lý do gì, bao gồm nhưng không giới hạn nếu bạn vi phạm Điều khoản.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Header_5">5. Thay đổi</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Body_5">Chúng tôi bảo lưu quyền sửa đổi hoặc thay thế các Điều khoản này bất cứ lúc nào. Bằng việc tiếp tục truy cập sau khi các sửa đổi có hiệu lực, bạn đồng ý tuân thủ các điều khoản mới.</sys:String>
+    
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Btn_Agree">Tôi đồng ý &amp; Tiếp tục</sys:String>
+    <sys:String x:Key="Lang.Terms_ConditionsPopup.Btn_Decline">Từ chối</sys:String>
+
+
+
+                        <!-- CompressView.xaml -->
+    <sys:String x:Key="Lang.CompressView.Title">Nén file</sys:String>
+    <sys:String x:Key="Lang.CompressView.Subtitle">Giảm dung lượng file mà không làm giảm chất lượng</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.UploadPrompt">Nhấn để tải lên hoặc kéo thả file vào đây</sys:String>
+    <sys:String x:Key="Lang.CompressView.UploadInfo">PNG, JPG, WEBP, MP4, MP3... (tối đa 10MB)</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Prev">Trước</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Next">Sau</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Upload">Tải ảnh lên</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Clear">Xóa</sys:String>
+    <sys:String x:Key="Lang.CompressView.DownloadLink">Tải xuống file tại đây</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.Settings_Title">Cài đặt</sys:String>
+    <sys:String x:Key="Lang.CompressView.Label_Format">Định dạng</sys:String>
+    <sys:String x:Key="Lang.CompressView.Label_OutputFolder">Thư mục xuất</sys:String>
+    <sys:String x:Key="Lang.CompressView.Radio_Default">Thư mục mặc định</sys:String>
+    <sys:String x:Key="Lang.CompressView.Radio_Custom">Thư mục tùy chỉnh</sys:String>
+    <sys:String x:Key="Lang.CompressView.Btn_Change">Thay đổi</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.Label_Quality">Chất lượng</sys:String>
+    <sys:String x:Key="Lang.CompressView.Quality_Low">Thấp</sys:String>
+    <sys:String x:Key="Lang.CompressView.Quality_Medium">Vừa</sys:String>
+    <sys:String x:Key="Lang.CompressView.Quality_High">Cao</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.Btn_Start">Nén file</sys:String>
+    
+    <sys:String x:Key="Lang.CompressView.Recent_Title">Đã xử lý gần đây</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_Filename">TÊN FILE</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_Date">NGÀY</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_Status">TRẠNG THÁI</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_Filesize">KÍCH THƯỚC</sys:String>
+    <sys:String x:Key="Lang.CompressView.Col_OutputSize">KÍCH THƯỚC MỚI</sys:String>
+    <sys:String x:Key="Lang.CompressView.Status_Completed">Hoàn tất</sys:String>
+    <sys:String x:Key="Lang.CompressView.Status_Failed">Thất bại</sys:String>
+
+
+
+                        <!-- MarkdownToTextView.xaml -->
+    <sys:String x:Key="Lang.MarkdownToTextView.Title">Chuyển đổi Markdown sang Văn bản</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Subtitle">Dán nội dung Markdown của bạn bên dưới để chuyển đổi sang văn bản thường.</sys:String>
+    
+    <sys:String x:Key="Lang.MarkdownToTextView.Options_Title">Tùy chọn</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Option_PlainText">Văn bản thuần</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Option_RichText">Văn bản định dạng</sys:String>
+    
+    <sys:String x:Key="Lang.MarkdownToTextView.Input_Header">Đầu vào Markdown</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Input_Placeholder">Nhập markdown tại đây</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Btn_Clear_Tooltip">Xóa nội dung</sys:String>
+    
+    <sys:String x:Key="Lang.MarkdownToTextView.Output_Header">Kết quả</sys:String>
+    <sys:String x:Key="Lang.MarkdownToTextView.Btn_Copy_Tooltip">Sao chép vào bộ nhớ tạm</sys:String>
+    
+    <sys:String x:Key="Lang.MarkdownToTextView.Toast_Copied">Đã sao chép vào bộ nhớ tạm!</sys:String>
+
+
+
+                        <!-- RemoveBackgroundView.xaml -->
+    <sys:String x:Key="Lang.RemoveBackgroundView.Title">Xóa phông nền</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Subtitle">Tách nền ảnh chất lượng cao một cách dễ dàng</sys:String>
+    
+    <sys:String x:Key="Lang.RemoveBackgroundView.UploadPrompt">Nhấn để tải lên hoặc kéo thả ảnh vào đây</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.UploadInfo">PNG, JPG, hoặc WEBP (tối đa 10MB)</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.PreviewPlaceholder">Bản xem trước sẽ hiện ở đây.</sys:String>
+    
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Prev">Trước</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Next">Sau</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Upload">Tải ảnh lên</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Start">Xóa nền</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Clear">Xóa</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Btn_Download">Tải ảnh xuống</sys:String>
+    
+    <sys:String x:Key="Lang.RemoveBackgroundView.Recent_Title">Đã xử lý gần đây</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Col_Filename">TÊN FILE</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Col_Date">NGÀY</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Col_Status">TRẠNG THÁI</sys:String>
+    <sys:String x:Key="Lang.RemoveBackgroundView.Col_Filesize">KÍCH THƯỚC</sys:String>
+
+
+
+                        <!-- ConvertView.xaml -->
+    <sys:String x:Key="Lang.ConvertView.Title">Chuyển đổi</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Subtitle">Chuyển đổi định dạng tệp tin của bạn sang định dạng khác</sys:String>
+
+    <sys:String x:Key="Lang.ConvertView.Btn_AddFiles">+ Thêm tệp</sys:String>
+
+    <sys:String x:Key="Lang.ConvertView.Btn_ConvertAll">Chuyển đổi tất cả</sys:String>
+    <sys:String x:Key="Lang.ConvertView.DownloadLink">Tải xuống tệp tại đây</sys:String>
+    
+    <sys:String x:Key="Lang.ConvertView.Preview_Dimensions">Kích thước: 1920x1080</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Preview_Unavailable">Không có bản xem trước cho loại tệp này.</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_OriginalPlaceholder">Gốc: mountain-scenery.jpg</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_OutputPlaceholder">Kết quả: mountain-scenery.png</sys:String>
+    
+    <sys:String x:Key="Lang.ConvertView.Settings_Title">Cài đặt chuyển đổi</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_InputFormat">Định dạng gốc</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_OutputFormat">Chuyển đổi sang</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Label_Resize">Đổi kích thước ảnh</sys:String>
+    <sys:String x:Key="Lang.ConvertView.Check_AspectRatio">Giữ nguyên tỉ lệ khung hình</sys:String>
+
+
+
+                        <!-- DisconnectView.xaml -->
+    <sys:String x:Key="Lang.DisconnectView.Title">Mất kết nối mạng</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Message">Có vẻ như bạn chưa kết nối internet. Vui lòng kiểm tra lại đường truyền và thử lại.</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Btn_Retry">Thử kết nối lại</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Status_Connecting">Đang kết nối...</sys:String>
+    
+    <sys:String x:Key="Lang.DisconnectView.Checks_Title">Kiểm tra nhanh</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Check_1">Đảm bảo dây cáp Wi-fi hoặc Ethernet được kết nối đúng cách.</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Check_2">Khởi động lại router hoặc modem của bạn.</sys:String>
+    <sys:String x:Key="Lang.DisconnectView.Check_3">Kiểm tra xem các trang web khác có tải được trên thiết bị của bạn không.</sys:String>
+
+
+
+                        <!-- HomepageView.xaml -->
+    <sys:String x:Key="Lang.HomepageView.Subtitle">Dưới đây là tổng quan chi tiết hoạt động của bạn.</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Btn.StartNew">Tác vụ mới</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Feat.Convert">Đổi đuôi file</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Feat.Compress">Nén file</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Feat.RemoveBG">Xóa phông</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Feat.Markdown">Markdown</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.QuoteTitle">Trích dẫn trong ngày ✨</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Activity.Title">Tổng quan hoạt động</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Activity.Weekly">Tuần này</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Activity.Monthly">Tháng này</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Activity.Desc">Các thao tác thực hiện trong 7 ngày qua.</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Stats.TotalTasks">Tổng tác vụ</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Stats.StorageSaved">Tiết kiệm</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Stats.AvgTime">Thời gian TB</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Stats.SuccessRate">Tỷ lệ thành công</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Breakdown.Title">Phân loại tác vụ</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Breakdown.Desc">Sự phân bố các loại tác vụ.</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Chart.Convert">Đổi file</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Chart.Compress">Nén</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Chart.RemoveBG">Xóa phông</sys:String>
+    
+    <sys:String x:Key="Lang.HomepageView.Recent.Title">Xử lý gần đây</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Header.Filename">TÊN TẬP TIN</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Header.Task">LOẠI TÁC VỤ</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Header.Date">NGÀY</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Header.Status">TRẠNG THÁI</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Status.Completed">Hoàn tất</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Status_Failed">Thất bại</sys:String>
+
+
+
+                        <!-- MainWindow.xaml -->
+    <sys:String x:Key="Lang.MainWindow.Title">Converto</sys:String>
+    <sys:String x:Key="Lang.MainWindow.MenuTitle">DANH MỤC</sys:String>
+    
+    <sys:String x:Key="Lang.MainWindow.Dashboard">Trang chủ</sys:String>
+    <sys:String x:Key="Lang.MainWindow.Convert">Chuyển đổi</sys:String>
+    <sys:String x:Key="Lang.MainWindow.Compress">Nén file</sys:String>
+    <sys:String x:Key="Lang.MainWindow.RemoveBG">Xóa phông nền</sys:String>
+    <sys:String x:Key="Lang.MainWindow.Markdown">Markdown sang Text</sys:String>
+    
+    <sys:String x:Key="Lang.MainWindow.Profile">Tài khoản</sys:String>
+    <sys:String x:Key="Lang.MainWindow.Logout">Đăng xuất</sys:String>
 </ResourceDictionary>

@@ -200,8 +200,8 @@
             </Grid.RowDefinitions>
 
             <StackPanel Grid.Row="0" Margin="40,40,40,20">
-                <TextBlock Text="Compress" FontSize="36" FontWeight="Bold" Foreground="{StaticResource Color.Text.Primary}"/>
-                <TextBlock Text="Reduce the size of your files without compromising quality" 
+                <TextBlock Text="{DynamicResource Lang.CompressView.Title}" FontSize="36" FontWeight="Bold" Foreground="{StaticResource Color.Text.Primary}"/>
+                <TextBlock Text="{DynamicResource Lang.CompressView.Subtitle}" 
                            FontSize="14" Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,5,0,0"/>
             </StackPanel>
 
@@ -261,14 +261,14 @@
                                                     Margin="0,5,0,0"/>
                                 </Grid>
 
-                                <TextBlock Text="Click to upload or drop files here" 
+                                <TextBlock Text="{DynamicResource Lang.CompressView.UploadPrompt}" 
                                            Foreground="White" 
                                            FontWeight="Bold" 
                                            FontSize="16" 
                                            HorizontalAlignment="Center" 
                                            Margin="0,0,0,5"/>
 
-                                <TextBlock Text="PNG, JPG, WEBP, MP4, MP3... (max. 10MB)" 
+                                <TextBlock Text="{DynamicResource Lang.CompressView.UploadInfo}" 
                                            Foreground="{StaticResource Color.Text.Secondary}" 
                                            FontSize="13" 
                                            HorizontalAlignment="Center"/>
@@ -280,14 +280,14 @@
                                 BorderThickness="0"
                                 Cursor="Hand"
                                 Panel.ZIndex="10"
-                                Width="40" Height="30" HorizontalAlignment="Left" Content="Prev" Foreground="{StaticResource Brush.Brand}"
+                                Width="40" Height="30" HorizontalAlignment="Left" Content="{DynamicResource Lang.CompressView.Btn_Prev}" Foreground="{StaticResource Brush.Brand}"
                                 Visibility="{Binding Uploaded, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <Button Command="{Binding NextPreviewedImageCommand}"
                                 Opacity="0.7"
                                 BorderThickness="0"
                                 Cursor="Hand"
                                 Panel.ZIndex="10"
-                                Width="40" Height="30" HorizontalAlignment="Right" Content="Next" Foreground="{StaticResource Brush.Brand}"
+                                Width="40" Height="30" HorizontalAlignment="Right" Content="{DynamicResource Lang.CompressView.Btn_Next}" Foreground="{StaticResource Brush.Brand}"
                                 Visibility="{Binding Uploaded, Converter={StaticResource BoolToVisibilityConverter}}"/>
 
                         <Grid Cursor="Hand"
@@ -376,7 +376,9 @@
                                                   Opacity="1"/>
                             </Button.Effect>
 
-                            <Button.Content>Upload Image</Button.Content>
+                            <Button.Content>
+                                <TextBlock Text="{DynamicResource Lang.CompressView.Btn_Upload}"/>
+                            </Button.Content>
                         </Button>
 
                         <Button Grid.Column="2" 
@@ -421,14 +423,16 @@
                                 </Style>
                             </Button.Style>
 
-                            <Button.Content>Clear</Button.Content>
+                            <Button.Content>
+                                <TextBlock Text="{DynamicResource Lang.CompressView.Btn_Clear}"/>
+                            </Button.Content>
                         </Button>
                     </Grid>
 
                     <Border Margin="0,20,0,0" Background="#111111" CornerRadius="6" Height="44" BorderBrush="#333333" BorderThickness="1"
                             Visibility="{Binding IsCompressed, Converter={StaticResource BoolToVisibilityConverter}}">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <TextBlock Text="Download your files here" Foreground="White" TextDecorations="Underline" Cursor="Hand" FontWeight="SemiBold" Margin="5,0,0,0">
+                            <TextBlock Text="{DynamicResource Lang.CompressView.DownloadLink}" Foreground="White" TextDecorations="Underline" Cursor="Hand" FontWeight="SemiBold" Margin="5,0,0,0">
                                 <TextBlock.InputBindings>
                                     <MouseBinding MouseAction="LeftClick" Command="{Binding DownloadFilesCommand}" />
                                 </TextBlock.InputBindings>
@@ -446,7 +450,7 @@
                         VerticalAlignment="Center" Height="488">
 
                     <StackPanel>
-                        <TextBlock Text="Settings" FontSize="22" FontWeight="Bold" Foreground="White" Margin="0,0,0,30"/>
+                        <TextBlock Text="{DynamicResource Lang.CompressView.Settings_Title}" FontSize="22" FontWeight="Bold" Foreground="White" Margin="0,0,0,30"/>
 
                         <Grid Margin="0,0,0,25">
                             <Grid.ColumnDefinitions>
@@ -455,7 +459,7 @@
                             </Grid.ColumnDefinitions>
 
                             <TextBlock Grid.Column="0" 
-                                       Text="Type Format" 
+                                       Text="{DynamicResource Lang.CompressView.Label_Format}" 
                                        Foreground="White" 
                                        FontWeight="SemiBold" 
                                        VerticalAlignment="Center"/>
@@ -470,7 +474,7 @@
                             </ComboBox>
                         </Grid>
 
-                        <TextBlock Text="Output folder" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,10"/>
+                        <TextBlock Text="{DynamicResource Lang.CompressView.Label_OutputFolder}" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,10"/>
                         <Grid Margin="0,0,0,10">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -478,17 +482,17 @@
                             </Grid.ColumnDefinitions>
 
                             <RadioButton Grid.Column="0" 
-                                         Content="Default output folder" 
+                                         Content="{DynamicResource Lang.CompressView.Radio_Default}" 
                                          HorizontalAlignment="Left"
                                          IsChecked="{Binding SelectedOutputFolderMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Default}"/>
 
                             <RadioButton Grid.Column="1" 
-                                         Content="Customized folder"
+                                         Content="{DynamicResource Lang.CompressView.Radio_Custom}"
                                          HorizontalAlignment="Right"
                                          IsChecked="{Binding SelectedOutputFolderMode, Converter={StaticResource EnumToBooleanConverter}, ConverterParameter=Custom}"/>
                         </Grid>
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,30" HorizontalAlignment="Right">
-                            <Button Content="Change" 
+                            <Button Content="{DynamicResource Lang.CompressView.Btn_Change}" 
                                     Foreground="Gray" 
                                     FontSize="14" FontWeight="SemiBold"
                                     Cursor="Hand" Margin="0,0,20,0"
@@ -518,15 +522,15 @@
                             <TextBlock Text="{Binding CustomOutputFolderPath}" VerticalAlignment="Center" Foreground="#444444" FontSize="13" HorizontalAlignment="Right"/>
                         </StackPanel>
 
-                        <TextBlock Text="Quality" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                        <TextBlock Text="{DynamicResource Lang.CompressView.Label_Quality}" Foreground="White" FontWeight="SemiBold" Margin="0,0,0,15"/>
                         <Slider Maximum="100" Minimum="0" Value="{Binding SliderValue, Mode=TwoWay}" Margin="0,0,0,10" 
                                 IsSnapToTickEnabled="True" TickFrequency="50"
                                 Style="{StaticResource ModernSliderStyle}"/>
 
                         <Grid Margin="0,0,0,65">
-                            <TextBlock Text="Low" Foreground="#666666" HorizontalAlignment="Left" FontSize="12"/>
-                            <TextBlock Text="Medium" Foreground="#666666" HorizontalAlignment="Center" FontSize="12"/>
-                            <TextBlock Text="High" Foreground="#666666" HorizontalAlignment="Right" FontSize="12"/>
+                            <TextBlock Text="{DynamicResource Lang.CompressView.Quality_Low}" Foreground="#666666" HorizontalAlignment="Left" FontSize="12"/>
+                            <TextBlock Text="{DynamicResource Lang.CompressView.Quality_Medium}" Foreground="#666666" HorizontalAlignment="Center" FontSize="12"/>
+                            <TextBlock Text="{DynamicResource Lang.CompressView.Quality_High}" Foreground="#666666" HorizontalAlignment="Right" FontSize="12"/>
                         </Grid>
 
                         <Button Height="52" Cursor="Hand"
@@ -537,7 +541,7 @@
                                     <Border Background="{StaticResource Color.Brand}" CornerRadius="8">
                                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                                             <fa:ImageAwesome Icon="FolderOpen" Foreground="White" Height="16" Margin="0,0,10,0"/>
-                                            <TextBlock Text="Compress files" Foreground="White" FontWeight="Bold" FontSize="16"/>
+                                            <TextBlock Text="{DynamicResource Lang.CompressView.Btn_Start}" Foreground="White" FontWeight="Bold" FontSize="16"/>
                                         </StackPanel>
                                     </Border>
                                     <ControlTemplate.Triggers>
@@ -563,7 +567,7 @@
             </Grid>
 
             <StackPanel Grid.Row="2" Margin="40,50,40,40">
-                <TextBlock Text="Recently Processed" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,20"/>
+                <TextBlock Text="{DynamicResource Lang.CompressView.Recent_Title}" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,20"/>
 
                 <Border Background="#121212" CornerRadius="10" BorderBrush="#222222" BorderThickness="1">
                     <StackPanel>
@@ -576,11 +580,11 @@
                                 <ColumnDefinition Width="1*"/>
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="FILENAME" Grid.Column="0" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" Margin="25,0" VerticalAlignment="Center"/>
-                            <TextBlock Text="DATE" Grid.Column="1" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBlock Text="STATUS" Grid.Column="2" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBlock Text="FILESIZE" Grid.Column="3" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                            <TextBlock Text="OUTPUTSIZE" Grid.Column="4" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Lang.CompressView.Col_Filename}" Grid.Column="0" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" Margin="25,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Lang.CompressView.Col_Date}" Grid.Column="1" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Lang.CompressView.Col_Status}" Grid.Column="2" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Lang.CompressView.Col_Filesize}" Grid.Column="3" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <TextBlock Text="{DynamicResource Lang.CompressView.Col_OutputSize}" Grid.Column="4" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
                         </Grid>
 
                         <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
@@ -606,7 +610,7 @@
 
                                                 <Border Grid.Column="2" Background="#103820" CornerRadius="12" HorizontalAlignment="Center" Padding="15,4">
 
-                                                    <TextBlock Text="Completed" Foreground="#4ADE80" FontWeight="SemiBold" FontSize="12"/>
+                                                    <TextBlock Text="{DynamicResource Lang.CompressView.Status_Completed}" Foreground="#4ADE80" FontWeight="SemiBold" FontSize="12"/>
                                                 </Border>
 
                                                 <TextBlock Grid.Column="3" Text="{Binding OriginalFileSize, Converter={StaticResource BytesToMegabytesConverter}}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>

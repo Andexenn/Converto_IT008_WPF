@@ -1,0 +1,46 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+                        <!-- MyAccount.xaml -->
+    <!-- Header -->
+    <sys:String x:Key="MyAccount.Lang_Header_Title">Hồ sơ người dùng</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Header_Subtitle">Quản lý thông tin cá nhân, chi tiết tài khoản và tùy chọn.</sys:String>
+    <sys:String x:Key="MyAccount.Lang_MemberSince">Thành viên từ:</sys:String>
+
+    <!-- Personal Information -->
+    <sys:String x:Key="MyAccount.Lang_Section_PersonalInfo">Thông tin cá nhân</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_Edit">Sửa</sys:String>
+    <sys:String x:Key="MyAccount.Lang_FirstName">Tên</sys:String>
+    <sys:String x:Key="MyAccount.Lang_LastName">Họ</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Label_Email">Địa chỉ Email</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Placeholder_Email">Nhập email</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Label_Phone">Số điện thoại</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Placeholder_Phone">Nhập SĐT</sys:String>
+    <sys:String x:Key="MyAccount.Lang_City">Thành phố</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Birthday">Ngày sinh</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_Cancel">Hủy</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_SaveChanges">Lưu thay đổi</sys:String>
+
+    <!-- Password -->
+    <sys:String x:Key="MyAccount.Lang_Section_Password">Mật khẩu</sys:String>
+    <sys:String x:Key="MyAccount.Lang_NewPassword">Mật khẩu mới</sys:String>
+    <sys:String x:Key="MyAccount.Lang_ConfirmPassword">Xác nhận mật khẩu</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_ChangePassword">Đổi mật khẩu</sys:String>
+
+    <!-- Preferences -->
+    <sys:String x:Key="MyAccount.Lang_Section_Preferences">Tùy chọn</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Label_OutputFolder">Thư mục xuất mặc định</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_Change">Thay đổi</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Label_Languages">Ngôn ngữ</sys:String>
+
+    <!-- Delete Account -->
+    <sys:String x:Key="MyAccount.Lang_Section_DeleteAccount">Xóa tài khoản</sys:String>
+    <sys:String x:Key="MyAccount.Lang_DeleteAccount_Desc">Xóa vĩnh viễn tài khoản và toàn bộ dữ liệu liên quan.</sys:String>
+    <sys:String x:Key="MyAccount.Lang_DeleteAccount_Warn">Hành động này không thể hoàn tác</sys:String>
+    <sys:String x:Key="MyAccount.Lang_Btn_DeleteAccount">Xóa tài khoản của tôi</sys:String>
+
+
+
+                        <!-- LoginView.xaml -->
+</ResourceDictionary>

@@ -19,10 +19,6 @@ public partial class SessionState : ObservableObject
 
     [ObservableProperty]
     UserPreferencesDto? userPreferences = null;
-
-    public event PropertyChangedEventHandler PropertyChanged;
-    protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-    }
+    [ObservableProperty]
+    QuoteDto? dailyQuote = null;
 }

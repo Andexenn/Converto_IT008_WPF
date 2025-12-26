@@ -81,11 +81,11 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0">
-                    <TextBlock Text="Terms of Service" 
+                    <TextBlock Text="{DynamicResource Lang.Terms_ConditionsPopup.Title}" 
                                Foreground="White"
                                FontWeight="Bold"
                                FontSize="22"/>
-                    <TextBlock Text="Last updated: Dec 2025" 
+                    <TextBlock Text="{DynamicResource Lang.Terms_ConditionsPopup.LastUpdated}" 
                                Foreground="{StaticResource Brush.Text.Secondary}"
                                FontSize="12"
                                Margin="0,5,0,0"/>
@@ -136,29 +136,29 @@
                                Foreground="{StaticResource Brush.Text.Secondary}" 
                                FontSize="14" 
                                LineHeight="24">
-                        <Run Text="1. Introduction" FontWeight="Bold" Foreground="White"/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Header_1}" FontWeight="Bold" Foreground="White"/>
                         <LineBreak/>
-                        <Run Text="Welcome to Converto. By accessing or using our application, you agree to be bound by these Terms. If you disagree with any part of the terms, then you may not access the service."/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Body_1}"/>
                         <LineBreak/><LineBreak/>
                         
-                        <Run Text="2. User Obligations" FontWeight="Bold" Foreground="White"/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Header_2}" FontWeight="Bold" Foreground="White"/>
                         <LineBreak/>
-                        <Run Text="You agree to provide accurate and complete information during the registration process. You are responsible for safeguarding the password that you use to access the service."/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Body_2}"/>
                         <LineBreak/><LineBreak/>
 
-                        <Run Text="3. Privacy Policy" FontWeight="Bold" Foreground="White"/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Header_3}" FontWeight="Bold" Foreground="White"/>
                         <LineBreak/>
-                        <Run Text="Your privacy is important to us. Please review our Privacy Policy to understand how we collect, use, and share information about you."/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Body_3}"/>
                         <LineBreak/><LineBreak/>
 
-                        <Run Text="4. Termination" FontWeight="Bold" Foreground="White"/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Header_4}" FontWeight="Bold" Foreground="White"/>
                         <LineBreak/>
-                        <Run Text="We may terminate or suspend access to our service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms."/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Body_4}"/>
                          <LineBreak/><LineBreak/>
                         
-                        <Run Text="5. Changes" FontWeight="Bold" Foreground="White"/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Header_5}" FontWeight="Bold" Foreground="White"/>
                          <LineBreak/>
-                        <Run Text="We reserve the right, at our sole discretion, to modify or replace these Terms at any time. By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms."/>
+                        <Run Text="{DynamicResource Lang.Terms_ConditionsPopup.Body_5}"/>
                     </TextBlock>
                 </ScrollViewer>
             </Border>
@@ -171,7 +171,7 @@
                 </Grid.ColumnDefinitions>
 
                 <Button Grid.Column="0"
-                        Content="I Agree &amp; Continue" 
+                        Content="{DynamicResource Lang.Terms_ConditionsPopup.Btn_Agree}" 
                         Command="{Binding AcceptTermsCommand}"
                         Height="45"
                         FontSize="15"
@@ -205,7 +205,7 @@
                 </Button>
 
                 <Button Grid.Column="2"
-                        Content="Decline" 
+                        Content="{DynamicResource Lang.Terms_ConditionsPopup.Btn_Decline}" 
                         Command="{Binding CloseTermsAndConditionsCommand}"
                         Background="Transparent"
                         Foreground="{StaticResource Brush.Text.Secondary}"

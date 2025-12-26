@@ -138,14 +138,14 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0" Margin="0,0,0,25">
-                    <TextBlock Text="Join now" 
+                    <TextBlock Text="{DynamicResource Lang.LoginView.Title}" 
                                Foreground="White" 
                                FontSize="28" 
                                FontWeight="Bold" 
                                HorizontalAlignment="Center"
                                Margin="0,0,0,5"/>
-                    
-                    <TextBlock Text="Increase your productivity" 
+
+                    <TextBlock Text="{DynamicResource Lang.LoginView.Subtitle}" 
                                Foreground="{StaticResource Brush.Text.Secondary}" 
                                FontSize="14" 
                                HorizontalAlignment="Center"/>
@@ -178,7 +178,7 @@
                         </Border>
 
                         <Button Grid.Column="0" x:Name="btnSignUp"
-                                Content="Sign Up"
+                                Content="{DynamicResource Lang.LoginView.Toggle_SignUp}"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 FontWeight="SemiBold"
@@ -244,7 +244,7 @@
                         </Button>
 
                         <Button Grid.Column="1" x:Name="btnLogin"
-                                Content="Log In"
+                                Content="{DynamicResource Lang.LoginView.Toggle_LogIn}"
                                 Background="Transparent"
                                 BorderThickness="0"
                                 FontWeight="Bold"
@@ -266,7 +266,7 @@
 
                 <StackPanel Grid.Row="2" VerticalAlignment="Top">
                     <Border Style="{StaticResource InputContainerStyle}">
-                        <custom:PlaceholderTextBox Placeholder="Email Address"
+                        <custom:PlaceholderTextBox Placeholder="{DynamicResource Lang.LoginView.Placeholder_Email}"
                                                    Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                    TabIndex="0"/>
                     </Border>
@@ -278,7 +278,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <custom:PlaceholderTextBox Grid.Column="0"
-                                                       Placeholder="Password"
+                                                       Placeholder="{DynamicResource Lang.LoginView.Placeholder_Password}"
                                                        Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                        TabIndex="1"/>
                             <Button Grid.Column="1" Margin="0,0,15,0" Background="Transparent" BorderThickness="0" Cursor="Hand">
@@ -293,7 +293,7 @@
                     </Border>
                     
                     <Button Command="{Binding LoginCommand}"
-                            Content="Log In"
+                            Content="{DynamicResource Lang.LoginView.Btn_Submit}"
                             Height="50"
                             Margin="0,20,0,0" 
                             FontSize="16"
@@ -343,7 +343,7 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Rectangle Grid.Column="0" Height="1" Fill="{StaticResource Brush.Line}" Opacity="0.3" VerticalAlignment="Center"/>
-                        <TextBlock Grid.Column="1" Text="Or continue with" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="12" Margin="15,0"/>
+                        <TextBlock Grid.Column="1" Text="{DynamicResource Lang.LoginView.Divider}" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="12" Margin="15,0"/>
                         <Rectangle Grid.Column="2" Height="1" Fill="{StaticResource Brush.Line}" Opacity="0.3" VerticalAlignment="Center"/>
                     </Grid>
 

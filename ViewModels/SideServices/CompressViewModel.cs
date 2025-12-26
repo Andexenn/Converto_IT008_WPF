@@ -262,6 +262,7 @@ public partial class CompressViewModel : BaseViewModel
         {
             IsCompressing = false;
             IsCompressed = true;
+            _ = GetUserTasks();
         }
     }
 
@@ -301,7 +302,9 @@ public partial class CompressViewModel : BaseViewModel
             IsBusy = true;
             var tasks = await _taskService.GetUserTasksAsync();
             var filteredTasks = tasks.Where(t => t.ServiceTypeID == 2).ToList();
-            UserTasks = new ObservableCollection<UserTasksDto>(filteredTasks);
+            filteredTasks.Reverse();
+            UserTasks = new ObservableCollection<UserTasksDto>(filteredTasks.Take(5));
+            
         }
         catch (Exception ex)
         {

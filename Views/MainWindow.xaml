@@ -9,7 +9,7 @@
         xmlns:userviews="clr-namespace:Converto_IT008_WPF.Views.UserViews"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="Converto" Height="700" Width="1100"
+        Title="{DynamicResource Lang.MainWindow.Title}" Height="700" Width="1100"
         ResizeMode="CanResize"
         Closing="MainWindow_Closing"
         WindowStartupLocation="CenterScreen">
@@ -36,6 +36,9 @@
                                     CornerRadius="8" 
                                     Padding="15,10,15,10"
                                     RenderTransformOrigin="0.5, 0.5">
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
                                 <StackPanel Orientation="Horizontal">
                                     <fa:FontAwesome Icon="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" 
                                                     Width="25" VerticalAlignment="Center" FontSize="16" 
@@ -67,6 +70,14 @@
                                     <Setter TargetName="border" Property="Background" Value="Transparent"/>
                                     <Setter Property="Foreground" Value="White"/>
                                 </Trigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </Setter.Value>
@@ -84,6 +95,9 @@
                     <Setter.Value>
                         <ControlTemplate TargetType="{x:Type RadioButton}">
                             <Border x:Name="border" Background="{TemplateBinding Background}" CornerRadius="8" Padding="15,10,15,10">
+                                <Border.RenderTransform>
+                                    <ScaleTransform ScaleX="1" ScaleY="1"/>
+                                </Border.RenderTransform>
                                 <StackPanel Orientation="Horizontal">
                                     <Image x:Name="IconImage" Source="/Resources/dashboardv1.png" Width="25" VerticalAlignment="Center"/>
                                     <ContentPresenter VerticalAlignment="Center" Margin="10,0,0,0"/>
@@ -115,6 +129,14 @@
                                     <Setter TargetName="border" Property="Background" Value="Transparent"/>
                                     <Setter Property="Foreground" Value="White"/>
                                     <Setter TargetName="IconImage" Property="Source" Value="/Resources/dashboardv2.png"/>
+                                </Trigger>
+
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter TargetName="border" Property="RenderTransform">
+                                        <Setter.Value>
+                                            <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                        </Setter.Value>
+                                    </Setter>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
@@ -159,28 +181,28 @@
                         </StackPanel>
 
                         <StackPanel Grid.Row="1" Panel.ZIndex="1">
-                            <TextBlock Text="MENU" Foreground="{StaticResource Brush.Line}" FontSize="11" FontWeight="Bold" Margin="5,0,0,10"/>
+                            <TextBlock Text="{DynamicResource Lang.MainWindow.MenuTitle}" Foreground="{StaticResource Brush.Line}" FontSize="11" FontWeight="Bold" Margin="5,0,0,10"/>
 
-                            <RadioButton x:Name="BtnDashboard" Content="Dashboard" GroupName="NavGroup" IsChecked="True"
-                                         Style="{StaticResource DashboardSidebarButtonStyle}" Command="{Binding GoHomepageCommand}"
+                            <RadioButton x:Name="BtnDashboard" Content="{DynamicResource Lang.MainWindow.Dashboard}" GroupName="NavGroup" IsChecked="True"
+                                         Style="{StaticResource DarkSidebarButton}" Tag="{x:Static fa:FontAwesomeIcon.Dashboard}" Command="{Binding GoHomepageCommand}"
                                          Click="SidebarButton_Click"/>
 
-                            <RadioButton Content="Convert" 
+                            <RadioButton Content="{DynamicResource Lang.MainWindow.Convert}" 
                                          GroupName="NavGroup" 
                                          Tag="{x:Static fa:FontAwesomeIcon.Exchange}" 
                                          Style="{StaticResource DarkSidebarButton}" 
                                          Command="{Binding GoConvertCommand}"
                                          Click="SidebarButton_Click"/>
 
-                            <RadioButton Content="Compress" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.Compress}"
+                            <RadioButton Content="{DynamicResource Lang.MainWindow.Compress}" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.Compress}"
                                          Style="{StaticResource DarkSidebarButton}" Command="{Binding GoCompressCommand}"
                                          Click="SidebarButton_Click"/>
 
-                            <RadioButton Content="Remove Background" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.Image}"
+                            <RadioButton Content="{DynamicResource Lang.MainWindow.RemoveBG}" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.Image}"
                                          Style="{StaticResource DarkSidebarButton}" Command="{Binding GoRemoveBackgroundCommand}"
                                          Click="SidebarButton_Click"/>
 
-                            <RadioButton Content="Markdown to text" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.FileText}"
+                            <RadioButton Content="{DynamicResource Lang.MainWindow.Markdown}" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.FileText}"
                                          Style="{StaticResource DarkSidebarButton}" Command="{Binding GoMarkdownToTextCommand}"
                                          Click="SidebarButton_Click"/>
                         </StackPanel>
@@ -188,9 +210,16 @@
                         <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Panel.ZIndex="1">
                             <Separator Background="{StaticResource Brush.Line}" Margin="0,10,0,10"/>
 
-                            <RadioButton Content="Profile" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.User}"
+                            <RadioButton Content="{DynamicResource Lang.MainWindow.Profile}" GroupName="NavGroup" Tag="{x:Static fa:FontAwesomeIcon.User}"
                                          Style="{StaticResource DarkSidebarButton}" Command="{Binding GoMyAccountCommand}"
                                          Click="SidebarButton_Click"/>
+
+                            <RadioButton Content="{DynamicResource Lang.MainWindow.Logout}" 
+                                         GroupName="NavGroup"
+                                         Tag="{x:Static fa:FontAwesomeIcon.SignOut}"
+                                         Style="{StaticResource DarkSidebarButton}"
+                                         Click="SidebarButton_Click"
+                                         Command="{Binding LogoutCommand}"/>
                         </StackPanel>
                     </Grid>
                 </Border>

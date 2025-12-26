@@ -79,11 +79,11 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Margin="30,30,30,15">
-            <TextBlock Text="Markdown to Text Converter" 
+            <TextBlock Text="{DynamicResource Lang.MarkdownToTextView.Title}" 
                        Foreground="White" 
                        FontWeight="Bold" 
                        FontSize="32"/>
-            <TextBlock Text="Paste your Markdown content below to convert it to plain text." 
+            <TextBlock Text="{DynamicResource Lang.MarkdownToTextView.Subtitle}" 
                        FontSize="14" 
                        Foreground="{StaticResource Brush.Text.Secondary}" 
                        Margin="0,5,0,0"/>
@@ -96,7 +96,7 @@
                 Padding="20,0">
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
 
-                <TextBlock Text="Options" 
+                <TextBlock Text="{DynamicResource Lang.MarkdownToTextView.Options_Title}" 
                            Foreground="White" 
                            FontWeight="Bold" 
                            FontSize="14"
@@ -104,13 +104,13 @@
                            Margin="0,0,40,0"/>
 
                 <RadioButton x:Name="radPlainText" 
-                             Content="Plain Text"
+                             Content="{DynamicResource Lang.MarkdownToTextView.Option_PlainText}"
                              GroupName="RenderMode"
                              Style="{StaticResource RedRadioButtonStyle}"
                              Checked="Mode_Checked"/>
 
                 <RadioButton x:Name="radRichText" 
-                             Content="Rich Text"
+                             Content="{DynamicResource Lang.MarkdownToTextView.Option_RichText}"
                              GroupName="RenderMode"
                              IsChecked="True"
                              Style="{StaticResource RedRadioButtonStyle}"
@@ -133,7 +133,7 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" Margin="0,0,0,15">
-                        <TextBlock Text="Markdown Input" 
+                        <TextBlock Text="{DynamicResource Lang.MarkdownToTextView.Input_Header}" 
                                    Foreground="White" 
                                    FontSize="16" 
                                    FontWeight="SemiBold"
@@ -144,7 +144,8 @@
                                 Width="30" Height="30"
                                 BorderThickness="0"
                                 Click="BtnClear_Click"
-                                Cursor="Hand">
+                                Cursor="Hand"
+                                ToolTip="{DynamicResource Lang.MarkdownToTextView.Btn_Clear_Tooltip}">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="6"/>
@@ -167,7 +168,7 @@
 
                     <Border Grid.Row="1" Style="{StaticResource EditorBoxStyle}">
                         <custom:PlaceholderTextBox x:Name="txtInput"
-                                                   Placeholder="Write your markdown here"
+                                                   Placeholder="{DynamicResource Lang.MarkdownToTextView.Input_Placeholder}"
                                                    Background="Transparent"
                                                    Foreground="White"
                                                    CaretBrush="{StaticResource Brush.Brand}"
@@ -194,7 +195,7 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0" Margin="0,0,0,15">
-                        <TextBlock Text="Text Output" 
+                        <TextBlock Text="{DynamicResource Lang.MarkdownToTextView.Output_Header}" 
                                    Foreground="White" 
                                    FontSize="16" 
                                    FontWeight="SemiBold"
@@ -206,7 +207,7 @@
                                 BorderThickness="0"
                                 Click="BtnCopy_Click"
                                 Cursor="Hand"
-                                ToolTip="Copy to Clipboard">
+                                ToolTip="{DynamicResource Lang.MarkdownToTextView.Btn_Copy_Tooltip}">
 
                             <Button.Template>
                                 <ControlTemplate TargetType="Button">
@@ -290,7 +291,7 @@
                                 VerticalAlignment="Center" 
                                 Margin="0,0,10,0"/>
 
-                <TextBlock Text="Copied to clipboard!" 
+                <TextBlock Text="{DynamicResource Lang.MarkdownToTextView.Toast_Copied}" 
                            Foreground="White" 
                            FontWeight="SemiBold" 
                            FontSize="14" 

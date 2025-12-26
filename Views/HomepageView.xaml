@@ -5,12 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:fa="http://schemas.fontawesome.io/icons/"
              xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
+             xmlns:local="clr-namespace:Converto_IT008_WPF.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="1080" d:DesignWidth="1400"
              Background="{StaticResource Brush.MainBG}"
              FontFamily="Segoe UI">
 
     <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <local:DropEventArgsConverter x:Key="DropEventArgsConverter"/>
+        <local:EnumToBooleanConverter x:Key="EnumToBooleanConverter"/>
+        <local:BytesToMegabytesConverter x:Key="BytesToMegabytesConverter"/>
+        <local:RelativeTimeConverter x:Key="RelativeTimeConverter"/>
+        <local:ServiceTypeIDToTaskNameConverter x:Key="ServiceTypeIDToTaskNameConverter"/>
+
         <SolidColorBrush x:Key="Brush.Card.Lighter" Color="#1F1F1F"/>
         <SolidColorBrush x:Key="Brush.Brand.Light" Color="#26F90606"/>
 
@@ -18,6 +26,14 @@
         <SolidColorBrush x:Key="ScrollBar.MouseOver.Thumb" Color="#555555"/>
         <SolidColorBrush x:Key="ScrollBar.Pressed.Thumb" Color="#777777"/>
         <SolidColorBrush x:Key="ScrollBar.Track.Background" Color="#050505"/>
+
+        <SolidColorBrush x:Key="Color.Bg" Color="#050505"/>
+        <SolidColorBrush x:Key="Color.Card" Color="#121212"/>
+        <SolidColorBrush x:Key="Color.Border" Color="#333333"/>
+        <SolidColorBrush x:Key="Color.Brand" Color="#FF1E1E"/>
+        <SolidColorBrush x:Key="Color.Text.Primary" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="Color.Text.Secondary" Color="#888888"/>
+
 
         <Style x:Key="ScrollBarThumbStyle" TargetType="{x:Type Thumb}">
             <Setter Property="OverridesDefaultStyle" Value="true"/>
@@ -207,374 +223,356 @@
         </Style>
     </UserControl.Resources>
 
-    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-        <Grid Margin="30">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+    <Grid>
+        <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                    Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,10,0,0"/>
+        
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                      Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
+        
+            <Grid Margin="30">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Margin="0,0,0,30">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <StackPanel>
-                    <TextBlock Text="Welcome back, Alex!" FontSize="32" FontWeight="Bold" Foreground="White"/>
-                    <TextBlock Text="Here's a detailed overview of your activity." FontSize="16" Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,5,0,0"/>
-                </StackPanel>
-                <Button Grid.Column="1" Command="{Binding StartNewTaskCommand}" Style="{StaticResource PrimaryButtonStyle}" Margin="0,15,0,16">
-                    <StackPanel Orientation="Horizontal">
-                        <fa:ImageAwesome Icon="Plus" Width="12" Height="12" Foreground="White" Margin="0,0,8,0"/>
-                        <TextBlock Text="Start New Task" FontWeight="SemiBold"/>
-                    </StackPanel>
-                </Button>
-            </Grid>
-
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-
-                <Grid Grid.Column="0" Margin="0,0,15,0">
+                <Grid Grid.Row="0" Margin="0,0,0,30">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-
-                    <Button Grid.Column="0" Grid.Row="0" Command="{Binding ConvertFileCommand}" Style="{StaticResource FeatureCardButtonStyle}">
-                        <StackPanel>
-                            <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
-                                <fa:ImageAwesome Icon="Exchange" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Border>
-                            <TextBlock Text="Convert Files" Foreground="White" FontWeight="Medium" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource FeatureCardButtonStyle}">
-                        <StackPanel>
-                            <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
-                                <fa:ImageAwesome Icon="Compress" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Border>
-                            <TextBlock Text="Compress Files" Foreground="White" FontWeight="Medium" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource FeatureCardButtonStyle}">
-                        <StackPanel>
-                            <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
-                                <fa:ImageAwesome Icon="Image" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Border>
-                            <TextBlock Text="Remove BG" Foreground="White" FontWeight="Medium" HorizontalAlignment="Center"/>
-                        </StackPanel>
-                    </Button>
-
-                    <Button Grid.Column="0" Grid.Row="1" Style="{StaticResource FeatureCardButtonStyle}">
-                        <StackPanel>
-                            <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
-                                <fa:ImageAwesome Icon="FileTextOutline" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </Border>
-                            <TextBlock Text="Markdown" Foreground="White" FontWeight="Medium" HorizontalAlignment="Center"/>
+                    <StackPanel>
+                        <TextBlock Text="{Binding WelcomeMessage}" FontSize="32" FontWeight="Bold" Foreground="White"/>
+                        <TextBlock Text="{DynamicResource Lang.HomepageView.Subtitle}" FontSize="16" Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,5,0,0"/>
+                    </StackPanel>
+                    <Button Grid.Column="1" Command="{Binding DataContext.GoConvertCommand, 
+                      RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Style="{StaticResource PrimaryButtonStyle}" Margin="0,15,0,16">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:ImageAwesome Icon="Plus" Width="12" Height="12" Foreground="White" Margin="0,0,8,0"/>
+                            <TextBlock Text="{DynamicResource Lang.HomepageView.Btn.StartNew}" FontWeight="SemiBold"/>
                         </StackPanel>
                     </Button>
                 </Grid>
 
-                <Border Grid.Column="1" Background="{StaticResource Brush.Card.Lighter}" CornerRadius="12" Padding="20" Margin="0,0,0,15">
-                    <StackPanel>
-                        <TextBlock Text="Ongoing Tasks (2)" Style="{StaticResource SectionTitle}"/>
-                        <ItemsControl ItemsSource="{Binding OngoingTasks}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Margin="0,0,0,20">
-                                        <Grid Margin="0,0,0,5">
-                                            <TextBlock Text="{Binding Name}" Foreground="White" FontSize="14"/>
-                                            <TextBlock Text="{Binding Progress, StringFormat={}{0}%}" Foreground="{StaticResource Brush.Text.Secondary}" HorizontalAlignment="Right"/>
-                                        </Grid>
-                                        <ProgressBar Value="{Binding Progress}" Height="6" BorderThickness="0" Background="#333" Foreground="{StaticResource Brush.Brand}"/>
-                                        <TextBlock Text="{Binding TimeRemaining}" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="12" Margin="0,5,0,0"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1*"/>
-                </Grid.ColumnDefinitions>
-
-                <Border Grid.Column="0" Background="{StaticResource Brush.Card.Lighter}" CornerRadius="12" Padding="20" Margin="0,0,15,15">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-
-                        <Grid Grid.Row="0">
-                            <TextBlock Text="Activity Overview" Style="{StaticResource SectionTitle}" VerticalAlignment="Center"/>
-
-                            <Border HorizontalAlignment="Right" Background="#0A0A0A" CornerRadius="6" Width="140" Height="32">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-
-                                    <Border x:Name="ActivePill" Background="{StaticResource Brush.Brand}" CornerRadius="4" Margin="1" Grid.Column="0" HorizontalAlignment="Left" Width="68">
-                                        <Border.RenderTransform>
-                                            <TranslateTransform X="0"/>
-                                        </Border.RenderTransform>
-                                        <Border.Style>
-                                            <Style TargetType="Border">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsWeekly}" Value="False">
-                                                        <DataTrigger.EnterActions>
-                                                            <BeginStoryboard>
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="70" Duration="0:0:0.3">
-                                                                        <DoubleAnimation.EasingFunction>
-                                                                            <CubicEase EasingMode="EaseOut"/>
-                                                                        </DoubleAnimation.EasingFunction>
-                                                                    </DoubleAnimation>
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.EnterActions>
-                                                        <DataTrigger.ExitActions>
-                                                            <BeginStoryboard>
-                                                                <Storyboard>
-                                                                    <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="0:0:0.3">
-                                                                        <DoubleAnimation.EasingFunction>
-                                                                            <CubicEase EasingMode="EaseOut"/>
-                                                                        </DoubleAnimation.EasingFunction>
-                                                                    </DoubleAnimation>
-                                                                </Storyboard>
-                                                            </BeginStoryboard>
-                                                        </DataTrigger.ExitActions>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                    </Border>
-
-                                    <Button Grid.Column="0" Content="Weekly" Command="{Binding SwitchTimeFrameCommand}" CommandParameter="Weekly" 
-                                            Style="{StaticResource WeeklyButtonStyle}"/>
-
-                                    <Button Grid.Column="1" Content="Monthly" Command="{Binding SwitchTimeFrameCommand}" CommandParameter="Monthly" 
-                                            Style="{StaticResource MonthlyButtonStyle}"/>
-                                </Grid>
-                            </Border>
-                        </Grid>
-
-                        <TextBlock Grid.Row="1" Text="Operations performed in the last 7 days." Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,-10,0,20"/>
-
-                        <Grid Grid.Row="1" Margin="0,20,0,20">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Total Tasks" Foreground="{StaticResource Brush.Text.Secondary}"/>
-                                <TextBlock Text="120" Foreground="White" FontSize="20" FontWeight="Bold"/>
-                                <TextBlock Text="+5%" Foreground="#4CAF50" FontSize="12"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Storage Saved" Foreground="{StaticResource Brush.Text.Secondary}"/>
-                                <TextBlock Text="250 MB" Foreground="White" FontSize="20" FontWeight="Bold"/>
-                                <TextBlock Text="+15%" Foreground="#4CAF50" FontSize="12"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="2">
-                                <TextBlock Text="Avg. Time" Foreground="{StaticResource Brush.Text.Secondary}"/>
-                                <TextBlock Text="12s" Foreground="White" FontSize="20" FontWeight="Bold"/>
-                                <TextBlock Text="-2%" Foreground="#F44336" FontSize="12"/>
-                            </StackPanel>
-                            <StackPanel Grid.Column="3">
-                                <TextBlock Text="Success Rate" Foreground="{StaticResource Brush.Text.Secondary}"/>
-                                <TextBlock Text="98%" Foreground="White" FontSize="20" FontWeight="Bold"/>
-                                <TextBlock Text="+1.5%" Foreground="#4CAF50" FontSize="12"/>
-                            </StackPanel>
-                        </Grid>
-
-                        <lvc:CartesianChart Grid.Row="2" Height="150" Series="{Binding ActivitySeries}" LegendLocation="None" Hoverable="True">
-                            <lvc:CartesianChart.DataTooltip>
-                                <lvc:DefaultTooltip SelectionMode="SharedYValues" Background="#222" Foreground="White" BulletSize="10"/>
-                            </lvc:CartesianChart.DataTooltip>
-                            <lvc:CartesianChart.AxisX>
-                                <lvc:Axis Labels="{Binding ActivityLabels}" Foreground="{StaticResource Brush.Text.Secondary}" ShowLabels="True">
-                                    <lvc:Axis.Separator>
-                                        <lvc:Separator Step="1" StrokeThickness="0" />
-                                    </lvc:Axis.Separator>
-                                </lvc:Axis>
-                            </lvc:CartesianChart.AxisX>
-                            <lvc:CartesianChart.AxisY>
-                                <lvc:Axis LabelFormatter="{Binding YFormatter}" Foreground="Transparent">
-                                    <lvc:Axis.Separator>
-                                        <lvc:Separator StrokeThickness="0" />
-                                    </lvc:Axis.Separator>
-                                </lvc:Axis>
-                            </lvc:CartesianChart.AxisY>
-                        </lvc:CartesianChart>
-                    </Grid>
-                </Border>
-
-                <Border Grid.Column="1" Background="{StaticResource Brush.Card.Lighter}" CornerRadius="12" Padding="20" Margin="0,0,0,15">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Text="Task Breakdown" Style="{StaticResource SectionTitle}"/>
-                        <TextBlock Grid.Row="1" Text="Distribution of tasks by type." Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,-10,0,10"/>
-
-                        <Grid Grid.Row="2">
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="*"/>
-                                <RowDefinition Height="Auto"/>
-                            </Grid.RowDefinitions>
-                            <lvc:PieChart Grid.Row="0" Series="{Binding TaskBreakdownSeries}" 
-                                          InnerRadius="60" LegendLocation="None" Hoverable="True">
-                                <lvc:PieChart.DataTooltip>
-                                    <lvc:DefaultTooltip SelectionMode="OnlySender" Background="#222" Foreground="White"/>
-                                </lvc:PieChart.DataTooltip>
-                            </lvc:PieChart>
-                            <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
-                                <TextBlock Text="45" Foreground="White" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
-                                <TextBlock Text="Total Tasks" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="12"/>
-                            </StackPanel>
-                            <UniformGrid Grid.Row="1" Columns="2" Margin="0,20,0,0">
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <Ellipse Width="10" Height="10" Fill="#F90606" Margin="0,0,8,0"/>
-                                    <TextBlock Foreground="#D1D1D1">
-                                        <Run Text="Convert"/> <Run Text="(40%)"/>
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <Ellipse Width="10" Height="10" Fill="#EBCB8B" Margin="0,0,8,0"/>
-                                    <TextBlock Foreground="#D1D1D1">
-                                        <Run Text="Compress"/> <Run Text="(30%)"/>
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="10" Height="10" Fill="#5E81AC" Margin="0,0,8,0"/>
-                                    <TextBlock Foreground="#D1D1D1">
-                                        <Run Text="Remove BG"/> <Run Text="(15%)"/>
-                                    </TextBlock>
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Ellipse Width="10" Height="10" Fill="#A3BE8C" Margin="0,0,8,0"/>
-                                    <TextBlock Foreground="#D1D1D1">
-                                        <Run Text="Markdown"/> <Run Text="(15%)"/>
-                                    </TextBlock>
-                                </StackPanel>
-                            </UniformGrid>
-                        </Grid>
-                    </Grid>
-                </Border>
-            </Grid>
-
-            <StackPanel Grid.Row="3">
-                <TextBlock Text="Recent Activity" Style="{StaticResource SectionTitle}" Margin="0,0,0,10"/>
-                <Grid Margin="20,0,20,10">
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="2*"/>
-                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="1*"/>
                     </Grid.ColumnDefinitions>
-                    <TextBlock Text="FILE NAME" Foreground="{StaticResource Brush.Text.Secondary}" FontWeight="Bold" FontSize="11"/>
-                    <TextBlock Grid.Column="1" Text="TASK" Foreground="{StaticResource Brush.Text.Secondary}" FontWeight="Bold" FontSize="11"/>
-                    <TextBlock Grid.Column="2" Text="DATE" Foreground="{StaticResource Brush.Text.Secondary}" FontWeight="Bold" FontSize="11"/>
-                    <TextBlock Grid.Column="3" Text="STATUS" Foreground="{StaticResource Brush.Text.Secondary}" FontWeight="Bold" FontSize="11"/>
-                    <TextBlock Grid.Column="4" Text="ACTION" Foreground="{StaticResource Brush.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Right"/>
+
+                    <Grid Grid.Column="0" Margin="0,0,15,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <Button Grid.Column="0" Grid.Row="0" Command="{Binding DataContext.GoConvertCommand, 
+                      RelativeSource={RelativeSource AncestorType={x:Type Window}}}" Style="{StaticResource FeatureCardButtonStyle}">
+                            <StackPanel>
+                                <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
+                                    <fa:ImageAwesome Icon="Exchange" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource Lang.HomepageView.Feat.Convert}" Foreground="White" FontWeight="Medium" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Grid.Column="1" Grid.Row="0" Style="{StaticResource FeatureCardButtonStyle}" Command="{Binding DataContext.GoCompressCommand, 
+                      RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+                            <StackPanel>
+                                <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
+                                    <fa:ImageAwesome Icon="Compress" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource Lang.HomepageView.Feat.Compress}" Foreground="White" FontWeight="Medium" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Grid.Column="2" Grid.Row="0" Style="{StaticResource FeatureCardButtonStyle}" Command="{Binding DataContext.GoRemoveBackgroundCommand, 
+                      RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+                            <StackPanel>
+                                <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
+                                    <fa:ImageAwesome Icon="Image" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource Lang.HomepageView.Feat.RemoveBG}" Foreground="White" FontWeight="Medium" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Grid.Column="0" Grid.Row="1" Style="{StaticResource FeatureCardButtonStyle}" Command="{Binding DataContext.GoMarkdownToTextCommand, 
+                      RelativeSource={RelativeSource AncestorType={x:Type Window}}}">
+                            <StackPanel>
+                                <Border Width="50" Height="50" Background="{StaticResource Brush.Brand.Light}" CornerRadius="12" Margin="0,0,0,15" HorizontalAlignment="Center">
+                                    <fa:ImageAwesome Icon="FileTextOutline" Width="24" Height="24" Foreground="{StaticResource Brush.Brand}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Border>
+                                <TextBlock Text="{DynamicResource Lang.HomepageView.Feat.Markdown}" Foreground="White" FontWeight="Medium" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
+
+                    <Border Grid.Column="1" Background="{StaticResource Brush.Card.Lighter}" CornerRadius="12" Padding="20" Margin="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="{DynamicResource Lang.HomepageView.QuoteTitle}" Style="{StaticResource SectionTitle}"/>
+                            <!--<ItemsControl ItemsSource="{Binding OngoingTasks}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0,0,0,20">
+                                            <Grid Margin="0,0,0,5">
+                                                <TextBlock Text="{Binding Name}" Foreground="White" FontSize="14"/>
+                                                <TextBlock Text="{Binding Progress, StringFormat={}{0}%}" Foreground="{StaticResource Brush.Text.Secondary}" HorizontalAlignment="Right"/>
+                                            </Grid>
+                                            <ProgressBar Value="{Binding Progress}" Height="6" BorderThickness="0" Background="#333" Foreground="{StaticResource Brush.Brand}"/>
+                                            <TextBlock Text="{Binding TimeRemaining}" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="12" Margin="0,5,0,0"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>-->
+
+                            <StackPanel>
+                                <TextBlock Text="{Binding Quote.Text}" FontSize="22" TextWrapping="Wrap" Width="360" HorizontalAlignment="Left" Foreground="White"/>
+                                <TextBlock Text="{Binding Quote.Author}" FontSize="16"  Foreground="{StaticResource Brush.Text.Secondary}"/>
+                            </StackPanel>
+
+
+                        </StackPanel>
+                    </Border>
                 </Grid>
 
-                <Border Background="{StaticResource Brush.Card.Lighter}" CornerRadius="12" Padding="0,10">
-                    <ItemsControl ItemsSource="{Binding RecentActivities}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Grid Margin="20,15">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="3*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="2*"/>
-                                        <ColumnDefinition Width="1*"/>
-                                    </Grid.ColumnDefinitions>
+                <Grid Grid.Row="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition Width="1*"/>
+                    </Grid.ColumnDefinitions>
 
-                                    <StackPanel Orientation="Horizontal">
-                                        <fa:ImageAwesome Icon="{Binding IconKind}" Foreground="{StaticResource Brush.Text.Secondary}" Width="16" Height="16" Margin="0,0,10,0" VerticalAlignment="Center"/>
-                                        <TextBlock Text="{Binding FileName}" Foreground="White" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                    <TextBlock Grid.Column="1" Text="{Binding Task}" Foreground="{StaticResource Brush.Text.Secondary}" VerticalAlignment="Center"/>
-                                    <TextBlock Grid.Column="2" Text="{Binding Date}" Foreground="{StaticResource Brush.Text.Secondary}" VerticalAlignment="Center"/>
+                    <Border Grid.Column="0" Background="{StaticResource Brush.Card.Lighter}" CornerRadius="12" Padding="20" Margin="0,0,15,15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
 
-                                    <Border Grid.Column="3" CornerRadius="10" Padding="10,4" HorizontalAlignment="Left" VerticalAlignment="Center">
-                                        <Border.Style>
-                                            <Style TargetType="Border">
-                                                <Style.Triggers>
-                                                    <DataTrigger Binding="{Binding IsSuccess}" Value="True">
-                                                        <Setter Property="Background" Value="#1E382A"/>
-                                                    </DataTrigger>
-                                                    <DataTrigger Binding="{Binding IsSuccess}" Value="False">
-                                                        <Setter Property="Background" Value="{StaticResource Brush.Delete}"/>
-                                                    </DataTrigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </Border.Style>
-                                        <TextBlock Text="{Binding Status}" FontSize="12" FontWeight="SemiBold">
-                                            <TextBlock.Style>
-                                                <Style TargetType="TextBlock">
+                            <Grid Grid.Row="0">
+                                <TextBlock Text="{DynamicResource Lang.HomepageView.Activity.Title}" Style="{StaticResource SectionTitle}" VerticalAlignment="Center"/>
+
+                                <Border HorizontalAlignment="Right" Background="#0A0A0A" CornerRadius="6" Width="140" Height="32">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <Border x:Name="ActivePill" Background="{StaticResource Brush.Brand}" CornerRadius="4" Margin="1" Grid.Column="0" HorizontalAlignment="Left" Width="68">
+                                            <Border.RenderTransform>
+                                                <TranslateTransform X="0"/>
+                                            </Border.RenderTransform>
+                                            <Border.Style>
+                                                <Style TargetType="Border">
                                                     <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsSuccess}" Value="True">
-                                                            <Setter Property="Foreground" Value="#4CAF50"/>
-                                                        </DataTrigger>
-                                                        <DataTrigger Binding="{Binding IsSuccess}" Value="False">
-                                                            <Setter Property="Foreground" Value="#F44336"/>
+                                                        <DataTrigger Binding="{Binding IsWeekly}" Value="False">
+                                                            <DataTrigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="70" Duration="0:0:0.3">
+                                                                            <DoubleAnimation.EasingFunction>
+                                                                                <CubicEase EasingMode="EaseOut"/>
+                                                                            </DoubleAnimation.EasingFunction>
+                                                                        </DoubleAnimation>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </DataTrigger.EnterActions>
+                                                            <DataTrigger.ExitActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.X)" To="0" Duration="0:0:0.3">
+                                                                            <DoubleAnimation.EasingFunction>
+                                                                                <CubicEase EasingMode="EaseOut"/>
+                                                                            </DoubleAnimation.EasingFunction>
+                                                                        </DoubleAnimation>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </DataTrigger.ExitActions>
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
-                                            </TextBlock.Style>
+                                            </Border.Style>
+                                        </Border>
+
+                                        <Button Grid.Column="0" Content="{DynamicResource Lang.HomepageView.Activity.Weekly}" Command="{Binding SwitchTimeFrameCommand}" CommandParameter="Weekly" 
+                                                Style="{StaticResource WeeklyButtonStyle}"/>
+
+                                        <Button Grid.Column="1" Content="{DynamicResource Lang.HomepageView.Activity.Monthly}" Command="{Binding SwitchTimeFrameCommand}" CommandParameter="Monthly" 
+                                                Style="{StaticResource MonthlyButtonStyle}"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+
+                            <TextBlock Grid.Row="1" Text="{DynamicResource Lang.HomepageView.Activity.Desc}" Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,-10,0,20"/>
+
+                            <Grid Grid.Row="1" Margin="0,20,0,20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Grid.Column="0">
+                                    <TextBlock Text="{DynamicResource Lang.HomepageView.Stats.TotalTasks}" Foreground="{StaticResource Brush.Text.Secondary}"/>
+                                    <TextBlock Text="{Binding OverviewTotalTasks}" Foreground="White" FontSize="20" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding OverviewTotalTasksChange}" Foreground="#4CAF50" FontSize="12"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock Text="{DynamicResource Lang.HomepageView.Stats.StorageSaved}" Foreground="{StaticResource Brush.Text.Secondary}"/>
+                                    <TextBlock Text="{Binding StorageSaved}" Foreground="White" FontSize="20" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding StorageSavedChange}" Foreground="#4CAF50" FontSize="12"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Text="{DynamicResource Lang.HomepageView.Stats.AvgTime}" Foreground="{StaticResource Brush.Text.Secondary}"/>
+                                    <TextBlock Text="{Binding AvgProcessingTime}" Foreground="White" FontSize="20" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding AvgProcessingTimeChange}" Foreground="#F44336" FontSize="12"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="3">
+                                    <TextBlock Text="{DynamicResource Lang.HomepageView.Stats.SuccessRate}" Foreground="{StaticResource Brush.Text.Secondary}"/>
+                                    <TextBlock Text="{Binding SuccessRate}" Foreground="White" FontSize="20" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding SuccessRateChange}" Foreground="#4CAF50" FontSize="12"/>
+                                </StackPanel>
+                            </Grid>
+
+                            <lvc:CartesianChart Grid.Row="2" Height="150" Series="{Binding ActivitySeries}" LegendLocation="None" Hoverable="True">
+                                <lvc:CartesianChart.DataTooltip>
+                                    <lvc:DefaultTooltip SelectionMode="SharedYValues" Background="#222" Foreground="White" BulletSize="10"/>
+                                </lvc:CartesianChart.DataTooltip>
+                                <lvc:CartesianChart.AxisX>
+                                    <lvc:Axis Labels="{Binding ActivityLabels}" Foreground="{StaticResource Brush.Text.Secondary}" ShowLabels="True">
+                                        <lvc:Axis.Separator>
+                                            <lvc:Separator Step="1" StrokeThickness="0" />
+                                        </lvc:Axis.Separator>
+                                    </lvc:Axis>
+                                </lvc:CartesianChart.AxisX>
+                                <lvc:CartesianChart.AxisY>
+                                    <lvc:Axis LabelFormatter="{Binding YFormatter}" Foreground="Transparent">
+                                        <lvc:Axis.Separator>
+                                            <lvc:Separator StrokeThickness="0" />
+                                        </lvc:Axis.Separator>
+                                    </lvc:Axis>
+                                </lvc:CartesianChart.AxisY>
+                            </lvc:CartesianChart>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Column="1" Background="{StaticResource Brush.Card.Lighter}" CornerRadius="12" Padding="20" Margin="0,0,0,15">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Text="{DynamicResource Lang.HomepageView.Breakdown.Title}" Style="{StaticResource SectionTitle}"/>
+                            <TextBlock Grid.Row="1" Text="{DynamicResource Lang.HomepageView.Breakdown.Desc}" Foreground="{StaticResource Brush.Text.Secondary}" Margin="0,-10,0,10"/>
+
+                            <Grid Grid.Row="2">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                <lvc:PieChart Grid.Row="0" Series="{Binding TaskBreakdownSeries}" 
+                                              InnerRadius="60" LegendLocation="None" Hoverable="True">
+                                    <lvc:PieChart.DataTooltip>
+                                        <lvc:DefaultTooltip SelectionMode="OnlySender" Background="#222" Foreground="White"/>
+                                    </lvc:PieChart.DataTooltip>
+                                </lvc:PieChart>
+                                <StackPanel Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="{Binding TotalTasks}" Foreground="White" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                    <TextBlock Text="{DynamicResource Lang.HomepageView.Stats.TotalTasks}" Foreground="{StaticResource Brush.Text.Secondary}" FontSize="12"/>
+                                </StackPanel>
+                                <UniformGrid Grid.Row="1" Columns="2" Margin="0,20,0,0">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <Ellipse Width="10" Height="10" Fill="#F90606" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Foreground="#D1D1D1" >
+                                            <Run Text="{DynamicResource Lang.HomepageView.Chart.Convert}"/> <Run Text="("/> <Run Text="{Binding ConvertPercent}"/> <Run Text="%"/> <Run Text=")"/>
                                         </TextBlock>
-                                    </Border>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                        <Ellipse Width="10" Height="10" Fill="#EBCB8B" Margin="0,0,8,0" />
+                                        <TextBlock Foreground="#D1D1D1" >
+                                            <Run Text="{DynamicResource Lang.HomepageView.Chart.Compress}"/> <Run Text="("/> <Run Text="{Binding CompressPercent}"/> <Run Text="%"/> <Run Text=")"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="10" Height="10" Fill="#5E81AC" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                        <TextBlock Foreground="#D1D1D1" VerticalAlignment="Center">
+                                            <Run Text="{DynamicResource Lang.HomepageView.Chart.RemoveBG}"/> <Run Text="("/> <Run Text="{Binding RemoveBGPercent}"/> <Run Text="%"/> <Run Text=")"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </UniformGrid>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
 
-                                    <Button Grid.Column="4" Style="{StaticResource IconButtonStyle}" HorizontalAlignment="Right">
-                                        <fa:ImageAwesome Width="14" Height="14" Foreground="Gray" VerticalAlignment="Center">
-                                            <fa:ImageAwesome.Style>
-                                                <Style TargetType="fa:ImageAwesome">
-                                                    <Style.Triggers>
-                                                        <DataTrigger Binding="{Binding IsSuccess}" Value="True">
-                                                            <Setter Property="Icon" Value="Download"/>
-                                                        </DataTrigger>
+                <StackPanel Grid.Row="3" Margin="0,40,0,20">
+                    <TextBlock Text="{DynamicResource Lang.HomepageView.Recent.Title}" FontSize="20" FontWeight="Bold" Foreground="White" Margin="0,0,0,20"/>
 
-                                                        <DataTrigger Binding="{Binding IsSuccess}" Value="False">
-                                                            <Setter Property="Icon" Value="Refresh"/>
-                                                        </DataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </fa:ImageAwesome.Style>
-                                        </fa:ImageAwesome>
-                                    </Button>
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Border>
-            </StackPanel>
-        </Grid>
-    </ScrollViewer>
+                    <Border Background="#121212" CornerRadius="10" BorderBrush="#222222" BorderThickness="1">
+                        <StackPanel>
+                            <Grid Background="#1A1A1A" Height="45">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="1.5*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Text="{DynamicResource Lang.HomepageView.Header.Filename}" Grid.Column="0" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" Margin="25,0" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Lang.HomepageView.Header.Task}" Grid.Column="1" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Lang.HomepageView.Header.Date}" Grid.Column="2" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource Lang.HomepageView.Header.Status}" Grid.Column="3" Foreground="{StaticResource Color.Text.Secondary}" FontWeight="Bold" FontSize="11" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Grid>
+
+                            <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
+                             Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
+
+                            <ScrollViewer  VerticalScrollBarVisibility="Auto">
+                                <ItemsControl ItemsSource="{Binding ViewUserTasks}" Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#33FFFFFF" BorderThickness="0,1,0,0" Padding="20,12,7,15">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="1.5*"/>
+                                                        <ColumnDefinition Width="1.5*"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <TextBlock Grid.Column="0" Text="{Binding OriginalFilePath}" TextTrimming="CharacterEllipsis" Foreground="White" VerticalAlignment="Center"/>
+
+                                                    <TextBlock Grid.Column="1" Text="{Binding ServiceTypeID, Converter={StaticResource ServiceTypeIDToTaskNameConverter}}" Margin="0,0,8,0" HorizontalAlignment="Center" Foreground="#888888" VerticalAlignment="Center"/>
+
+                                                    <TextBlock Grid.Column="2" Text="{Binding CreatedAt, Converter={StaticResource RelativeTimeConverter}}" HorizontalAlignment="Center" Foreground="#888888" VerticalAlignment="Center"/>
+                                                    <Border Grid.Column="3" Background="#103820" CornerRadius="12" HorizontalAlignment="Center" Margin="10,0,0,0" Padding="15,4">
+
+                                                        <TextBlock Text="{DynamicResource Lang.HomepageView.Status.Completed}" Foreground="#4ADE80" FontWeight="SemiBold" FontSize="12"/>
+                                                    </Border>
+
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+
+                            </ScrollViewer>
+
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+        
+    </Grid>
+    
 </UserControl>

@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
 
 namespace Converto_IT008_WPF.ViewModels.UserViewModel;
@@ -71,7 +72,7 @@ public partial class MyAccountViewModel : BaseViewModel
     
 
         Languages = new ObservableCollection<string> {
-                "Vietnamese", "English"
+                "Tiếng Việt", "English"
             };
 
         Language = Languages[1];
@@ -85,21 +86,6 @@ public partial class MyAccountViewModel : BaseViewModel
             new CloseOverlayMessageDto { CloseLogin = false, CloseSignUp = true });
     }
 
-    [RelayCommand]
-    private async Task Logout()
-    {
-        //_sessionState.IsUserLoggedIn = false;
-        if (_sessionState.LoginResponse != null)
-        {
-            _sessionState.LoginResponse.access_token = string.Empty;
-
-            _sessionState.LoginResponse.user = null!;
-
-            goToLogin();
-
-            await _userService.Logout();
-        }
-    }
 
     [RelayCommand]
     private async Task ChangeAvatarUrl()
@@ -206,11 +192,46 @@ public partial class MyAccountViewModel : BaseViewModel
         {
             _sessionState.UserPreferences.Language = Language;
             await _userService.UpdateUserPreference(_sessionState.UserPreferences);
+
+            if (Language == "Tiếng Việt")
+            {
+                SwitchLanguage("vi");
+            }
+            else
+            {
+                SwitchLanguage("en");
+            }
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"Error changing language: {ex.Message}");
         }
+    }
+
+    private void SwitchLanguage(string languageCode)
+    {
+        string resourceFile = $"/Converto_IT008_WPF;component/Resources/Languages/Strings.{languageCode}.xaml";
+        var uri = new Uri(resourceFile, UriKind.Relative);
+
+        ResourceDictionary newRes = new ResourceDictionary();
+        try
+        {
+            newRes.Source = uri;
+        }
+        catch
+        {
+            return;
+        }
+
+        var oldRes = System.Windows.Application.Current.Resources.MergedDictionaries
+                        .FirstOrDefault(d => d.Contains("Lang_UserProfile"));
+
+        if (oldRes != null)
+        {
+            System.Windows.Application.Current.Resources.MergedDictionaries.Remove(oldRes);
+        }
+
+        System.Windows.Application.Current.Resources.MergedDictionaries.Add(newRes);
     }
 
     [RelayCommand]
@@ -244,6 +265,4 @@ public partial class MyAccountViewModel : BaseViewModel
             Debug.WriteLine($"Error cancelling password change: {ex.Message}");
         }
     }
-
-    
 }

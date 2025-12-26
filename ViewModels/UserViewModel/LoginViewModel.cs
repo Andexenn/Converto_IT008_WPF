@@ -90,6 +90,7 @@ public partial class LoginViewModel : BaseViewModel
             if(_sessionState.LoginResponse != null)
             {   
                 Properties.Settings.Default.RefreshToken = _sessionState.LoginResponse.refresh_token;
+                Properties.Settings.Default.FirstName = _sessionState.LoginResponse.user.FirstName; 
                 Properties.Settings.Default.Save();
                 await getUserPreference();
                 CloseOverlay();
@@ -122,6 +123,7 @@ public partial class LoginViewModel : BaseViewModel
             if(_sessionState.LoginResponse != null)
             {
                 Properties.Settings.Default.RefreshToken = _sessionState.LoginResponse.refresh_token;
+                Properties.Settings.Default.FirstName = _sessionState.LoginResponse.user.FirstName;
                 Properties.Settings.Default.Save();
                 await getUserPreference();
                 CloseOverlay();
@@ -160,7 +162,7 @@ public partial class LoginViewModel : BaseViewModel
             if (_sessionState.LoginResponse != null)
             {
                 Properties.Settings.Default.RefreshToken = _sessionState.LoginResponse.refresh_token;
-                Debug.WriteLine("GitHub login successful. Refresh Token: " + _sessionState.LoginResponse.refresh_token + "Access Token: " + _sessionState.LoginResponse.access_token);
+                Properties.Settings.Default.FirstName = _sessionState.LoginResponse.user.FirstName;
                 Properties.Settings.Default.Save();
                 await getUserPreference();
                 CloseOverlay();

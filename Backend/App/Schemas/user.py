@@ -1,8 +1,8 @@
+"""User"""
 from pydantic import BaseModel, EmailStr, Field, ConfigDict
 from typing import Optional
 from datetime import datetime
 
-import time
 
 class UserBase(BaseModel):
     Email: EmailStr
@@ -50,8 +50,7 @@ class UserLoginResponse(BaseModel):
     MemberSince: Optional[datetime] = None 
     LastLogin: Optional[datetime] = Field(default_factory=datetime.now)
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class GoogleUserData(BaseModel):
     email: EmailStr
@@ -60,16 +59,14 @@ class GoogleUserData(BaseModel):
     picture: Optional[str] = None
     id_token: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class GoogleAuthResponse(BaseModel):
     access_token: str
     token_type: str
     user: UserLoginResponse
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class UserData(BaseModel):
     Email: Optional[EmailStr] = None 

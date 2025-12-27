@@ -98,7 +98,7 @@ class AuthRepository(IAuthService):
             self.db.rollback()
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail = "User registration failed. Email might already exist."
+                detail = f"User registration failed. Email might already exist: {str(e)}"
             ) from e
         except HTTPException:
             self.db.rollback()

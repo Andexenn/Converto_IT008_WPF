@@ -9,6 +9,7 @@ on:
   pull_request:
     branches:
       - "main"
+  workflow_dispatch:
 
 jobs:
   smoke-test:
@@ -30,6 +31,16 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
+        
+      # my-redis-services:
+      #   image: redis:alpine 
+
+      #   env: 
+      #     REDIS_PASSWORD: hung123
+      #     ALLOW_EMPTY_PASSWORD: no
+      #   ports:
+      #     - "6379:6379"
+
 
     strategy:
       fail-fast: false
@@ -39,6 +50,13 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Run redis service 
+        run: |
+          docker run -d -p 6379:6379 --name redis \
+          redis:alpine redis-server --requirepass "hung123" --appendonly yes
+
+          sleep 5
 
       - name: Install System Dependencies
         run: |
@@ -97,11 +115,9 @@ jobs:
         run: |
           cd Backend/App
           
-          # Option 1: Test if app can even start
           echo "Testing if app can import without errors..."
           python -c "from main import app; print('App imported successfully')" || (echo "Failed to import app" && exit 1)
           
-          # Option 2: Start server with timeout
           echo "Starting FastAPI server with timeout..."
           timeout 30s python -m uvicorn main:app --host 127.0.0.1 --port 5050 --log-level debug &
           
@@ -110,8 +126,11 @@ jobs:
           echo "Waiting 15s for startup..."
           sleep 15
           
-          echo "Testing health endpoint..."
+          echo "Testing health server..."
           curl -f -v http://127.0.0.1:5050/health || exit 1
+
+          echo "Testing server connect to db"
+          curl -f -v http://127.0.0.1:5050/connect_db || exit 1
           
           echo "Success!"
           kill $SERVER_PID 2>/dev/null || true

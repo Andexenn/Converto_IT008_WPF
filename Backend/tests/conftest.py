@@ -1,11 +1,18 @@
 """conftest file"""
 from datetime import timedelta
+import os 
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+from pathlib import Path 
+
+os.environ.setdefault("SECRET_KEY", "test-secret-key-for-testing")
+os.environ.setdefault("ALGORITHM", "HS256")
+os.environ.setdefault("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
+os.environ.setdefault("REFRESH_TOKEN_EXPIRE_DAYS", "7")
 
 from main import app
 from Database.connection import Base, get_db
@@ -139,3 +146,15 @@ def authorized_client(client, access_token):
     }
 
     return client
+
+@pytest.fixture(scope="session")
+def get_test_image():
+    current_test_dir = Path(__file__).parent 
+
+    image_path = current_test_dir / "fixtures" / "test_img.jpg"
+
+    if not image_path.exists():
+        raise FileNotFoundError('Test image not found')
+
+    return str(image_path) 
+

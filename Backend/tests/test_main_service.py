@@ -1,10 +1,13 @@
 """Test main service file"""
+import os 
 
-def test_converter(authorized_client , base_url):
+
+def test_converter(authorized_client , base_url, get_test_image):
+
 
     data = {
         "input_paths": [
-            "D:\\Downloads\\ready.webp"
+            get_test_image
         ],
         "output_format": "tiff"
     }
@@ -16,11 +19,11 @@ def test_converter(authorized_client , base_url):
     except Exception as e:
         assert 1 == 2, f"Convert service failed: {str(e)}"
 
-def test_compressor(authorized_client, base_url):
+def test_compressor(authorized_client, base_url, get_test_image):
 
     data = {
         "input_paths": [
-            "D:\\Ryan\\Saved Pictures\\z6193229319145_0422e4545890575de9bf68717f63b732.jpg"
+            get_test_image
         ],
         "quality": 30
     }
@@ -32,11 +35,11 @@ def test_compressor(authorized_client, base_url):
     except Exception as e:
         assert 1 == 2, f"Compress image failed: {str(e)}"
 
-def test_removebg(authorized_client, base_url):
+def test_removebg(authorized_client, base_url, get_test_image):
 
     data = {
         "input_paths": [
-            "D:\\Ryan\\Saved Pictures\\z6193229319145_0422e4545890575de9bf68717f63b732.jpg"
+            get_test_image
         ]
     }
 

@@ -7,8 +7,8 @@ pydantic[email]
 pydantic-settings
 pymysql
 python-dotenv
-passlib[bcrypt]  
-bcrypt          
+bcrypt==4.0.1
+passlib[bcrypt]==1.7.4         
 Pillow
 httpx
 python-jose[cryptography]
@@ -20,6 +20,7 @@ numpy
 pytest
 pytest-asyncio
 pytest-dotenv
+pytest-cov
 alembic
 pyjwt
 redis

@@ -44,6 +44,12 @@ class ConversionRepository(IConversionService):
         """
         Get the ffmpeg path
         """
+
+        system_ffmpeg = shutil.which("ffmpeg")
+        if system_ffmpeg:
+            print("ffmpeg system shutil:", system_ffmpeg)
+            return system_ffmpeg
+
         ffmpeg_path = Path(__file__).parent.parent.parent.parent / 'bin' / 'Debug' / 'net9.0-windows' / FFMPEG_EXECUTABLE_NAME
 
         if not ffmpeg_path.exists():
@@ -58,6 +64,11 @@ class ConversionRepository(IConversionService):
         """
         Get soffice path
         """
+
+        system_libreoffice = shutil.which("soffice")
+        if system_libreoffice:
+            return system_libreoffice
+
         soffice_path = Path(__file__).parent.parent.parent.parent / 'bin' / 'Debug' / 'net9.0-windows' / SOFFICE_EXECUTABLE_NAME
 
         if not soffice_path.exists():

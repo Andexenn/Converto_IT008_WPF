@@ -5,7 +5,7 @@ on:
     branches:
       - "main"
       - "test"
-      - "HH"
+      - "HH2"
   pull_request:
     branches:
       - "main"
@@ -31,16 +31,6 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=5
-        
-      # my-redis-services:
-      #   image: redis:alpine 
-
-      #   env: 
-      #     REDIS_PASSWORD: hung123
-      #     ALLOW_EMPTY_PASSWORD: no
-      #   ports:
-      #     - "6379:6379"
-
 
     strategy:
       fail-fast: false
@@ -74,13 +64,8 @@ jobs:
             libfontconfig1 \
             libdbus-glib-1-2 \
             libcairo2 \
-            libcups2
-
-      - name: Verify LibreOffice Installation
-        run: |
-          which soffice
-          soffice --version
-          ls -la /usr/bin/soffice
+            libcups2 \
+            ffmpeg
 
       - name: Setup Python & Cache
         uses: actions/setup-python@v4 
@@ -134,3 +119,114 @@ jobs:
           
           echo "Success!"
           kill $SERVER_PID 2>/dev/null || true
+
+  integration-test:
+    name: Run pytest 
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false 
+      matrix:
+        python-version: ['3.11', '3.12', '3.13']
+
+    services:
+      mysql-service:
+        image: mysql:8.0
+
+        env: 
+          MYSQL_ROOT_PASSWORD: hungdepzai123
+          MYSQL_DATABASE: convertodb
+
+        ports:
+          - 3306:3306
+        
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    steps:
+      - name: Checkout code 
+        uses: actions/checkout@v4
+
+      - name: run redis-server 
+        run: | 
+          docker run -d -p 6379:6379 --name redis \
+          redis:alpine redis-server --requirepass "hung123" --appendonly yes  
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            ffmpeg \
+            imagemagick \
+            libgl1 \
+            libglib2.0-0 \
+            libreoffice \
+            libreoffice-writer \
+            libreoffice-calc \
+            libreoffice-impress \
+            default-jre-headless \
+            fonts-liberation \
+            libxinerama1 \
+            libfontconfig1 \
+            libdbus-glib-1-2 \
+            libcairo2 \
+            libcups2
+
+      - name: Verify Installations
+        run: |
+          echo "Verifying LibreOffice"
+          which soffice
+          soffice --version
+
+          echo "Verifying FFmpeg"
+          which ffmpeg 
+          ffmpeg -version 
+
+          echo "Verifying imagemagick"
+          which convert
+          convert --version 
+
+      - name: Cache python 
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+      
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip setuptools wheel
+          pip uninstall -y bcrypt  # Remove any existing bcrypt
+          pip install --no-cache-dir bcrypt==4.0.1
+          pip install --no-cache-dir passlib[bcrypt]==1.7.4
+          pip install -r Backend/requirements.txt
+
+
+      - name: Pytest 
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: 3306
+          DB_USER: root 
+          DB_PASSWORD: hungdepzai123
+          DB_NAME: convertodb
+          SECRET_KEY: "test-secret-key-for-github-actions"
+          GOOGLE_CLIENT_ID: "fake_id"
+          GOOGLE_CLIENT_SECRET: "fake_secret"
+          MAIL_USERNAME: "fake_mail_user"
+          MAIL_PASSWORD: "fake_mail_password"
+          MAIL_FROM: "test@example.com"
+          MAIL_PORT: 587
+          MAIL_SERVER: "smtp.gmail.com"
+          GITHUB_CLIENT_ID: "fake_gh_id"
+          GITHUB_CLIENT_SECRET: "fake_gh_secret"
+          PYTHONUNBUFFERED: "1"
+          SOFFICE_PATH: "/usr/bin/soffice"
+          REDIS_PASSWORD: "hung123"
+           
+        run: |
+          cd Backend/App 
+
+          echo "Running pytest..."
+          pytest ../tests

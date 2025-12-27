@@ -1,11 +1,17 @@
 """conftest file"""
 from datetime import timedelta
+import os 
 
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+
+os.environ.setdefault("SECRET_KEY", "test-secret-key-for-testing")
+os.environ.setdefault("ALGORITHM", "HS256")
+os.environ.setdefault("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
+os.environ.setdefault("REFRESH_TOKEN_EXPIRE_DAYS", "7")
 
 from main import app
 from Database.connection import Base, get_db

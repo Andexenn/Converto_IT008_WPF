@@ -205,7 +205,7 @@ jobs:
           DB_USER: root 
           DB_PASSWORD: hungdepzai123
           DB_NAME: convertodb
-          SECRET_KEY: "secret_fake"
+          SECRET_KEY: "test-secret-key-for-github-actions"
           GOOGLE_CLIENT_ID: "fake_id"
           GOOGLE_CLIENT_SECRET: "fake_secret"
           MAIL_USERNAME: "fake_mail_user"

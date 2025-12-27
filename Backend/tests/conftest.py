@@ -7,6 +7,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+from pathlib import Path 
 
 os.environ.setdefault("SECRET_KEY", "test-secret-key-for-testing")
 os.environ.setdefault("ALGORITHM", "HS256")
@@ -145,3 +146,15 @@ def authorized_client(client, access_token):
     }
 
     return client
+
+@pytest.fixture(scope="session")
+def get_test_image():
+    current_test_dir = Path(__file__).parent 
+
+    image_path = current_test_dir / "fixtures" / "test_img.jpg"
+
+    if not image_path.exists():
+        raise FileNotFoundError('Test image not found')
+
+    return str(image_path) 
+

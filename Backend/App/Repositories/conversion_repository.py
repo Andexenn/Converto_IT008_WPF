@@ -65,7 +65,7 @@ class ConversionRepository(IConversionService):
         Get soffice path
         """
 
-        system_libreoffice = shutil.which("ffmpeg")
+        system_libreoffice = shutil.which("soffice")
         if system_libreoffice:
             return system_libreoffice
 

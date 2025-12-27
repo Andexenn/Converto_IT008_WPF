@@ -186,8 +186,8 @@ jobs:
           ffmpeg -version 
 
           echo "Verifying imagemagick"
-          which magick
-          magick --version 
+          which convert
+          convert --version 
 
       - name: Cache python 
         uses: actions/setup-python@v4

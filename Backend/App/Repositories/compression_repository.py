@@ -47,6 +47,10 @@ class CompressionRepository(ICompressionSerivce):
         if system_magick:
             return system_magick
 
+        system_convert = shutil.which("convert")
+        if system_convert:
+            return system_convert
+
         magick_path = Path(__file__).parent.parent.parent.parent / 'bin' / 'Debug' / 'net9.0-windows' / MAGICK_EXECUTABLE_NAME
 
         if not Path(magick_path).exists():
@@ -57,6 +61,12 @@ class CompressionRepository(ICompressionSerivce):
     @property
     def _get_ffmpeg_path(self) -> str:
         """Get the path to FFmpeg executable file"""
+
+        system_ffmpeg = shutil.which("ffmpeg")
+        if system_ffmpeg:
+            print("ffmpeg system shutil:", system_ffmpeg)
+            return system_ffmpeg
+
         ffmpeg_path = Path(__file__).parent.parent.parent.parent / 'bin' / 'Debug' / 'net9.0-windows' / FFMPEG_EXECUTABLE_NAME
 
         if not Path(ffmpeg_path).exists():

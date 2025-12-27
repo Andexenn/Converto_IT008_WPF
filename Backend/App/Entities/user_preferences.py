@@ -5,7 +5,7 @@ User preferences entity
 from typing import TYPE_CHECKING
 from datetime import datetime
 
-from sqlalchemy import BigInteger, String, DateTime, func, ForeignKey, Integer
+from sqlalchemy import String, DateTime, func, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from Database.connection import Base 

@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 
 # 1. Thêm ForeignKey vào import
-from sqlalchemy import BigInteger, String, DateTime, ForeignKey, Integer
+from sqlalchemy import String, DateTime, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from Database.connection import Base

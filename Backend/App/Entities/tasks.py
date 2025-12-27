@@ -5,7 +5,7 @@ Tasks entity
 from datetime import datetime
 from typing import Optional, TYPE_CHECKING
 
-from sqlalchemy import BigInteger, String, DateTime, func, ForeignKey, Double
+from sqlalchemy import Integer, String, DateTime, func, ForeignKey, Double
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from Database.connection import Base
@@ -19,16 +19,16 @@ class Tasks(Base):
 
     __table_args__ = {'extend_existing': True}
 
-    TaskID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
-    UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID"), nullable=False)
-    ServiceTypeID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICETYPES.ServiceTypeID", ondelete="CASCADE") , nullable=False)
+    TaskID: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    UserID: Mapped[int] = mapped_column(Integer, ForeignKey("USER.UserID"), nullable=False)
+    ServiceTypeID: Mapped[int] = mapped_column(Integer, ForeignKey("SERVICETYPES.ServiceTypeID", ondelete="CASCADE") , nullable=False)
 
     OriginalFileName: Mapped[str] = mapped_column(String(255))
-    OriginalFileSize: Mapped[int] = mapped_column(BigInteger)
+    OriginalFileSize: Mapped[int] = mapped_column(Integer)
     OriginalFilePath: Mapped[str] = mapped_column(String(255))
 
     OutputFileName: Mapped[Optional[str]] = mapped_column(String(255))
-    OutputFileSize: Mapped[Optional[int]] = mapped_column(BigInteger)
+    OutputFileSize: Mapped[Optional[int]] = mapped_column(Integer)
     OutputFilePath: Mapped[Optional[str]] = mapped_column(String(255))
 
     TaskStatus: Mapped[bool] = mapped_column(String(50))

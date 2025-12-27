@@ -5,7 +5,7 @@ user entity
 from datetime import datetime
 from typing import List, Optional, TYPE_CHECKING
 
-from sqlalchemy import BigInteger, String, DateTime, func, Integer
+from sqlalchemy import String, DateTime, func, Integer
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 from Database.connection import Base 
 

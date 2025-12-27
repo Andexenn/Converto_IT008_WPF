@@ -4,7 +4,7 @@ service type entity
 
 from typing import Optional, TYPE_CHECKING, List
 
-from sqlalchemy import BigInteger, String, Integer
+from sqlalchemy import String, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from Database.connection import Base

@@ -32,11 +32,11 @@ def test_signup(client, base_url, db_session):
 
 ### Test login ###
 
-def test_login(client, base_url, create_test_user):
+def test_login(client, base_url, test_user_factory):
     email = "hungdepzai@gmail.com"
     password = "hungdepzai123"
 
-    create_test_user(email=email, password=password)
+    test_user_factory(email=email, password=password)
 
     payload = {
         "Email": email,

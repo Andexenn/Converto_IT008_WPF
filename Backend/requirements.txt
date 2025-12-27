@@ -20,6 +20,7 @@ numpy
 pytest
 pytest-asyncio
 pytest-dotenv
+pytest-cov
 alembic
 pyjwt
 redis

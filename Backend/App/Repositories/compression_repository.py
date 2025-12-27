@@ -11,6 +11,7 @@ from typing import Tuple, List
 from concurrent.futures import ProcessPoolExecutor, as_completed
 import multiprocessing
 import time 
+import shutil 
 
 from sqlalchemy.orm import Session
 
@@ -41,6 +42,11 @@ class CompressionRepository(ICompressionSerivce):
         """
         Get the path to Magick executable
         """
+
+        system_magick = shutil.which("magick")
+        if system_magick:
+            return system_magick
+
         magick_path = Path(__file__).parent.parent.parent.parent / 'bin' / 'Debug' / 'net9.0-windows' / MAGICK_EXECUTABLE_NAME
 
         if not Path(magick_path).exists():

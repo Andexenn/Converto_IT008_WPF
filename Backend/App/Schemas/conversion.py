@@ -4,7 +4,7 @@ conversion schema
 from typing import Optional
 from datetime import datetime
 from decimal import Decimal
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class ConversionHistoryBase(BaseModel):
     UserID: int
@@ -14,8 +14,7 @@ class ConversionHistoryResponse(ConversionHistoryBase):
     ConversionHistoryID: int
     CreatedAt: datetime
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ConversionHistoryWithServiceResponse(BaseModel):
     """Conversion history with service details"""
@@ -24,8 +23,7 @@ class ConversionHistoryWithServiceResponse(BaseModel):
     ServiceName: str
     Cost: Decimal
     
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ConversionResponse(BaseModel):
     """Response after conversion (metadata only, file returned separately)"""

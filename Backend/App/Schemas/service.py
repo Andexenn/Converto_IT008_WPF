@@ -1,21 +1,20 @@
-from pydantic import BaseModel 
+"""Service schema"""
 from decimal import Decimal
+from pydantic import BaseModel, ConfigDict
 
 class ServiceBase(BaseModel):
-    InputFormat: str 
-    OutputFormat: str 
-    ServiceName: str 
+    InputFormat: str
+    OutputFormat: str
+    ServiceName: str
     Price: Decimal
 
 class ServiceCreate(ServiceBase):
-    pass 
+    pass
 
 class ServiceResponse(ServiceBase):
-    ServiceID: int 
+    ServiceID: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 class ThirdPartyRequest(BaseModel):
-    code: str 
-
+    code: str

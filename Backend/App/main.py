@@ -3,7 +3,7 @@ Entry point for the server
 """
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from Database.connection import init_db, get_db
+from Database.connection import get_db, r, init_db
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from sqlalchemy.exc import OperationalError
@@ -12,7 +12,7 @@ from Handlers import auth_handler, conversion_handler, compression_handler,\
 
 from config import settings
 
-# init_db()
+init_db()
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -48,12 +48,24 @@ def root():
     }
 
 @app.get("/health")
-def health_check(db:Session = Depends(get_db)):
+def health_check():
     """
     Check if server is working well
     """
+    return {"status": "healthy"}
+
+@app.get("/connect_db")
+def connect_db(db: Session = Depends(get_db)):
     try:
         db.execute(text("SELECT 1"))
     except OperationalError as e:
-        print(f"Can not connect to the database {str(e)}") 
-    return {"status": "healthy"}
+        print(f"Cannot connect to mysql db: {str(e)}")
+        return {"status": "disconnect"}
+
+    try:
+        r.ping()
+    except OperationalError as e:
+        print(f"Cannot connect to redis db: {str(e)}")
+        return {"status": "disconnect"}
+    
+    return {"status": "connected"}

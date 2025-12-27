@@ -196,7 +196,13 @@ jobs:
           cache: 'pip'
       
       - name: Install Dependencies
-        run: pip install -r Backend/requirements.txt
+        run: |
+          pip install --upgrade pip setuptools wheel
+          pip uninstall -y bcrypt  # Remove any existing bcrypt
+          pip install --no-cache-dir bcrypt==4.0.1
+          pip install --no-cache-dir passlib[bcrypt]==1.7.4
+          pip install -r Backend/requirements.txt
+
 
       - name: Pytest 
         env:

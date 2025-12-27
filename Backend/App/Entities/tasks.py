@@ -17,6 +17,8 @@ if TYPE_CHECKING:
 class Tasks(Base):
     __tablename__ = 'TASKS'
 
+    __table_args__ = {'extend_existing': True}
+
     TaskID: Mapped[int] = mapped_column(BigInteger, primary_key=True, autoincrement=True)
     UserID: Mapped[int] = mapped_column(BigInteger, ForeignKey("USER.UserID"), nullable=False)
     ServiceTypeID: Mapped[int] = mapped_column(BigInteger, ForeignKey("SERVICETYPES.ServiceTypeID", ondelete="CASCADE") , nullable=False)
@@ -41,5 +43,5 @@ class Tasks(Base):
     CreatedAt: Mapped[datetime] = mapped_column(DateTime, server_default=func.now()) #pylint: disable=not-callable
 
     #relationship
-    User: Mapped["User"] = relationship(back_populates="UserTasks")
-    TaskType: Mapped["ServiceTypes"] = relationship(back_populates="Tasks")
+    User: Mapped["User"] = relationship("Entities.user.User", back_populates="UserTasks")
+    TaskType: Mapped["ServiceTypes"] = relationship("Entities.service_types.ServiceTypes", back_populates="Tasks")

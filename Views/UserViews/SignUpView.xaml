@@ -283,20 +283,23 @@
                         <Border Grid.Column="0" Style="{StaticResource InputContainerStyle}">
                             <custom:PlaceholderTextBox Placeholder="{DynamicResource Lang.SignUpView.Placeholder_FirstName}"
                                                        Text="{Binding FirstName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                       TabIndex="0"/>
+                                                       TabIndex="0"
+                                                       CaretBrush="White"/>
                         </Border>
 
                         <Border Grid.Column="2" Style="{StaticResource InputContainerStyle}">
                             <custom:PlaceholderTextBox Placeholder="{DynamicResource Lang.SignUpView.Placeholder_LastName}"
                                                        Text="{Binding LastName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                       TabIndex="1"/>
+                                                       TabIndex="1"
+                                                       CaretBrush="White"/>
                         </Border>
                     </Grid>
 
                     <Border Style="{StaticResource InputContainerStyle}">
                         <custom:PlaceholderTextBox Placeholder="{DynamicResource Lang.SignUpView.Placeholder_Email}"
                                                    Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                   TabIndex="2"/>
+                                                   TabIndex="2"
+                                                   CaretBrush="White"/>
                     </Border>
 
                     <Border Style="{StaticResource InputContainerStyle}">
@@ -308,7 +311,8 @@
                             <custom:PlaceholderTextBox Grid.Column="0"
                                                        Placeholder="{DynamicResource Lang.SignUpView.Placeholder_Password}"
                                                        Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                       TabIndex="3"/>
+                                                       TabIndex="3"
+                                                       CaretBrush="White"/>
                             <fa:ImageAwesome Grid.Column="1" 
                                              Icon="Eye" 
                                              Foreground="{StaticResource Brush.Text.Secondary}" 
@@ -328,7 +332,8 @@
                             <custom:PlaceholderTextBox Grid.Column="0"
                                                        Placeholder="{DynamicResource Lang.SignUpView.Placeholder_ConfirmPassword}"
                                                        Text="{Binding ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                       TabIndex="4"/>
+                                                       TabIndex="4"
+                                                       CaretBrush="White"/>
                             
                             <fa:ImageAwesome Grid.Column="1" 
                                              Icon="Eye" 

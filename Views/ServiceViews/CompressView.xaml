@@ -590,7 +590,7 @@
                         <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                                          Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
                         
-                        <ScrollViewer  VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer  VerticalScrollBarVisibility="Disabled">
                             <ItemsControl ItemsSource="{Binding UserTasks}" Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>

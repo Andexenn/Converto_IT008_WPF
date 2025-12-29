@@ -37,6 +37,8 @@ public partial class HomepageViewModel : BaseViewModel
     double _compressPercent;
     [ObservableProperty]
     double _removeBGPercent;
+    [ObservableProperty]
+    private string _timeFrameLabel;
 
     [ObservableProperty]
     private int _overviewTotalTasks;
@@ -79,9 +81,19 @@ public partial class HomepageViewModel : BaseViewModel
         _sessionState = sessionState;
         _taskService = taskService;
 
+        TimeFrameLabel = "Operations performed in the last 7 days";
+
         SwitchTimeFrameCommand = new RelayCommand<string>((param) =>
         {
             IsWeekly = param == "Weekly";
+            if (IsWeekly)
+            {
+                TimeFrameLabel = "Operations performed in the last 7 days";
+            }
+            else
+            {
+                TimeFrameLabel = "Operations performed in the last 4 weeks";
+            }
             UpdateChartData();
         });
 

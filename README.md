@@ -11,11 +11,12 @@
 ![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=flat&logo=c-sharp&logoColor=white)
 ![.NET](https://img.shields.io/badge/.NET-5C2D91?style=flat&logo=.net&logoColor=white)
 ![WPF](https://img.shields.io/badge/WPF-%230078D4.svg?style=flat&logo=windows&logoColor=white)
-![MIT License](https://img.shields.io/badge/License-MIT-green.svg?style=flat)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)
 ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=flat&logo=git&logoColor=white)
 ![Pytest](https://img.shields.io/badge/pytest-%23793534.svg?style=flat&logo=pytest&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=flat&logo=githubactions&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-D71F00?style=flat&logoColor=white)
+![Alembic](https://img.shields.io/badge/Alembic-652B98?style=flat&logoColor=white)
 
 Welcome to Converto, the final project for the Visual Programming (IT008) course.
 
@@ -60,19 +61,19 @@ The project is built using a modern, decoupled architecture:
 ## 📸 Screenshots / Demo
 
 **Dashboard:**
-![alt text](image-1.png)
-
+![alt text](./Asset/image.png)
+![alt text](image.png)
 **Convert:**
-![alt text](image-3.png)
+![alt text](./Asset/image-3.png)
 
 **Compress:**
-![alt text](image-2.png)
+![alt text](./Asset/image-2.png)
 
 **Remove background:**
-![alt text](image-4.png)
+![alt text](./Asset/image-4.png)
 
 **Markdown to text:**
-![alt text](image-5.png)
+![alt text](./Asset/image-5.png)
 
 ---
 

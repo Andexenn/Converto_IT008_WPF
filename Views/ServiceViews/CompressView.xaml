@@ -590,7 +590,7 @@
                         <fa:ImageAwesome Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}"
                                          Icon="Refresh" Spin="True" Width="40" Height="40" Foreground="{DynamicResource Brush.Brand}" Margin="0,20,0,0"/>
                         
-                        <ScrollViewer  VerticalScrollBarVisibility="Disabled">
+                        <!--<ScrollViewer  VerticalScrollBarVisibility="Disabled">-->
                             <ItemsControl ItemsSource="{Binding UserTasks}" Visibility="{Binding IsNotBusy, Converter={StaticResource BoolToVisibilityConverter}}">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
@@ -604,7 +604,7 @@
                                                     <ColumnDefinition Width="1*"/>
                                                 </Grid.ColumnDefinitions>
 
-                                                <TextBlock Grid.Column="0" Text="{Binding OriginalFilePath}" TextTrimming="CharacterEllipsis" Foreground="White" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="0" Text="{Binding OriginalFilePath}" FontSize="12" TextTrimming="CharacterEllipsis" Foreground="White" VerticalAlignment="Center"/>
 
                                                 <TextBlock Grid.Column="1" Text="{Binding CreatedAt, Converter={StaticResource RelativeTimeConverter}}" HorizontalAlignment="Center" Foreground="#888888" VerticalAlignment="Center"/>
 
@@ -613,15 +613,15 @@
                                                     <TextBlock Text="{DynamicResource Lang.CompressView.Status_Completed}" Foreground="#4ADE80" FontWeight="SemiBold" FontSize="12"/>
                                                 </Border>
 
-                                                <TextBlock Grid.Column="3" Text="{Binding OriginalFileSize, Converter={StaticResource BytesToMegabytesConverter}}" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                <TextBlock Text="{Binding OutputFileSize, Converter={StaticResource BytesToMegabytesConverter}}" Grid.Column="4" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="3" Text="{Binding OriginalFileSize, Converter={StaticResource BytesToMegabytesConverter}}" FontSize="12" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <TextBlock Text="{Binding OutputFileSize, Converter={StaticResource BytesToMegabytesConverter}}" Grid.Column="4" FontSize="12" Foreground="White" HorizontalAlignment="Right" Margin="0,0,25,0" VerticalAlignment="Center"/>
                                             </Grid>
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
 
-                        </ScrollViewer>
+                        <!--</ScrollViewer>-->
 
                     </StackPanel>
                 </Border>

@@ -1,9 +1,21 @@
 # 🚀 Converto - a project deploy by UIT Students
 
-<img width="3465" height="646" alt="image" src="https://github.com/user-attachments/assets/8ed6e8b6-f7b5-40e6-b882-1575bf96e744" />
+<img width="3365" alt="image" src="./Asset/logo.jpg" />
 
 ---
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![UIT](https://img.shields.io/badge/UIT-VNU-lightblue%20)](https://www.uit.edu.vn/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![UIT](https://img.shields.io/badge/UIT-VNU-lightblue%20)](https://www.uit.edu.vn/)
+![Python](https://img.shields.io/badge/python-3670A0?style=flat&logo=python&logoColor=ffdd54)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)
+![Pydantic](https://img.shields.io/badge/Pydantic-E92063?style=flat&logo=pydantic&logoColor=white)
+![C#](https://img.shields.io/badge/c%23-%23239120.svg?style=flat&logo=c-sharp&logoColor=white)
+![.NET](https://img.shields.io/badge/.NET-5C2D91?style=flat&logo=.net&logoColor=white)
+![WPF](https://img.shields.io/badge/WPF-%230078D4.svg?style=flat&logo=windows&logoColor=white)
+![MIT License](https://img.shields.io/badge/License-MIT-green.svg?style=flat)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)
+![Git](https://img.shields.io/badge/git-%23F05033.svg?style=flat&logo=git&logoColor=white)
+![Pytest](https://img.shields.io/badge/pytest-%23793534.svg?style=flat&logo=pytest&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E5.svg?style=flat&logo=githubactions&logoColor=white)
 
 Welcome to Converto, the final project for the Visual Programming (IT008) course.
 
@@ -13,83 +25,54 @@ Converto is a client-server application for much transition beetween a lot of fi
 
 * **Course:** Visual Programming (IT008)
 * **University:** University of Information Technology - VNU-HCM
-* **Instructor:** ...
+* **Instructor:** Ths Võ Tuấn Kiệt
 
 ---
 
 ## ✨ Key Features
 
-* **[Main Feature 1]:** [Describe the feature, e.g., Convert .PNG files to .JPEG and vice-versa].
-* **[Main Feature 2]:** [Describe the feature, e.g., Allow clients to upload and download files from the server].
+* **[Convert]:** Seamlessly convert between popular file formats with high-performance processing and zero quality loss.
+* **[Compress]:** Smart file compression algorithms that significantly reduce file size while maintaining original visual fidelity.
+* **[Remove background]:** AI-powered background removal tool that automatically detects subjects and creates transparent backgrounds instantly.
+* **[Markdown to text]:** Efficiently parse and convert raw text or HTML content into clean, structured Markdown syntax for documentation.
+
 
 ---
 
 ## 🛠 Tech Stack
 
-* **Programming Language:** C#, Python
-* **Libraries:**
-    * ...
-    * ...
+The project is built using a modern, decoupled architecture:
 
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-* `g++` (or `gcc`) compiler
-* `make` (if you have a Makefile)
-
-### Installation & Usage
-
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/](https://github.com/)Andexenn/Converto_IT008_WPF.git
-    cd Converto_IT008_WPF
-    ```
-
-2.  **Compile the project:**
-    (Using a `Makefile` is highly recommended)
-    ```bash
-    make
-    ```
-    *(Alternatively, for manual compilation):*
-    ```bash
-    # Example for compiling the server
-    g++ server.cpp -o server -lpthread
-    
-    # Example for compiling the client
-    g++ client.cpp -o client -lpthread
-    ```
-
-3.  **Run the application:**
-
-    *(Describe how to run it. For a Client-Server model, specify running the server first.)*
-
-    **Terminal 1 (Run the Server):**
-    ```bash
-    ./server [PORT]
-    ```
-
-    **Terminal 2 (Run the Client):**
-    ```bash
-    ./client [SERVER_IP] [SERVER_PORT] [other_arguments]
-    ```
+* **Programming Languages:** C#, Python
+* **Frontend:**
+    * **WPF (.NET):** For a responsive and native Windows desktop experience.
+* **Backend:**
+    * **FastAPI:** High-performance web framework for building APIs with Python.
+    * **Pydantic:** Data validation and settings management using Python type hints.
+* **DevOps & Tools:**
+    * **Docker:** Containerization for consistent deployment environments.
+    * **GitHub Actions:** Automated CI/CD pipelines.
+    * **Pytest:** Robust testing framework for the backend.
+    * **Git:** Distributed version control system.
 
 ---
 
 ## 📸 Screenshots / Demo
 
-!!!Thêm ảnh!!!
+**Dashboard:**
+![alt text](image-1.png)
 
-**Client Terminal Interface:**
-``
+**Convert:**
+![alt text](image-3.png)
 
-**Server Log Output:**
-``
+**Compress:**
+![alt text](image-2.png)
 
-**Conversion Feature Demo:**
-`[GIF of File conversion process]`
+**Remove background:**
+![alt text](image-4.png)
+
+**Markdown to text:**
+![alt text](image-5.png)
 
 ---
 
@@ -97,8 +80,8 @@ Converto is a client-server application for much transition beetween a lot of fi
 
 | No. | Full Name | Student ID | Role |
 | :--- | :--- | :--- | :--- |
-| 1 | [Phan Huynh Hung] | [2452....] | [Team Leader, Backend, UI/UX] |
-| 2 | [Nguyen Duc Hoang Thuan] | [24521740] | [Frontend, Documentation, Tester] |
+| 1 | [Phan Huỳnh Hưng] | [24520623] | [Team Leader, Backend, UI/UX] |
+| 2 | [Nguyễn Đức Hoàng Thuận] | [24521740] | [Frontend, Documentation] |
 
 ---
 

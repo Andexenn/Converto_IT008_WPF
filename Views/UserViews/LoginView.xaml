@@ -268,7 +268,8 @@
                     <Border Style="{StaticResource InputContainerStyle}">
                         <custom:PlaceholderTextBox Placeholder="{DynamicResource Lang.LoginView.Placeholder_Email}"
                                                    Text="{Binding Email, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                   TabIndex="0"/>
+                                                   TabIndex="0"
+                                                   CaretBrush="White"/>
                     </Border>
 
                     <Border Style="{StaticResource InputContainerStyle}">
@@ -280,7 +281,8 @@
                             <custom:PlaceholderTextBox Grid.Column="0"
                                                        Placeholder="{DynamicResource Lang.LoginView.Placeholder_Password}"
                                                        Text="{Binding Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                       TabIndex="1"/>
+                                                       TabIndex="1"
+                                                       CaretBrush="White"/>
                             <Button Grid.Column="1" Margin="0,0,15,0" Background="Transparent" BorderThickness="0" Cursor="Hand">
                                 <fa:ImageAwesome Icon="Eye" Foreground="{StaticResource Brush.Text.Secondary}" Width="14" Opacity="0.7"/>
                                 <Button.Template>

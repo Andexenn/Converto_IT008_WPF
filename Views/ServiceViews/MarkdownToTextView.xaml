@@ -175,7 +175,6 @@
                                                    BorderThickness="0"
                                                    FontSize="14"
                                                    FontFamily="Consolas"
-                                                   
                                                    AcceptsReturn="True"
                                                    TextWrapping="Wrap"
                                                    VerticalScrollBarVisibility="Auto"

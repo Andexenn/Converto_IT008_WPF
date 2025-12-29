@@ -41,7 +41,7 @@ public partial class HomepageViewModel : BaseViewModel
     [ObservableProperty]
     private int _overviewTotalTasks;
     [ObservableProperty]
-    private string _overviewTotalTasksChange = "+0%"; 
+    private string _overviewTotalTasksChange = "+0%";
     [ObservableProperty]
     private string _storageSaved;
     [ObservableProperty]
@@ -234,32 +234,21 @@ public partial class HomepageViewModel : BaseViewModel
     {
         var now = DateTime.Now;
 
-        // Khởi tạo mảng dữ liệu cho 4 loại task
-        // Giả định ServiceTypeID: 1=Convert, 2=Compress, 3=RemoveBG, 4=Markdown
-        ChartValues<double> convertValues = new ChartValues<double>();
-        ChartValues<double> compressValues = new ChartValues<double>();
-        ChartValues<double> removeBgValues = new ChartValues<double>();
+        ChartValues<double> totalValues = new ChartValues<double>();
 
         if (IsWeekly)
         {
-            // Last 7 days
             ActivityLabels = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
             for (int i = 0; i < 7; i++)
             {
                 var targetDate = now.AddDays(-(6 - i)).Date;
-
-                // Lọc task theo ngày
-                var tasksInDay = UserTasks.Where(t => t.CreatedAt.Date == targetDate).ToList();
-
-                convertValues.Add(tasksInDay.Count(t => t.ServiceTypeID == 1));
-                compressValues.Add(tasksInDay.Count(t => t.ServiceTypeID == 2));
-                removeBgValues.Add(tasksInDay.Count(t => t.ServiceTypeID == 3));
+                int count = UserTasks.Count(t => t.CreatedAt.Date == targetDate);
+                totalValues.Add(count);
             }
         }
         else
         {
-            // Last 4 weeks
             ActivityLabels = new[] { "Week 1", "Week 2", "Week 3", "Week 4" };
 
             for (int i = 0; i < 4; i++)
@@ -267,51 +256,26 @@ public partial class HomepageViewModel : BaseViewModel
                 var weekStart = now.AddDays(-((3 - i + 1) * 7)).Date;
                 var weekEnd = now.AddDays(-((3 - i) * 7)).Date;
 
-                // Lọc task theo tuần
-                var tasksInWeek = UserTasks.Where(t => t.CreatedAt.Date >= weekStart && t.CreatedAt.Date < weekEnd).ToList();
-
-                convertValues.Add(tasksInWeek.Count(t => t.ServiceTypeID == 1));
-                compressValues.Add(tasksInWeek.Count(t => t.ServiceTypeID == 2));
-                removeBgValues.Add(tasksInWeek.Count(t => t.ServiceTypeID == 3));
+                int count = UserTasks.Count(t => t.CreatedAt.Date >= weekStart && t.CreatedAt.Date < weekEnd);
+                totalValues.Add(count);
             }
         }
 
-        // Cập nhật SeriesCollection với 4 đường riêng biệt
         ActivitySeries = new SeriesCollection
+    {
+        new LineSeries
         {
-            new LineSeries
-            {
-                Title = "Convert",
-                Values = convertValues,
-                PointGeometrySize = 10,
-                LineSmoothness = 0.5,
-                Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"), // Màu Đỏ
-                Fill = Brushes.Transparent, // Để Transparent để không bị che khuất nhau
-                StrokeThickness = 3
-            },
-            new LineSeries
-            {
-                Title = "Compress",
-                Values = compressValues,
-                PointGeometrySize = 10,
-                LineSmoothness = 0.5,
-                Stroke = (Brush)new BrushConverter().ConvertFrom("#EBCB8B"), // Màu Vàng
-                Fill = Brushes.Transparent,
-                StrokeThickness = 3
-            },
-            new LineSeries
-            {
-                Title = "Remove BG",
-                Values = removeBgValues,
-                PointGeometrySize = 10,
-                LineSmoothness = 0.5,
-                Stroke = (Brush)new BrushConverter().ConvertFrom("#5E81AC"), // Màu Xanh dương
-                Fill = Brushes.Transparent,
-                StrokeThickness = 3
-            }
-        };
+            Title = "Total Activity",
+            Values = totalValues,
+            PointGeometrySize = 12,
+            LineSmoothness = 0.5,
+            Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"),
+            Fill = (Brush)new BrushConverter().ConvertFrom("#22F90606"),
+            StrokeThickness = 3,
+            LabelPoint = point => $"({point.Y} Tasks)"
+        }
+    };
 
-        // Recalculate statistics when switching between weekly/monthly
         CalculateOverviewStatistics();
     }
 }

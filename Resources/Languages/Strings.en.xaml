@@ -234,7 +234,7 @@
     <sys:String x:Key="Lang.HomepageView.Activity.Title">Activity Overview</sys:String>
     <sys:String x:Key="Lang.HomepageView.Activity.Weekly">Weekly</sys:String>
     <sys:String x:Key="Lang.HomepageView.Activity.Monthly">Monthly</sys:String>
-    <sys:String x:Key="Lang.HomepageView.Activity.Desc">Operations performed in the last 7 days.</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Activity.Desc">Operations performed in the past.</sys:String>
     
     <sys:String x:Key="Lang.HomepageView.Stats.TotalTasks">Total Tasks</sys:String>
     <sys:String x:Key="Lang.HomepageView.Stats.StorageSaved">Storage Saved</sys:String>

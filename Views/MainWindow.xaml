@@ -9,7 +9,9 @@
         xmlns:userviews="clr-namespace:Converto_IT008_WPF.Views.UserViews"
         d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         mc:Ignorable="d"
-        Title="{DynamicResource Lang.MainWindow.Title}" Height="700" Width="1100"
+        Title="{DynamicResource Lang.MainWindow.Title}" 
+        MinHeight="750" 
+        MinWidth="1200"
         ResizeMode="CanResize"
         Closing="MainWindow_Closing"
         WindowStartupLocation="CenterScreen">
@@ -242,7 +244,6 @@
                   Visibility="{Binding IsSignUpVisible, Converter={StaticResource BoolToVisibilityConverter}, FallbackValue=Collapsed}"
                   Background="Transparent">
                 <userviews:SignUpView x:Name="MySignUpView"/>
-
             </Grid>
 
             <Grid x:Name="LoginOverlay"

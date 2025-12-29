@@ -233,7 +233,7 @@
     <sys:String x:Key="Lang.HomepageView.Activity.Title">Tổng quan hoạt động</sys:String>
     <sys:String x:Key="Lang.HomepageView.Activity.Weekly">Tuần này</sys:String>
     <sys:String x:Key="Lang.HomepageView.Activity.Monthly">Tháng này</sys:String>
-    <sys:String x:Key="Lang.HomepageView.Activity.Desc">Các thao tác thực hiện trong 7 ngày qua.</sys:String>
+    <sys:String x:Key="Lang.HomepageView.Activity.Desc">Các thao tác thực hiện trong quá khứ.</sys:String>
     
     <sys:String x:Key="Lang.HomepageView.Stats.TotalTasks">Tổng tác vụ</sys:String>
     <sys:String x:Key="Lang.HomepageView.Stats.StorageSaved">Tiết kiệm</sys:String>

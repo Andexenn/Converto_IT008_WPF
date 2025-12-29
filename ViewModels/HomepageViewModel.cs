@@ -234,59 +234,82 @@ public partial class HomepageViewModel : BaseViewModel
     {
         var now = DateTime.Now;
 
+        // Khởi tạo mảng dữ liệu cho 4 loại task
+        // Giả định ServiceTypeID: 1=Convert, 2=Compress, 3=RemoveBG, 4=Markdown
+        ChartValues<double> convertValues = new ChartValues<double>();
+        ChartValues<double> compressValues = new ChartValues<double>();
+        ChartValues<double> removeBgValues = new ChartValues<double>();
+
         if (IsWeekly)
         {
             // Last 7 days
             ActivityLabels = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
-            var weeklyData = new double[7];
             for (int i = 0; i < 7; i++)
             {
                 var targetDate = now.AddDays(-(6 - i)).Date;
-                weeklyData[i] = UserTasks.Count(t => t.CreatedAt.Date == targetDate);
-            }
 
-            ActivitySeries = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "Tasks",
-                    Values = new ChartValues<double>(weeklyData),
-                    PointGeometrySize = 10,
-                    LineSmoothness = 1,
-                    Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"),
-                    Fill = (Brush)new BrushConverter().ConvertFrom("#33F90606"),
-                    StrokeThickness = 3
-                }
-            };
+                // Lọc task theo ngày
+                var tasksInDay = UserTasks.Where(t => t.CreatedAt.Date == targetDate).ToList();
+
+                convertValues.Add(tasksInDay.Count(t => t.ServiceTypeID == 1));
+                compressValues.Add(tasksInDay.Count(t => t.ServiceTypeID == 2));
+                removeBgValues.Add(tasksInDay.Count(t => t.ServiceTypeID == 3));
+            }
         }
         else
         {
             // Last 4 weeks
             ActivityLabels = new[] { "Week 1", "Week 2", "Week 3", "Week 4" };
 
-            var monthlyData = new double[4];
             for (int i = 0; i < 4; i++)
             {
                 var weekStart = now.AddDays(-((3 - i + 1) * 7)).Date;
                 var weekEnd = now.AddDays(-((3 - i) * 7)).Date;
-                monthlyData[i] = UserTasks.Count(t => t.CreatedAt.Date >= weekStart && t.CreatedAt.Date < weekEnd);
-            }
 
-            ActivitySeries = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "Tasks",
-                    Values = new ChartValues<double>(monthlyData),
-                    PointGeometrySize = 10,
-                    LineSmoothness = 1,
-                    Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"),
-                    Fill = (Brush)new BrushConverter().ConvertFrom("#33F90606"),
-                    StrokeThickness = 3
-                }
-            };
+                // Lọc task theo tuần
+                var tasksInWeek = UserTasks.Where(t => t.CreatedAt.Date >= weekStart && t.CreatedAt.Date < weekEnd).ToList();
+
+                convertValues.Add(tasksInWeek.Count(t => t.ServiceTypeID == 1));
+                compressValues.Add(tasksInWeek.Count(t => t.ServiceTypeID == 2));
+                removeBgValues.Add(tasksInWeek.Count(t => t.ServiceTypeID == 3));
+            }
         }
+
+        // Cập nhật SeriesCollection với 4 đường riêng biệt
+        ActivitySeries = new SeriesCollection
+        {
+            new LineSeries
+            {
+                Title = "Convert",
+                Values = convertValues,
+                PointGeometrySize = 10,
+                LineSmoothness = 0.5,
+                Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"), // Màu Đỏ
+                Fill = Brushes.Transparent, // Để Transparent để không bị che khuất nhau
+                StrokeThickness = 3
+            },
+            new LineSeries
+            {
+                Title = "Compress",
+                Values = compressValues,
+                PointGeometrySize = 10,
+                LineSmoothness = 0.5,
+                Stroke = (Brush)new BrushConverter().ConvertFrom("#EBCB8B"), // Màu Vàng
+                Fill = Brushes.Transparent,
+                StrokeThickness = 3
+            },
+            new LineSeries
+            {
+                Title = "Remove BG",
+                Values = removeBgValues,
+                PointGeometrySize = 10,
+                LineSmoothness = 0.5,
+                Stroke = (Brush)new BrushConverter().ConvertFrom("#5E81AC"), // Màu Xanh dương
+                Fill = Brushes.Transparent,
+                StrokeThickness = 3
+            }
+        };
 
         // Recalculate statistics when switching between weekly/monthly
         CalculateOverviewStatistics();

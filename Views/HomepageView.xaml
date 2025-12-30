@@ -444,7 +444,7 @@
 
                             <lvc:CartesianChart Grid.Row="2" Height="150" Series="{Binding ActivitySeries}" LegendLocation="None" Hoverable="True">
                                 <lvc:CartesianChart.DataTooltip>
-                                    <lvc:DefaultTooltip SelectionMode="SharedYValues" Background="#222" Foreground="White" BulletSize="10"/>
+                                    <lvc:DefaultTooltip SelectionMode="OnlySender" Background="#222" Foreground="White" BulletSize="10"/>
                                 </lvc:CartesianChart.DataTooltip>
                                 <lvc:CartesianChart.AxisX>
                                     <lvc:Axis Labels="{Binding ActivityLabels}" Foreground="{StaticResource Brush.Text.Secondary}" ShowLabels="True">

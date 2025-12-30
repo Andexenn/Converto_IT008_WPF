@@ -242,6 +242,55 @@ public partial class HomepageViewModel : BaseViewModel
         TaskBreakdownSeries.Add(new PieSeries { Title = "Remove BG", Values = new ChartValues<double> { RemoveBGTasksCnt }, Fill = (Brush)new BrushConverter().ConvertFrom("#5E81AC"), PushOut = 0, LabelPoint = PointLabel });
     }
 
+    //private void UpdateChartData()
+    //{
+    //    var now = DateTime.Now;
+
+    //    ChartValues<double> totalValues = new ChartValues<double>();
+
+    //    if (IsWeekly)
+    //    {
+    //        ActivityLabels = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+
+    //        for (int i = 0; i < 7; i++)
+    //        {
+    //            var targetDate = now.AddDays(-(6 - i)).Date;
+    //            int count = UserTasks.Count(t => t.CreatedAt.Date == targetDate);
+    //            totalValues.Add(count);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        ActivityLabels = new[] { "Week 1", "Week 2", "Week 3", "Week 4" };
+
+    //        for (int i = 0; i < 4; i++)
+    //        {
+    //            var weekStart = now.AddDays(-((3 - i + 1) * 7)).Date;
+    //            var weekEnd = now.AddDays(-((3 - i) * 7)).Date;
+
+    //            int count = UserTasks.Count(t => t.CreatedAt.Date >= weekStart && t.CreatedAt.Date < weekEnd);
+    //            totalValues.Add(count);
+    //        }
+    //    }
+
+    //    ActivitySeries = new SeriesCollection
+    //{
+    //    new LineSeries
+    //    {
+    //        Title = "Total Activity",
+    //        Values = totalValues,
+    //        PointGeometrySize = 12,
+    //        LineSmoothness = 0.5,
+    //        Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"),
+    //        Fill = (Brush)new BrushConverter().ConvertFrom("#22F90606"),
+    //        StrokeThickness = 3,
+    //        LabelPoint = point => $"({point.Y} Tasks)"
+    //    }
+    //};
+
+    //    CalculateOverviewStatistics();
+    //}
+
     private void UpdateChartData()
     {
         var now = DateTime.Now;
@@ -252,24 +301,44 @@ public partial class HomepageViewModel : BaseViewModel
         {
             ActivityLabels = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
+            // Get the current day of week (0 = Sunday, 1 = Monday, etc.)
+            int currentDayOfWeek = (int)now.DayOfWeek;
+
+            // Convert Sunday (0) to 7 for easier calculation (Mon=1, Sun=7)
+            if (currentDayOfWeek == 0) currentDayOfWeek = 7;
+
+            // Calculate days back to Monday of current week
+            int daysBackToMonday = currentDayOfWeek - 1;
+
+            // Loop through each day from Monday to Sunday
             for (int i = 0; i < 7; i++)
             {
-                var targetDate = now.AddDays(-(6 - i)).Date;
+                // Calculate the target date: start from Monday and add i days
+                var targetDate = now.AddDays(-daysBackToMonday + i).Date;
                 int count = UserTasks.Count(t => t.CreatedAt.Date == targetDate);
                 totalValues.Add(count);
+
+                Debug.WriteLine($"Day {ActivityLabels[i]}: {targetDate:yyyy-MM-dd} - Count: {count}");
             }
         }
         else
         {
             ActivityLabels = new[] { "Week 1", "Week 2", "Week 3", "Week 4" };
 
+            // Calculate weeks going backwards from today
             for (int i = 0; i < 4; i++)
             {
-                var weekStart = now.AddDays(-((3 - i + 1) * 7)).Date;
+                // Week 4 is most recent (0-6 days ago)
+                // Week 3 is 7-13 days ago
+                // Week 2 is 14-20 days ago
+                // Week 1 is 21-27 days ago
+                var weekStart = now.AddDays(-((4 - i) * 7)).Date;
                 var weekEnd = now.AddDays(-((3 - i) * 7)).Date;
 
                 int count = UserTasks.Count(t => t.CreatedAt.Date >= weekStart && t.CreatedAt.Date < weekEnd);
                 totalValues.Add(count);
+
+                Debug.WriteLine($"Week {i + 1}: {weekStart:yyyy-MM-dd} to {weekEnd:yyyy-MM-dd} - Count: {count}");
             }
         }
 

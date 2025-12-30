@@ -37,11 +37,13 @@ public partial class HomepageViewModel : BaseViewModel
     double _compressPercent;
     [ObservableProperty]
     double _removeBGPercent;
+    [ObservableProperty]
+    private string _timeFrameLabel;
 
     [ObservableProperty]
     private int _overviewTotalTasks;
     [ObservableProperty]
-    private string _overviewTotalTasksChange = "+0%"; 
+    private string _overviewTotalTasksChange = "+0%";
     [ObservableProperty]
     private string _storageSaved;
     [ObservableProperty]
@@ -79,9 +81,19 @@ public partial class HomepageViewModel : BaseViewModel
         _sessionState = sessionState;
         _taskService = taskService;
 
+        TimeFrameLabel = "Operations performed in the last 7 days";
+
         SwitchTimeFrameCommand = new RelayCommand<string>((param) =>
         {
             IsWeekly = param == "Weekly";
+            if (IsWeekly)
+            {
+                TimeFrameLabel = "Operations performed in the last 7 days";
+            }
+            else
+            {
+                TimeFrameLabel = "Operations performed in the last 4 weeks";
+            }
             UpdateChartData();
         });
 
@@ -230,65 +242,121 @@ public partial class HomepageViewModel : BaseViewModel
         TaskBreakdownSeries.Add(new PieSeries { Title = "Remove BG", Values = new ChartValues<double> { RemoveBGTasksCnt }, Fill = (Brush)new BrushConverter().ConvertFrom("#5E81AC"), PushOut = 0, LabelPoint = PointLabel });
     }
 
+    //private void UpdateChartData()
+    //{
+    //    var now = DateTime.Now;
+
+    //    ChartValues<double> totalValues = new ChartValues<double>();
+
+    //    if (IsWeekly)
+    //    {
+    //        ActivityLabels = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+
+    //        for (int i = 0; i < 7; i++)
+    //        {
+    //            var targetDate = now.AddDays(-(6 - i)).Date;
+    //            int count = UserTasks.Count(t => t.CreatedAt.Date == targetDate);
+    //            totalValues.Add(count);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        ActivityLabels = new[] { "Week 1", "Week 2", "Week 3", "Week 4" };
+
+    //        for (int i = 0; i < 4; i++)
+    //        {
+    //            var weekStart = now.AddDays(-((3 - i + 1) * 7)).Date;
+    //            var weekEnd = now.AddDays(-((3 - i) * 7)).Date;
+
+    //            int count = UserTasks.Count(t => t.CreatedAt.Date >= weekStart && t.CreatedAt.Date < weekEnd);
+    //            totalValues.Add(count);
+    //        }
+    //    }
+
+    //    ActivitySeries = new SeriesCollection
+    //{
+    //    new LineSeries
+    //    {
+    //        Title = "Total Activity",
+    //        Values = totalValues,
+    //        PointGeometrySize = 12,
+    //        LineSmoothness = 0.5,
+    //        Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"),
+    //        Fill = (Brush)new BrushConverter().ConvertFrom("#22F90606"),
+    //        StrokeThickness = 3,
+    //        LabelPoint = point => $"({point.Y} Tasks)"
+    //    }
+    //};
+
+    //    CalculateOverviewStatistics();
+    //}
+
     private void UpdateChartData()
     {
         var now = DateTime.Now;
 
+        ChartValues<double> totalValues = new ChartValues<double>();
+
         if (IsWeekly)
         {
-            // Last 7 days
             ActivityLabels = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
 
-            var weeklyData = new double[7];
+            // Get the current day of week (0 = Sunday, 1 = Monday, etc.)
+            int currentDayOfWeek = (int)now.DayOfWeek;
+
+            // Convert Sunday (0) to 7 for easier calculation (Mon=1, Sun=7)
+            if (currentDayOfWeek == 0) currentDayOfWeek = 7;
+
+            // Calculate days back to Monday of current week
+            int daysBackToMonday = currentDayOfWeek - 1;
+
+            // Loop through each day from Monday to Sunday
             for (int i = 0; i < 7; i++)
             {
-                var targetDate = now.AddDays(-(6 - i)).Date;
-                weeklyData[i] = UserTasks.Count(t => t.CreatedAt.Date == targetDate);
-            }
+                // Calculate the target date: start from Monday and add i days
+                var targetDate = now.AddDays(-daysBackToMonday + i).Date;
+                int count = UserTasks.Count(t => t.CreatedAt.Date == targetDate);
+                totalValues.Add(count);
 
-            ActivitySeries = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "Tasks",
-                    Values = new ChartValues<double>(weeklyData),
-                    PointGeometrySize = 10,
-                    LineSmoothness = 1,
-                    Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"),
-                    Fill = (Brush)new BrushConverter().ConvertFrom("#33F90606"),
-                    StrokeThickness = 3
-                }
-            };
+                Debug.WriteLine($"Day {ActivityLabels[i]}: {targetDate:yyyy-MM-dd} - Count: {count}");
+            }
         }
         else
         {
-            // Last 4 weeks
             ActivityLabels = new[] { "Week 1", "Week 2", "Week 3", "Week 4" };
 
-            var monthlyData = new double[4];
+            // Calculate weeks going backwards from today
             for (int i = 0; i < 4; i++)
             {
-                var weekStart = now.AddDays(-((3 - i + 1) * 7)).Date;
+                // Week 4 is most recent (0-6 days ago)
+                // Week 3 is 7-13 days ago
+                // Week 2 is 14-20 days ago
+                // Week 1 is 21-27 days ago
+                var weekStart = now.AddDays(-((4 - i) * 7)).Date;
                 var weekEnd = now.AddDays(-((3 - i) * 7)).Date;
-                monthlyData[i] = UserTasks.Count(t => t.CreatedAt.Date >= weekStart && t.CreatedAt.Date < weekEnd);
-            }
 
-            ActivitySeries = new SeriesCollection
-            {
-                new LineSeries
-                {
-                    Title = "Tasks",
-                    Values = new ChartValues<double>(monthlyData),
-                    PointGeometrySize = 10,
-                    LineSmoothness = 1,
-                    Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"),
-                    Fill = (Brush)new BrushConverter().ConvertFrom("#33F90606"),
-                    StrokeThickness = 3
-                }
-            };
+                int count = UserTasks.Count(t => t.CreatedAt.Date >= weekStart && t.CreatedAt.Date < weekEnd);
+                totalValues.Add(count);
+
+                Debug.WriteLine($"Week {i + 1}: {weekStart:yyyy-MM-dd} to {weekEnd:yyyy-MM-dd} - Count: {count}");
+            }
         }
 
-        // Recalculate statistics when switching between weekly/monthly
+        ActivitySeries = new SeriesCollection
+    {
+        new LineSeries
+        {
+            Title = "Total Activity",
+            Values = totalValues,
+            PointGeometrySize = 12,
+            LineSmoothness = 0.5,
+            Stroke = (Brush)new BrushConverter().ConvertFrom("#F90606"),
+            Fill = (Brush)new BrushConverter().ConvertFrom("#22F90606"),
+            StrokeThickness = 3,
+            LabelPoint = point => $"({point.Y} Tasks)"
+        }
+    };
+
         CalculateOverviewStatistics();
     }
 }
